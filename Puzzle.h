@@ -11,9 +11,10 @@
 #include "PuzzlePiece.h"
 #include "Exceptions.h"
 #include <vector>
-#include <string>
+#include <string.h>
 using namespace std;
 
+//TODO: how to output the errors in the needed order?
 
 /*
  * Class Puzzle:
@@ -25,24 +26,28 @@ Check valid pieces puzzle - corners, sum edges wrong # of straight edges..
 
 class Puzzle{
 //members:
-	vector<PuzzlePiece> pieces;
-	int size;
-	int numEdges[4]; //for each one of the sides..
-	//TODO: represnt here popssible corners?
+private:
+	vector<PuzzlePiece> _pieces;
+	vector<Error> _errors;
+	int _size;
+	int _numEdges[4]; //for each one of the sides..
+	//TODO: represent here possible corners?
 //functions:
 public:
 	//constructors:
-	Puzzle(){};
-	Puzzle(string fileName){};
+	Puzzle();
+	Puzzle(string fileName);
 
 	//destructors:
 	//TODO!
 
-	Error buildPuzzleFromFile(string fileName);
+	Error buildPuzzleFromFile(const string& fileName);
 
 private:
 	Error sumEdges();
 	Error missingCorner();
+	Error parseFirstLine(string line);
+
 };
 
 
