@@ -65,7 +65,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			(*errList).add(Error(WRONG_PIECE_ID, curr.getId()));
 			continue;
 		}
-		_pieces[curr.getId()] = curr;
+		_pieces[curr.getId()-1] = curr;
 	}
 }
 

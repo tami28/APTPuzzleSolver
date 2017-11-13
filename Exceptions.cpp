@@ -1,7 +1,7 @@
 /*
  * Exceptions.cpp
  *
- *  Created on: 12 бребЧ 2017
+ *  Created on: 12 пїЅпїЅпїЅпїЅпїЅ 2017
  *      Author: Tami
  */
 
@@ -39,6 +39,9 @@ ErrorType Error::getErrorType(){
 
 
 //---------------ErrorList:---------------------//
+
+ErrorList* ErrorList::_errors;
+bool ErrorList::_initialized;
 
 //constructors & destructors:
 ErrorList::ErrorList(){
