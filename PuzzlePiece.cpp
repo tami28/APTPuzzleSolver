@@ -11,12 +11,13 @@
 PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
 
 /*
- * Cinstructor for a Piece object from id + edges array
+ * Constructor for a Piece object from id + edges array.
+ * This c'tor assumes valid input in inputEdges.
  */
 PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
         : id(id) {
     for (int i=0; i<4; i++){
-        edges[i] = inputEdges[i];
+        edges[i] = (Constraints) inputEdges[i];
     }
 }
 
@@ -78,4 +79,9 @@ bool PuzzlePiece::canConnect(PuzzlePiece other, Edge edge){
             return other.edges[edge] == Constraints::MALE;
     }
     return false;
+}
+
+
+Constraints PuzzlePiece::getEdge(Edge edge){
+    return this->edges[edge];
 }
