@@ -8,7 +8,7 @@
 #include <string>
 #include <cstring>
 #include<cstdlib>
-
+#include "const.h"
 
 #define ALTERNATIVE_ZERO_STRING "8"
 #define ALTERNATIVE_ZERO_INT 8
@@ -29,7 +29,7 @@ public:
     int getId();
     //int* getEdges(); //TODO: return int* ??...
     //void setPosition(const int x, const int y);
-    //bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
+    bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
 };
 
 
