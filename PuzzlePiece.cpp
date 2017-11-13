@@ -45,16 +45,23 @@ PuzzlePiece::PuzzlePiece(string inputFileLine) {
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
         }
         param = atoi(paramstr);
-        if (param == 0){
-            //One of the parameters given in the input line was not an int --> invalid piece representation.
+        if (param == 0 && argsCount > 1){
+            //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
             (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
+        }
+        if (param == 0 && argsCount == 1){
+            //the ID given in the input line is not an int --> Error 1.5 in exercise updates:
+            (*errList).add(Error(PIECE_ID_NAN, param));
+            //TODO: make sure this works according to section 1.7 in updates
+
         }
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
 
         args[argsCount-1] = param;
         if (argsCount == 1 && (param < 1 || param > numPieces)) {
-            //Piece-index given in file line is invalid:
-
+            //Input ID is numeric but not in the valid range:
+            (*errList).add(Error(WRONG_PIECE_ID, param));
+            //TODO: make sure this works according to section 1.7 in updates
         }
         else if (param != Constraints::MALE &&
                  param != Constraints::FEMALE &&
