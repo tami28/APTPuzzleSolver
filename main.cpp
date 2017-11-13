@@ -1,15 +1,15 @@
 /*
  * main.cpp
  *
- *  Created on: 12 бребЧ 2017
+ *  Created on: 12 пїЅпїЅпїЅпїЅпїЅ 2017
  *      Author: Tami
  */
-
-#include "Exceptions.h"
+#include "PuzzlePiece.h"
 
 int main(){
-	ErrorList* el = ErrorList::getErrorList();
-	return 0;
+	string line = "2 -1 0 1 -1";
+    PuzzlePiece pp = PuzzlePiece(line);
+    printf("dine");
 }
 
 //TODO: close ErrorList

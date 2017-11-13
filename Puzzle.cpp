@@ -14,6 +14,9 @@
 #include <iostream>
 #include <string>
 
+
+int numPieces; //initialization of global variable.
+
 //constructors:
 
 /*
