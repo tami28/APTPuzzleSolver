@@ -85,3 +85,10 @@ void Puzzle::parseFirstLine(std::string line){
 	}
 
 }
+
+/*
+ * get (by value) the piece at index i in the puzzle.
+ */
+PuzzlePiece Puzzle::getPieceAt(int i){
+	return _pieces[i];
+}

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <string>
+#include <cstring>
+#include<cstdlib>
+#include <iostream>
+
 #define INVALID_PIECE_ID -9
 
 extern int numPieces;
