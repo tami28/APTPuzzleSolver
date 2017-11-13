@@ -3,7 +3,6 @@
 //
 
 #include "PuzzlePiece.h"
-#include "const.h"
 
 
 /*
@@ -66,3 +65,17 @@ int PuzzlePiece::getId(){
     return id;
 }
 
+/*
+ * Given another piece, return true if they can legally connect on a given edge (LEFT, TOP, RIGHT or BOTTOM), false o/w.
+ */
+bool PuzzlePiece::canConnect(PuzzlePiece other, Edge edge){
+    switch (this->edges[edge]){
+        case Constraints::STRAIGHT:
+            return other.edges[edge] == Constraints::STRAIGHT;
+        case Constraints::MALE:
+            return other.edges[edge] == Constraints::FEMALE;
+        case Constraints::FEMALE:
+            return other.edges[edge] == Constraints::MALE;
+    }
+    return false;
+}
