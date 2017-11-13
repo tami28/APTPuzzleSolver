@@ -6,12 +6,13 @@
 #define PROJECT_PUZZLEPIECE_H
 
 #include <string>
+#include<cstdlib>
 using namespace std;
 
 enum Edge {RIGHT, LEFT, UP, DOWN} ;
 
 class PuzzlePiece {
-    const int id;
+    int id;
     int edges[4];
 public:
     PuzzlePiece(const int id, int edges[4]);
