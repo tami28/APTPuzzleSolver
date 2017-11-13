@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
+#include <string>
+
 //constructors:
 
 /*
@@ -37,7 +39,7 @@ void Puzzle::sumEdges(){
 }
 
 
-void Puzzle::buildPuzzleFromFile(const string& fileName){
+void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	ifstream fin(fileName);
 	string line;
 	ErrorList* errList = ErrorList::getErrorList();
@@ -53,7 +55,7 @@ void Puzzle::buildPuzzleFromFile(const string& fileName){
 	while(getline(fin,line)){
 		curr = PuzzlePiece(line);
 		//assuming the PuzzlePiece constructor returns nullptr if failed completly
-		if (curr == nullptr){
+		if (curr.getId() == -1){
 			continue;
 		}
 		if (curr.getId( )> _size){
@@ -78,7 +80,7 @@ void Puzzle::parseFirstLine(std::string line){
 	{
 	  std::size_t const m = line.find_first_not_of("0123456789", n);
 	  num = line.substr(n, m != std::string::npos ? m-n : m);
-	  //_size = std::stoi(num, m-n);
+	  _size = atoi(num.c_str());
 	}
 
 }
