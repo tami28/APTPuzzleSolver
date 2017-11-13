@@ -35,9 +35,7 @@ PuzzlePiece::PuzzlePiece(string inputFileLine) {
         argsCount +=1;
         if (argsCount > 5) {
             //More than 5 numbers in line --> invalid piece representation.
-            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
-            id = INVALID_PIECE_ID;
-            break;
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
         char* paramstr =(char*) inputFileLine.substr(prvDelimPos, currDelimPos).c_str();
         // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's error value being 0.
@@ -45,34 +43,31 @@ PuzzlePiece::PuzzlePiece(string inputFileLine) {
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
         }
         param = atoi(paramstr);
-        if (param == 0 && argsCount > 1){
-            //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
-            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
-        }
         if (param == 0 && argsCount == 1){
             //the ID given in the input line is not an int --> Error 1.5 in exercise updates:
-            (*errList).add(Error(PIECE_ID_NAN, param));
-            //TODO: make sure this works according to section 1.7 in updates
-
+            throw Error(PIECE_ID_NAN, param);
+        }
+        if (param == 0 && argsCount > 1){
+            //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
-
         args[argsCount-1] = param;
         if (argsCount == 1 && (param < 1 || param > numPieces)) {
             //Input ID is numeric but not in the valid range:
-            (*errList).add(Error(WRONG_PIECE_ID, param));
-            //TODO: make sure this works according to section 1.7 in updates
+            throw Error(WRONG_PIECE_ID, param);
         }
         else if (param != Constraints::MALE &&
                  param != Constraints::FEMALE &&
                  param != Constraints::STRAIGHT) {
-            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
         prvDelimPos = currDelimPos+1;
     }
     //Call regular Piece c'tor on parsed arguments:
     *this = PuzzlePiece(args[0], args+1);
 }
+
 
 
 int PuzzlePiece::getId(){

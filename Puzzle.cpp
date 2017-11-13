@@ -56,12 +56,14 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	while(getline(fin,line)){
-		curr = PuzzlePiece(line);
-		//assuming the PuzzlePiece constructor returns nullptr if failed completly
-		if (curr.){
-			continue;
+		try {
+			curr = PuzzlePiece(line);
+			_pieces[curr.getId()-1] = curr;
 		}
-		_pieces[curr.getId()-1] = curr;
+		catch (Error e) {
+			(*ErrorList::getErrorList()).add(e);
+			continue;
+		};
 	}
 }
 
