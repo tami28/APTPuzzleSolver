@@ -31,8 +31,8 @@ private:
 public:
 	Error(ErrorType err);
 	Error(ErrorType err, int id);
-	Error(ErrorType err, string str);
-	Error(ErrorType err, string str, int id);
+	Error(ErrorType err, std::string str);
+	Error(ErrorType err, std::string str, int id);
 	ErrorType getErrorType();
 };
 

@@ -24,13 +24,13 @@ Error::Error(ErrorType err, int id){
 Error::Error(ErrorType err, string str, int id){
 	_err = err;
 	_extraInt1 = id;
-	_extraString1 = new string(str);
+	_extraString1 = str;
 }
 
 Error::Error(ErrorType err, string str){
 	_err = err;
 	_extraInt1 = -1;
-	_extraString1 = new string(str);
+	_extraString1 = str;
 }
 
 ErrorType Error::getErrorType(){
@@ -46,9 +46,11 @@ ErrorList::ErrorList(){
 }
 
 //TODO: is this needed?
+/*
 ErrorList::~ErrorList(){
 	_errVec.clear();
 }
+*/
 
 //Public methods:
 ErrorList* ErrorList::getErrorList(){

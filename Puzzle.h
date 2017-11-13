@@ -1,7 +1,7 @@
 /*
  * Puzzle.h
  *
- *  Created on: 10 бреб„ 2017
+ *  Created on: 10 november 2017
  *      Author: Tami
  */
 
@@ -37,9 +37,9 @@ public:
 	void buildPuzzleFromFile(const string& fileName);
 
 private:
-	Error sumEdges();
-	Error missingCorner();
-	Error parseFirstLine(string line);
+	void sumEdges();
+	void missingCorner();
+	void parseFirstLine(string line);
 
 };
 

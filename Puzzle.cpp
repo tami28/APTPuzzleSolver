@@ -2,7 +2,7 @@
 
  * Puzzle.cpp
  *
- *  Created on: 11 бреб„ 2017
+ *  Created on: 11 nov 2017
  *      Author: Tami
  */
 
@@ -30,27 +30,21 @@ Puzzle::Puzzle(string fileName){
 }
 
 
-Error Puzzle::sumEdges(){
+void Puzzle::sumEdges(){
 	if(_numEdges[LEFT] != _numEdges[RIGHT] || _numEdges[UP] != _numEdges[DOWN]){
-		return SUM_EDGES_NOT_ZERO;
+		 (*(ErrorList::getErrorList())).add(Error(SUM_EDGES_NOT_ZERO));
 	}
-	return SUCCESS;
 }
 
 
 void Puzzle::buildPuzzleFromFile(const string& fileName){
 	ifstream fin(fileName);
 	string line;
-	ErrorList errList = ErrorList::getErrorList();
-	Error err;
+	ErrorList* errList = ErrorList::getErrorList();
 	PuzzlePiece curr;
 	getline(fin, line);
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
-	err = parseFirstLine(line);
-
-	if (err!= nullptr){
-		errList.add(err);
-	}
+	parseFirstLine(line);
 	_pieces.resize(_size);
 	numPieces = _size;
 	//TODO: what if failed reading size? fix this!
@@ -63,21 +57,20 @@ void Puzzle::buildPuzzleFromFile(const string& fileName){
 			continue;
 		}
 		if (curr.getId( )> _size){
-			errList.add(Error(WRONG_PIECE_ID, curr.getId()));
+			(*errList).add(Error(WRONG_PIECE_ID, curr.getId()));
 			continue;
 		}
 		_pieces[curr.getId()] = curr;
 	}
 }
 
-Error Puzzle::parseFirstLine(std::string line){
-	ErrorList* errList = ErrorList::getErrorList();
+void Puzzle::parseFirstLine(std::string line){
 	std::string num;
 	std::size_t const foundS = line.find("NumElements");
-	std::size_t const foundEq = line.find("="), foundS);
+	std::size_t const foundEq = line.find("=", foundS+1);
 	//Make sure format is ok:
 	if (foundS ==std::string::npos || foundEq == std::string::npos){
-		(*errList).add(Error(WRONG_FORMET, line));
+		(*ErrorList::getErrorList()).add(Error(WRONG_FORMET, line));
 	}
 	//Read the number:
 	std::size_t const n = line.find_first_of("0123456789");
@@ -86,10 +79,6 @@ Error Puzzle::parseFirstLine(std::string line){
 	  std::size_t const m = line.find_first_not_of("0123456789", n);
 	  num = line.substr(n, m != std::string::npos ? m-n : m);
 	  //_size = std::stoi(num, m-n);
-  }
+	}
 
 }
-
-/// global error vector
-//global fatal error vector
-//TODO: puzzle piece constructor return NULL if failed
