@@ -3,40 +3,85 @@
 //
 
 #include "PuzzlePiece.h"
-#include "const.h"
 
+
+/*
+ * empy constructor for a Piece object
+ */
+PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
+
+/*
+ * Constructor for a Piece object from id + edges array.
+ * This c'tor assumes valid input in inputEdges.
+ */
 PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
         : id(id) {
     for (int i=0; i<4; i++){
-        edges[i] = inputEdges[i];
+        edges[i] = (Constraints) inputEdges[i];
     }
 }
 
+
+/*
+ * constructor for a Piece object from a line in the text file.
+ */
 PuzzlePiece::PuzzlePiece(string inputFileLine) {
     size_t currDelimPos, prvDelimPos=0;
     int argsCount = 0;
     string lineDelimiter = " ";
     int args[5], param;
-    while ((currDelimPos = inputFileLine.find(lineDelimiter)) != string::npos){
+    while ((currDelimPos = prvDelimPos + inputFileLine.find(lineDelimiter)) != string::npos){
         argsCount +=1;
         if (argsCount > 5) {
             //TODO:  handle error here
             id = -1;
+            break;
         }
-        param = stoi();
-        param = atoi(inputFileLine.substr(prvDelimPos, currDelimPos));
-        //TODO: need to check for exception in atoi, or use some other conversion...
-        args[argsCount] = param;
-        if (argsCount == 1 && (param < 1 || param > numPieces)) {//TODO: numElements needs to be a global var, initialized before ecalling this func.
+        char* paramstr =(char*) inputFileLine.substr(prvDelimPos, currDelimPos).c_str();
+        // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's error value being 0.
+        if (strcmp(paramstr,"0") == 0){
+            paramstr = (char *) ALTERNATIVE_ZERO_STRING;
+        }
+        param = atoi(paramstr);
+        if (param == 0){}//TODO: handle atoi exception (bad line)
+        if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
+
+        args[argsCount-1] = param;
+        if (argsCount == 1 && (param < 1 || param > numPieces)) {
                 //TODO: handle bad piece-index err
         }
-        else if (param != 1 &&
-                 param != -1 &&
-                 param != 0) { //TODO: change back to relevant enum values
+        else if (param != Constraints::MALE &&
+                 param != Constraints::FEMALE &&
+                 param != Constraints::STRAIGHT) {
             //todo: handle bad piece error
         }
-        prvDelimPos = currDelimPos; //todo: +1?
+        prvDelimPos = currDelimPos+1;
     }
     //Call regular Piece c'tor on parsed arguments:
     *this = PuzzlePiece(args[0], args+1);
+}
+
+
+int PuzzlePiece::getId(){
+    return id;
+}
+
+/*
+ * Given another piece, return true if they can legally connect on a given edge (LEFT, TOP, RIGHT or BOTTOM), false o/w.
+ */
+bool PuzzlePiece::canConnect(PuzzlePiece other, Edge edge){
+    switch (this->edges[edge]){
+        case Constraints::STRAIGHT:
+            return other.edges[edge] == Constraints::STRAIGHT;
+        case Constraints::MALE:
+            return other.edges[edge] == Constraints::FEMALE;
+        case Constraints::FEMALE:
+            return other.edges[edge] == Constraints::MALE;
+    }
+    return false;
+}
+
+
+Constraints PuzzlePiece::getEdge(Edge edge){
+    return this->edges[edge];
 }

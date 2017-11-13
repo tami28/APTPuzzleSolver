@@ -1,3 +1,6 @@
+#pragma once
+
+
 extern int numPieces;
-enum Edge {RIGHT, LEFT, UP, DOWN};
 enum Constraints { FEMALE = -1, STRAIGHT = 0, MALE = 1, NONE = 9};
+enum Edge {LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3};
