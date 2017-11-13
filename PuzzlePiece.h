@@ -9,7 +9,9 @@
 #include<cstdlib>
 using namespace std;
 
-enum Edge {RIGHT, LEFT, UP, DOWN} ;
+//enum class Edge {RIGHT, LEFT, UP, DOWN} ;
+//enum class EdgeDirections {MALE = 1, FEMALE = -1, STRAIGHT = 0} ;
+
 
 class PuzzlePiece {
     int id;
@@ -22,7 +24,7 @@ public:
     const int getId();
     int* getEdges(); //TODO: return int* ??...
     void setPosition(const int x, const int y);
-    bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
+    //bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
 };
 
 
