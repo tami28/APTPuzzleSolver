@@ -36,7 +36,7 @@ Puzzle::Puzzle(string fileName){
 
 
 void Puzzle::sumEdges(){
-	if(_numEdges[LEFT] != _numEdges[RIGHT] || _numEdges[UP] != _numEdges[DOWN]){
+	if(_numEdges[LEFT] != _numEdges[RIGHT] || _numEdges[TOP] != _numEdges[BOTTOM]){
 		 (*(ErrorList::getErrorList())).add(Error(SUM_EDGES_NOT_ZERO));
 	}
 }
