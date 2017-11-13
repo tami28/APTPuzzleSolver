@@ -22,6 +22,7 @@ using namespace std;
 class PuzzlePiece {
     int id;
     Constraints edges[4];
+
 public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
@@ -29,7 +30,6 @@ public:
 
     int getId();
     Constraints getEdge(Edge edge); //TODO: return int* ??...
-    //void setPosition(const int x, const int y);
     bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
 };
 
