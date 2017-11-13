@@ -12,13 +12,13 @@
 Error::Error(ErrorType err){
 	_err = err;
 	_extraInt1 = -1;
-	_extraString1 = nullptr;
+	//_extraString1 = nullptr;
 }
 
 Error::Error(ErrorType err, int id){
 	_err = err;
 	_extraInt1 = id;
-	_extraString1 = nullptr;
+	//_extraString1 = nullptr;
 }
 
 Error::Error(ErrorType err, string str, int id){
@@ -42,7 +42,7 @@ ErrorType Error::getErrorType(){
 
 //constructors & destructors:
 ErrorList::ErrorList(){
-	_errVec = new std::vector<Error>();
+	_errVec = std::vector<Error>();
 }
 
 //TODO: is this needed?
@@ -51,7 +51,7 @@ ErrorList::~ErrorList(){
 }
 
 //Public methods:
-static ErrorList* ErrorList::getErrorList(){
+ErrorList* ErrorList::getErrorList(){
 	if (! ErrorList::_initialized){
 		ErrorList::_errors = new ErrorList();
 	}
@@ -60,7 +60,7 @@ static ErrorList* ErrorList::getErrorList(){
 
 //TODO: find design where close doesn't have to be closed?
 //delete the errorList
-static void ErrorList::close(){
+void ErrorList::close(){
 	if (ErrorList::_errors != 0 && ErrorList::_initialized){
 		delete ErrorList::_errors;
 		ErrorList::_errors = 0;

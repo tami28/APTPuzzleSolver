@@ -9,7 +9,7 @@
 #define EXCEPTIONS_H_
 
 #include <vector>
-#include <string.h>
+#include <string>
 using namespace std;
 
 enum ErrorType{SUCCESS,
@@ -19,14 +19,15 @@ enum ErrorType{SUCCESS,
 		MISSING_CORNER,
 		SUM_EDGES_NOT_ZERO,
 		NO_SOLOUTION,
-		MISSING_SIZE
+		MISSING_SIZE,
+		WRONG_FORMET
 };
 
 class Error{
 private:
 	ErrorType _err;
 	int _extraInt1;
-	string _extraString1;
+	std::string _extraString1;
 public:
 	Error(ErrorType err);
 	Error(ErrorType err, int id);
@@ -42,7 +43,7 @@ private:
 	static ErrorList* _errors;
 	std::vector<Error> _errVec;
 	ErrorList();
-	virtual ~ErrorList();
+	//virtual ~ErrorList();
 
 public:
 	static ErrorList* getErrorList();

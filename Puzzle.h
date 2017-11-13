@@ -12,11 +12,11 @@
 #include "Exceptions.h"
 #include <vector>
 #include <string.h>
+#include <string>
 using namespace std;
 
 //TODO: how to output the errors in the needed order?
 
-#define NUM_ELEMNTS = "NumElements"
 
 class Puzzle{
 //members:

@@ -7,11 +7,11 @@
  */
 
 #include "Puzzle.h"
+#include "const.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
-
 //constructors:
 
 /*
@@ -48,10 +48,11 @@ void Puzzle::buildPuzzleFromFile(const string& fileName){
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
 	err = parseFirstLine(line);
 
-	if (err!= NULL){
+	if (err!= nullptr){
 		errList.add(err);
 	}
 	_pieces.resize(_size);
+	numPieces = _size;
 	//TODO: what if failed reading size? fix this!
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
@@ -69,9 +70,24 @@ void Puzzle::buildPuzzleFromFile(const string& fileName){
 	}
 }
 
-Error Puzzle::parseFirstLine(string line){
-	size_t find = line.find(NUM_ELEMNTS);
-	if
+Error Puzzle::parseFirstLine(std::string line){
+	ErrorList* errList = ErrorList::getErrorList();
+	std::string num;
+	std::size_t const foundS = line.find("NumElements");
+	std::size_t const foundEq = line.find("="), foundS);
+	//Make sure format is ok:
+	if (foundS ==std::string::npos || foundEq == std::string::npos){
+		(*errList).add(Error(WRONG_FORMET, line));
+	}
+	//Read the number:
+	std::size_t const n = line.find_first_of("0123456789");
+	if (n != std::string::npos)
+	{
+	  std::size_t const m = line.find_first_not_of("0123456789", n);
+	  num = line.substr(n, m != std::string::npos ? m-n : m);
+	  //_size = std::stoi(num, m-n);
+  }
+
 }
 
 /// global error vector
