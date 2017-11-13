@@ -1,5 +1,6 @@
 #pragma once
 
+#define INVALID_PIECE_ID -9
 
 extern int numPieces;
 enum Constraints { FEMALE = -1, STRAIGHT = 0, MALE = 1, NONE = 9};

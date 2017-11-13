@@ -9,6 +9,7 @@
 #include <cstring>
 #include<cstdlib>
 #include "const.h"
+#include "Exceptions.h"
 
 #define ALTERNATIVE_ZERO_STRING "8"
 #define ALTERNATIVE_ZERO_INT 8

@@ -58,7 +58,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	while(getline(fin,line)){
 		curr = PuzzlePiece(line);
 		//assuming the PuzzlePiece constructor returns nullptr if failed completly
-		if (curr.getId() == -1){
+		if (curr.getId() == INVALID_PIECE_ID){
 			continue;
 		}
 		if (curr.getId( )> _size){

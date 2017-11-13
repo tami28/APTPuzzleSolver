@@ -26,6 +26,7 @@ PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
  * constructor for a Piece object from a line in the text file.
  */
 PuzzlePiece::PuzzlePiece(string inputFileLine) {
+    ErrorList* errList = ErrorList::getErrorList();
     size_t currDelimPos, prvDelimPos=0;
     int argsCount = 0;
     string lineDelimiter = " ";
@@ -33,8 +34,9 @@ PuzzlePiece::PuzzlePiece(string inputFileLine) {
     while ((currDelimPos = prvDelimPos + inputFileLine.find(lineDelimiter)) != string::npos){
         argsCount +=1;
         if (argsCount > 5) {
-            //TODO:  handle error here
-            id = -1;
+            //More than 5 numbers in line --> invalid piece representation.
+            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
+            id = INVALID_PIECE_ID;
             break;
         }
         char* paramstr =(char*) inputFileLine.substr(prvDelimPos, currDelimPos).c_str();
@@ -43,17 +45,21 @@ PuzzlePiece::PuzzlePiece(string inputFileLine) {
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
         }
         param = atoi(paramstr);
-        if (param == 0){}//TODO: handle atoi exception (bad line)
+        if (param == 0){
+            //One of the parameters given in the input line was not an int --> invalid piece representation.
+            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
+        }
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
 
         args[argsCount-1] = param;
         if (argsCount == 1 && (param < 1 || param > numPieces)) {
-                //TODO: handle bad piece-index err
+            //Piece-index given in file line is invalid:
+
         }
         else if (param != Constraints::MALE &&
                  param != Constraints::FEMALE &&
                  param != Constraints::STRAIGHT) {
-            //todo: handle bad piece error
+            (*ErrorList::getErrorList()).add(Error(WRONG_PIECE_FORMAT, inputFileLine));
         }
         prvDelimPos = currDelimPos+1;
     }
