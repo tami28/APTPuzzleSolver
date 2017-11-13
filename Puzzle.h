@@ -16,19 +16,12 @@ using namespace std;
 
 //TODO: how to output the errors in the needed order?
 
-/*
- * Class Puzzle:
-constructor(file)?
-Check initial valid puzzle (from reading to array)
-Check valid pieces puzzle - corners, sum edges wrong # of straight edges..
- *
- */
+#define NUM_ELEMNTS = "NumElements"
 
 class Puzzle{
 //members:
 private:
 	vector<PuzzlePiece> _pieces;
-	vector<Error> _errors;
 	int _size;
 	int _numEdges[4]; //for each one of the sides..
 	//TODO: represent here possible corners?
@@ -41,7 +34,7 @@ public:
 	//destructors:
 	//TODO!
 
-	Error buildPuzzleFromFile(const string& fileName);
+	void buildPuzzleFromFile(const string& fileName);
 
 private:
 	Error sumEdges();
