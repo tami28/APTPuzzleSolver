@@ -56,16 +56,14 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	while(getline(fin,line)){
-		curr = PuzzlePiece(line);
-		//assuming the PuzzlePiece constructor returns nullptr if failed completly
-		if (curr.getId() == -1){
-			continue;
+		try {
+			curr = PuzzlePiece(line);
+			_pieces[curr.getId()-1] = curr;
 		}
-		if (curr.getId( )> _size){
-			(*errList).add(Error(WRONG_PIECE_ID, curr.getId()));
+		catch (Error e) {
+			(*ErrorList::getErrorList()).add(e);
 			continue;
-		}
-		_pieces[curr.getId()-1] = curr;
+		};
 	}
 	fin.close();
 }
@@ -87,4 +85,11 @@ void Puzzle::parseFirstLine(std::string line){
 	  _size = atoi(num.c_str());
 	}
 
+}
+
+/*
+ * get (by value) the piece at index i in the puzzle.
+ */
+PuzzlePiece Puzzle::getPieceAt(int i){
+	return _pieces[i];
 }

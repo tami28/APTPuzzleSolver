@@ -9,6 +9,7 @@
 #include <cstring>
 #include<cstdlib>
 #include "const.h"
+#include "Exceptions.h"
 
 #define ALTERNATIVE_ZERO_STRING "8"
 #define ALTERNATIVE_ZERO_INT 8
@@ -21,14 +22,14 @@ using namespace std;
 class PuzzlePiece {
     int id;
     Constraints edges[4];
+
 public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
-    PuzzlePiece(string inputFileLine); //c'tor from file-line
+    PuzzlePiece(const std::string inputFileLine); //c'tor from file-line
 
     int getId();
     Constraints getEdge(Edge edge); //TODO: return int* ??...
-    //void setPosition(const int x, const int y);
     bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
 };
 

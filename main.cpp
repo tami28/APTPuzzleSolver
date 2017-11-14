@@ -8,7 +8,7 @@
 #include "Puzzle.h"
 
 int main(){
-	string line = "2 -1 0 1 -1";
+	std::string line = "2 -1 0 1 -1";
     PuzzlePiece pp = PuzzlePiece(line);
     printf("dine");
 
