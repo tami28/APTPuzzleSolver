@@ -44,7 +44,7 @@ void Puzzle::sumEdges(){
 
 void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	ifstream fin(fileName);
-	string line;
+	std::string line;
 	ErrorList* errList = ErrorList::getErrorList();
 	PuzzlePiece curr;
 	getline(fin, line);

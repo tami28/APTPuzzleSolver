@@ -26,7 +26,7 @@ PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
 /*
  * constructor for a Piece object from a line in the text file.
  */
-PuzzlePiece::PuzzlePiece(const std::string inputFileLine) {
+PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
     ErrorList* errList = ErrorList::getErrorList();
     size_t currDelimPos, prvDelimPos=0;
     int argsCount = 0;
@@ -43,7 +43,8 @@ PuzzlePiece::PuzzlePiece(const std::string inputFileLine) {
             //More than 5 numbers in line --> invalid piece representation.
             throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
-        char* paramstr =(char*) inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).c_str();
+        char* paramstr =new char[inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).length() + 1];
+        std::strcpy(paramstr,inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).c_str() );
         // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's error value being 0.
         if (strcmp(paramstr,"0") == 0){
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
