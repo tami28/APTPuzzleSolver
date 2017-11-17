@@ -23,8 +23,6 @@ int numPieces; //initialization of global variable.
  * initialize basic Puzzle
  */
 Puzzle::Puzzle() {
-	_size = 0;
-	memset(_numEdges,0, sizeof(_numEdges));
 }
 
 /*
@@ -35,20 +33,15 @@ Puzzle::Puzzle(string fileName){
 }
 
 
-void Puzzle::sumEdges(){
-	if(_numEdges[LEFT] != _numEdges[RIGHT] || _numEdges[TOP] != _numEdges[BOTTOM]){
-		 (*(ErrorList::getErrorList())).add(Error(SUM_EDGES_NOT_ZERO));
-	}
-}
-
-
 void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	ifstream fin(fileName);
 	std::string line;
 	ErrorList* errList = ErrorList::getErrorList();
 	PuzzlePiece curr;
 	getline(fin, line);
+	int totalSum = 0;
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
+
 	parseFirstLine(line);
 	_pieces.resize(_size);
 	numPieces = _size;
@@ -58,14 +51,27 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	while(getline(fin,line)){
 		try {
 			curr = PuzzlePiece(line);
-			_pieces[curr.getId()-1] = curr;
+			int i = addPiece(curr);
+			if (i == ILLEGAL_PIECE){
+				continue; //TODO
+			}
+			totalSum +=i;
 		}
 		catch (Error e) {
 			(*ErrorList::getErrorList()).add(e);
 			continue;
 		};
 	}
+
 	fin.close();
+	if(0 != totalSum){
+		(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
+	}
+	for (int i=TL; i!= LAST_C; i++){
+		if(0 == _corners[i]){
+			(*ErrorList::getErrorList()).add(Error(MISSING_CORNER, i));
+		}
+	}
 }
 
 void Puzzle::parseFirstLine(std::string line){
@@ -92,4 +98,36 @@ void Puzzle::parseFirstLine(std::string line){
  */
 PuzzlePiece Puzzle::getPieceAt(int i){
 	return _pieces[i];
+}
+
+int Puzzle::addPiece(PuzzlePiece &piece) {
+	if (0 >= piece.getId()){
+		return ILLEGAL_PIECE;
+	}
+	int sum =0;
+	_pieces[piece.getId() -1] = piece;
+	for (int edge = LEFT; edge != LAST; ++edge){
+		if(0 == piece.getEdge((Edge)edge)){
+			_numEdges[edge]++;
+
+		}
+		sum += piece.getEdge((Edge)edge);
+	}
+
+	//check corners:
+	//<TL><TR><BL><BR>
+	if ((0== piece.getEdge(TOP)) && (0==piece.getEdge(LEFT))){
+		_corners[TL]++;
+	}
+	if ((0== piece.getEdge(TOP)) && (0==piece.getEdge(RIGHT))){
+		_corners[TR]++;
+	}
+	if ((0== piece.getEdge(BOTTOM)) && (0==piece.getEdge(LEFT))){
+		_corners[BL]++;
+	}
+	if ((0== piece.getEdge(BOTTOM)) && (0==piece.getEdge(RIGHT))){
+		_corners[BR]++;
+	}
+	return sum;
+
 }
