@@ -37,13 +37,13 @@ void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdg
                                                 int neighbourRow, int neighbourCol) {
     switch (piece->getEdge(pieceEdgeToUpdateBy)) {
         case STRAIGHT:
-            matrix[neighbourRow - 1][neighbourCol].constraints[neighbourEdgeToUpdate] = STRAIGHT;
+            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = STRAIGHT;
             break;
         case MALE:
-            matrix[neighbourRow - 1][neighbourCol].constraints[neighbourEdgeToUpdate] = FEMALE;
+            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = FEMALE;
             break;
         case FEMALE:
-            matrix[neighbourRow - 1][neighbourCol].constraints[neighbourEdgeToUpdate] = MALE;
+            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = MALE;
             break;
     }
 }
@@ -57,16 +57,16 @@ void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdg
 void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, int row, int col){
     matrix[row][col].piece = piece;
     //Update constraints of neighbours:
-    if (row > 0){//cell has a neighbour below
-        UpdateConstraintsOfNeighbour(piece, BOTTOM, TOP, row-1, col);
+    if (row > 0){//cell has a neighbour above
+        UpdateConstraintsOfNeighbour(piece, TOP, BOTTOM, row-1, col);
         }
-    if (row < nrows){//cell has a neighbour above
-        UpdateConstraintsOfNeighbour(piece, TOP, BOTTOM, row+1, col);
+    if (row < nrows - 1){//cell has a neighbour below
+        UpdateConstraintsOfNeighbour(piece, BOTTOM, TOP, row+1, col);
     }
     if (col > 0){//cell has a neighbour on the left
         UpdateConstraintsOfNeighbour(piece, LEFT, RIGHT, row, col-1);
     }
-    if (col < ncols){//cell has a neighbour on the right
+    if (col < ncols - 1){//cell has a neighbour on the right
         UpdateConstraintsOfNeighbour(piece, RIGHT, LEFT, row, col+1);
     }
 }
@@ -79,6 +79,7 @@ void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, int row, int col){
 /*
  * check if given PuzzlePiece can be fitted to PuzzleMatrix[row][col], according to constraints of that cell.
  * if piece does not fit or cell is full (i.e it's piece pointer != NULL) - returns False, else True.
+ * if every non-NULL constraint matches the edge of the piece --> fits.
  */
 bool PuzzleMatrix::isFit(PuzzlePiece* piece, int row, int col){
     if (matrix[row][col].piece != NULL){
@@ -92,12 +93,12 @@ bool PuzzleMatrix::isFit(PuzzlePiece* piece, int row, int col){
             case (NONE)://the i'th edge of the cell has no constraint.
                 continue;
             case (FEMALE):
-                if (piece->getEdge((Edge) i) != MALE){
+                if (piece->getEdge((Edge) i) != FEMALE){
                     return false;
                 }
                 break;
             case (MALE):
-                if (piece->getEdge((Edge) i) != FEMALE){
+                if (piece->getEdge((Edge) i) != MALE){
                     return false;
                 }
                 break;
