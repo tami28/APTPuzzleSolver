@@ -16,13 +16,15 @@ using namespace std;
 
 //TODO: how to output the errors in the needed order?
 
+#define ILLEGAL_PIECE -5
 
 class Puzzle{
 //members:
 private:
 	vector<PuzzlePiece> _pieces;
-	int _size;
-	int _numEdges[4]; //for each one of the sides..
+	int _size = 0;
+	int _numEdges[4] = {0}; //for each one of the sides..
+	int _corners[4] = {0}; //<TL><TR><BL><BR>
 	//TODO: represent here possible corners?
 //functions:
 public:
@@ -40,6 +42,7 @@ private:
 	void sumEdges();
 	void missingCorner();
 	void parseFirstLine(string line);
+	int addPiece(PuzzlePiece& piece);
 
 };
 

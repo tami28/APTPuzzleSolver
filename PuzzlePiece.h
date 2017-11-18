@@ -11,8 +11,8 @@
 #include "const.h"
 #include "Exceptions.h"
 
-#define ALTERNATIVE_ZERO_STRING "8"
-#define ALTERNATIVE_ZERO_INT 8
+#define ALTERNATIVE_ZERO_STRING "-2"
+#define ALTERNATIVE_ZERO_INT -2
 #define DEFAULT_PIECE_ID -1
 #define DEFAULT_EDGE Constraints::NONE
 
@@ -26,7 +26,7 @@ class PuzzlePiece {
 public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
-    PuzzlePiece(const std::string inputFileLine); //c'tor from file-line
+    PuzzlePiece(const std::string& inputFileLine); //c'tor from file-line
 
     int getId();
     Constraints getEdge(Edge edge); //TODO: return int* ??...
