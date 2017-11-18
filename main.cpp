@@ -6,35 +6,48 @@
  */
 
 #include "Puzzle.h"
+#include "Solver.h"
 #include "PuzzleMatrix.h"
 int main(){
     string infile = "testFile.txt";
-    Puzzle puzzle = Puzzle(infile);
-    int row = 3;
+
+    int row = 2;
     int col=2;
     bool fits;
-    PuzzleMatrix pm = PuzzleMatrix(row,col);
-
-    PuzzlePiece ppiece = (puzzle.getPieceAt(0));
-    fits = pm.isFit(&ppiece, 0,0);
-    if (fits) {pm.assignPieceToCell(&ppiece, 0,0);}
-
-    ppiece = (puzzle.getPieceAt(1));
-    fits = pm.isFit(&ppiece, 0,1);
-    if (fits) {pm.assignPieceToCell(&ppiece, 0,1);}
-
-    ppiece = (puzzle.getPieceAt(2));
-    fits=pm.isFit(&ppiece, 1,0);
-    if (fits) {pm.assignPieceToCell(&ppiece, 1,0);}
-
-    ppiece = (puzzle.getPieceAt(3));
-    fits=pm.isFit(&ppiece, 1,1);
-    if (fits) {pm.assignPieceToCell(&ppiece, 1,1);}
 
 
-    ppiece = (puzzle.getPieceAt(4));
-    fits = pm.isFit(&ppiece, 2,1);
-    if (fits) {pm.assignPieceToCell(&ppiece, 2,1);}
+    Puzzle puzzle = Puzzle("solvable4by5.txt");
+    Solver solver = Solver(puzzle);
+    solver.solve();
+
+
+
+//    puzzle = Puzzle("solvable2by2.txt");
+//    row,col = 2,2;
+//    solver = Solver(puzzle);
+//    PuzzleMatrix pmx = PuzzleMatrix(row,col);
+//    vector<int> indices = {1,2,3,4};
+//    PuzzleMatrix* result = new PuzzleMatrix(row,col);
+//    bool isSolved = solver._solveForSize(pmx ,  indices, result);
+//
+//    puzzle = Puzzle("NOTsolvable2by2.txt");
+//    row,col = 2,2;
+//    solver = Solver(puzzle);
+//    pmx = PuzzleMatrix(row,col);
+//    indices = {1,2,3,4};
+//    result = new PuzzleMatrix(row,col);
+//    isSolved = solver._solveForSize(pmx ,  indices, result);
+//
+//    puzzle = Puzzle("solvable3by2.txt");
+//    row = 3;
+//    col = 2;
+//    solver = Solver(puzzle);
+//    pmx = PuzzleMatrix(row,col);
+//    indices = {1,2,3,4,5,6};
+//    result = new PuzzleMatrix(row,col);
+//    isSolved = solver._solveForSize(pmx ,  indices, result);
+
+
 
     printf("Done\n");
 }

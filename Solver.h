@@ -10,17 +10,25 @@
 
 #include "Puzzle.h"
 #include "const.h"
+#include "PuzzleMatrix.h"
 
 
 class Solver{
 private:
     Puzzle _puzzle;
+    std::vector<int> indices;
+
+
 
 public:
     Solver();
     Solver(Puzzle& p);
-    void setPuzzle(Puzzle& p);
+    //void setPuzzle(Puzzle& p);
+    std::vector<pair<int, int>> getPossiblePuzzleSizes();
 
+    bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* result); //TODO: move back to private
+    void solve();
+    int COUNTER = 0; //todo rm
     //TODO: destructors
 };
 

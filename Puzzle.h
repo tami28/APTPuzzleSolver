@@ -36,7 +36,8 @@ public:
 	//TODO!
 
 	void buildPuzzleFromFile(const string& fileName);
-	PuzzlePiece getPieceAt(int i);
+	PuzzlePiece* getPieceAt(int i);
+    int getSize();
 
 private:
 	void sumEdges();

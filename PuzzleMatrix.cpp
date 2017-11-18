@@ -1,6 +1,7 @@
 //
 // Created by Yoav on 13-Nov-17.
 //
+#include <fstream>
 #include "PuzzleMatrix.h"
 
 
@@ -25,6 +26,26 @@ PuzzleMatrix::PuzzleMatrix(int row, int col){
 
 Constraints PuzzleMatrix::operator()(int row, int col, Edge edge){
         return matrix[row][col].constraints[edge];
+}
+
+
+/*
+ * copy c'tor
+ */
+PuzzleMatrix::PuzzleMatrix(const PuzzleMatrix &other){
+    nrows = other.getNrows();
+    ncols = other.getNcols();
+    this->frontierCells = other.frontierCells;
+    this->matrix = other.matrix;
+}
+
+const int PuzzleMatrix::getNrows() const{
+    const int res = this->nrows;
+    return res;
+}
+const int PuzzleMatrix::getNcols() const{
+    const int res = this->ncols;
+    return res;
 }
 
 
@@ -96,6 +117,14 @@ void PuzzleMatrix::updateFrontiers(int row, int col){
     }
 }
 
+/*
+ * returns iterator to beginning of frontierCells set.
+ */
+std::set<pair<int,int>>::iterator PuzzleMatrix::getFrontierCellsIterator() const{
+    return this->frontierCells.begin();
+};
+
+
 
 
 
@@ -104,7 +133,7 @@ void PuzzleMatrix::updateFrontiers(int row, int col){
  * if piece does not fit or cell is full (i.e it's piece pointer != NULL) - returns False, else True.
  * if every non-NULL constraint matches the edge of the piece --> fits.
  */
-bool PuzzleMatrix::isFit(PuzzlePiece* piece, int row, int col){
+bool PuzzleMatrix:: isFit(PuzzlePiece* piece, int row, int col){
     if (matrix[row][col].piece != NULL){
         return false;
     }
@@ -136,3 +165,32 @@ bool PuzzleMatrix::isFit(PuzzlePiece* piece, int row, int col){
 }
 
 
+void PuzzleMatrix::toFile(string path) {
+    ofstream fout(path);
+    for (int i=0; i<nrows; i++){
+
+        for (int j=0; j<ncols; j++){
+            if (matrix[i][j].piece == NULL) {
+                fout << "NA" << " ";
+                continue;
+            }
+            fout << matrix[i][j].piece->getId() << " ";
+        }
+        if (i < nrows -1 ){fout << endl;}
+    }
+    fout.close();
+}
+
+void PuzzleMatrix::print() {
+    for (int i=0; i<nrows; i++){
+
+        for (int j=0; j<ncols; j++){
+            if (matrix[i][j].piece == NULL) {
+                cout << "N" << " ";
+                continue;
+            }
+            cout << matrix[i][j].piece->getId() << " ";
+        }
+        cout << endl;
+    }
+}

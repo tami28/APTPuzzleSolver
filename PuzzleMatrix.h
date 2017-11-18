@@ -12,7 +12,9 @@
 #include "const.h"
 #include "PuzzlePiece.h"
 #include <vector>
+#include <iostream>
 
+using namespace std;
 
 class PuzzleMatrix{
     int nrows;
@@ -27,11 +29,13 @@ class PuzzleMatrix{
     typedef std::vector<CellArray> CellArray2D;
     CellArray2D matrix;
 
-    std::set<pair<int,int>> frontierCells; //TODO: can change to unorderd_set
+
 
 
 public:
+
     PuzzleMatrix(int row, int col);
+    PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
 
     void UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
@@ -39,6 +43,14 @@ public:
     void assignPieceToCell(PuzzlePiece* piece, int row, int col);
     bool isFit(PuzzlePiece* piece, int row, int col);
     void updateFrontiers(int row, int col);
+    std::set<pair<int,int>>::iterator getFrontierCellsIterator() const;
+    const int getNrows() const;
+    const int getNcols() const;
+
+    std::set<pair<int,int>> frontierCells; //TODO: can change to unorderd_set. needs to be private with appropriate getters..
+
+    void toFile(string path);
+    void print();
 
     //TODO: destructor:
     //~PuzzleMatrix();

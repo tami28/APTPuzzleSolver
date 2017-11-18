@@ -4,6 +4,12 @@
 #include <cstring>
 #include<cstdlib>
 #include <iostream>
+#include <utility>
+#include <algorithm>
+#include <vector>
+#include <unordered_set>
+#include <set>
+#include <math.h>
 
 #define INVALID_PIECE_ID -9
 

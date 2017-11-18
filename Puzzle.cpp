@@ -94,10 +94,10 @@ void Puzzle::parseFirstLine(std::string line){
 }
 
 /*
- * get (by value) the piece at index i in the puzzle.
+ * get (by ref) the piece at index i in the puzzle.
  */
-PuzzlePiece Puzzle::getPieceAt(int i){
-	return _pieces[i];
+PuzzlePiece* Puzzle::getPieceAt(int i){
+	return &(_pieces[i-1]);
 }
 
 int Puzzle::addPiece(PuzzlePiece &piece) {
@@ -130,4 +130,8 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	}
 	return sum;
 
+}
+
+int Puzzle::getSize(){
+	return this->_size;
 }
