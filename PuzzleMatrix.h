@@ -27,13 +27,13 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
-    CellArray2D matrix;
+
 
 
 
 
 public:
-
+    CellArray2D matrix; // TODO: make private again
     PuzzleMatrix(int row, int col);
     PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
@@ -50,6 +50,7 @@ public:
     std::set<pair<int,int>> frontierCells; //TODO: can change to unorderd_set. needs to be private with appropriate getters..
 
     void toFile(string path);
+    string toString();
     void print();
 
     //TODO: destructor:

@@ -17,8 +17,8 @@ class Solver{
 private:
     Puzzle _puzzle;
     std::vector<int> indices;
-
-
+    unordered_set<string> memoizationSet;
+    bool checkSufficientStraightEdges(vector<int> indices, PuzzleMatrix* pm);
 
 public:
     Solver();

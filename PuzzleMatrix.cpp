@@ -194,3 +194,23 @@ void PuzzleMatrix::print() {
         cout << endl;
     }
 }
+
+//TODO: is it ok to return a string this way? no need to allocate it dynamically?
+string PuzzleMatrix::toString(){
+    string s;
+    for (int i=0; i<nrows; i++){
+
+        for (int j=0; j<ncols; j++){
+            if (matrix[i][j].piece == NULL) {
+                s.append("N");
+                s.append(" ");
+                continue;
+            }
+            s.append(std::to_string(matrix[i][j].piece->getId()));
+            s.append(" ");
+        }
+        s.append("\n");
+    }
+    return s;
+
+}
