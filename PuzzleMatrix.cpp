@@ -69,9 +69,32 @@ void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, int row, int col){
     if (col < ncols - 1){//cell has a neighbour on the right
         UpdateConstraintsOfNeighbour(piece, RIGHT, LEFT, row, col+1);
     }
+
+    updateFrontiers(row, col);
 }
 
+void PuzzleMatrix::updateFrontiers(int row, int col){
+    if (row > 0 && matrix[row - 1][col].piece == nullptr){//Given cell has a vacant neighbour above
+        frontierCells.insert(pair<int,int>(row-1,col));
+    }
+    if (row < nrows - 1 && matrix[row+1][col].piece == nullptr){//Given cell has a vacant neighbour below
+        frontierCells.insert(pair<int,int>(row+1,col));
+    }
+    if (col > 0 && matrix[row][col-1].piece == nullptr){//Given cell has a vacant neighbour on the left
+        frontierCells.insert(pair<int,int>(row,col-1));
+    }
+    if (col < ncols - 1 && matrix[row][col+1].piece == nullptr){//Given cell has a vacant neighbour on the right
+        frontierCells.insert(pair<int,int>(row,col+1));
+    }
 
+    //Remove position of inserted cell from frontierCells, if it is there:
+    auto iter = std::find( frontierCells.begin(), frontierCells.end(),
+                           pair<int,int>(row,col) );
+    if (iter != frontierCells.end()){
+        frontierCells.erase(iter);
+
+    }
+}
 
 
 
