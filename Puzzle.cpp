@@ -122,11 +122,7 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
 	for (int edge = LEFT; edge != LAST; ++edge){
-		if(0 == piece.getEdge((Edge)edge)){
-			_numEdges[edge]++;
-			_constraintEdgsMaps[edgeConstraintToInt((Edge) edge,piece.getEdge((Edge)edge) )].push_back(piece);
-
-		}
+		_constraintEdgsMaps[edgeConstraintToInt((Edge) edge,piece.getEdge((Edge)edge) )].push_back(piece);
 		sum += piece.getEdge((Edge)edge);
 	}
 

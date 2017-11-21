@@ -27,7 +27,6 @@ class Puzzle{
 private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
-	int _numEdges[4] = {0}; //for each one of the sides..
 	int _corners[4] = {0}; //<TL><TR><BL><BR>
 	std::map<int, std::vector<PuzzlePiece>> _constraintEdgsMaps;
 	//TODO: represent here possible corners?
