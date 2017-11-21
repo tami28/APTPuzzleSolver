@@ -13,6 +13,7 @@
 #include "PuzzlePiece.h"
 #include <vector>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -38,6 +39,7 @@ public:
     PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
 
+    void updateRequiredCounters(PuzzlePiece* piece, int row, int col);
     void UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
                                                     int neighbourRow, int neighbourCol);
     void assignPieceToCell(PuzzlePiece* piece, int row, int col);
@@ -52,6 +54,10 @@ public:
     void toFile(string path);
     string toString();
     void print();
+
+
+    std::map<Constraints , int> requiredCounters;
+
 
     //TODO: destructor:
     //~PuzzleMatrix();

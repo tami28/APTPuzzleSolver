@@ -22,6 +22,10 @@ PuzzleMatrix::PuzzleMatrix(int row, int col){
             }
         }
     }
+    requiredCounters[STRAIGHT] = 2*nrows + 2*ncols;
+    requiredCounters[MALE] = 0;
+    requiredCounters[FEMALE] = 0;
+
 }
 
 Constraints PuzzleMatrix::operator()(int row, int col, Edge edge){
@@ -35,6 +39,7 @@ Constraints PuzzleMatrix::operator()(int row, int col, Edge edge){
 PuzzleMatrix::PuzzleMatrix(const PuzzleMatrix &other){
     nrows = other.getNrows();
     ncols = other.getNcols();
+    this->requiredCounters = other.requiredCounters;
     this->frontierCells = other.frontierCells;
     this->matrix = other.matrix;
 }
@@ -56,7 +61,7 @@ const int PuzzleMatrix::getNcols() const{
  */
 void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
                                                 int neighbourRow, int neighbourCol) {
-    switch (piece->getEdge(pieceEdgeToUpdateBy)) {
+    switch (piece->getConstraint(pieceEdgeToUpdateBy)) {
         case STRAIGHT:
             matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = STRAIGHT;
             break;
@@ -91,9 +96,52 @@ void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, int row, int col){
         UpdateConstraintsOfNeighbour(piece, RIGHT, LEFT, row, col+1);
     }
 
+
+
+    updateRequiredCounters(piece, row, col);
     updateFrontiers(row, col);
 }
 
+
+void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, int row, int col){
+    //If piece was placed at edge of matrix, update requiredStraights:
+    if (row == 0 || row == this->nrows -1) { this->requiredCounters[STRAIGHT]--; }
+    if (col == 0 || col == this->ncols -1) { this->requiredCounters[STRAIGHT]--; }
+
+    if (row > 0) {//Given cell has a neighbour above
+        if (matrix[row - 1][col].piece == nullptr) // The neighbour is vacant
+            this->requiredCounters[piece->getOppositeConstraint(TOP)]++;
+        else // The neighbour is NOT vacant
+            this->requiredCounters[piece->getConstraint(TOP)]--;
+    }
+    if (row < nrows - 1){//Given cell has a neighbour below
+        if (matrix[row+1][col].piece == nullptr) // The neighbour is vacant
+            this->requiredCounters[piece->getOppositeConstraint(BOTTOM)]++;
+        else // The neighbour is NOT vacant
+            this->requiredCounters[piece->getConstraint(BOTTOM)]--;
+    }
+    if (col > 0){//Given cell has a neighbour on the left
+        if (matrix[row][col-1].piece == nullptr) // The neighbour is vacant
+            this->requiredCounters[piece->getOppositeConstraint(LEFT)]++;
+        else // The neighbour is NOT vacant
+            this->requiredCounters[piece->getConstraint(LEFT)]--;
+    }
+    if (col < ncols - 1 ){//Given cell has a neighbour on the right
+        if (matrix[row][col+1].piece == nullptr) // The neighbour is vacant
+            this->requiredCounters[piece->getOppositeConstraint(RIGHT)]++;
+        else // The neighbour is NOT vacant
+            this->requiredCounters[piece->getConstraint(RIGHT)]--;
+    }
+
+
+}
+
+
+
+
+/*
+ * update list of frontier cells after insertion of a piece to the matrix.
+ */
 void PuzzleMatrix::updateFrontiers(int row, int col){
     if (row > 0 && matrix[row - 1][col].piece == nullptr){//Given cell has a vacant neighbour above
         frontierCells.insert(pair<int,int>(row-1,col));
@@ -145,17 +193,17 @@ bool PuzzleMatrix:: isFit(PuzzlePiece* piece, int row, int col){
             case (NONE)://the i'th edge of the cell has no constraint.
                 continue;
             case (FEMALE):
-                if (piece->getEdge((Edge) i) != FEMALE){
+                if (piece->getConstraint((Edge) i) != FEMALE){
                     return false;
                 }
                 break;
             case (MALE):
-                if (piece->getEdge((Edge) i) != MALE){
+                if (piece->getConstraint((Edge) i) != MALE){
                     return false;
                 }
                 break;
             case (STRAIGHT):
-                if (piece->getEdge((Edge) i) != STRAIGHT){
+                if (piece->getConstraint((Edge) i) != STRAIGHT){
                     return false;
                 }
                 break;

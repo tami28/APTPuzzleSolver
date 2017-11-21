@@ -4,6 +4,8 @@
 
 #include "Solver.h"
 
+
+// #TODO: condider adding an innitial solvability test, to check if there are enough corners/straight edges/sums of male-female etc.
 Solver::Solver(){}; //empty c'tor
 
 Solver::Solver(Puzzle& p){ //c'tor from Puzzle
@@ -35,11 +37,11 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* resultMatrix){
-    //cout << "now attemting :\n" << pm.toString() << endl; // todo rm
+    //cout << "now attempting :\n" << pm.toString() << endl; // todo rm
     //cout << pm.toString() << endl;
-    //cout << "*****************" << endl << endl; todo rm
-    //COUNTER++; //todo rm
-    if (++COUNTER % 100000 == 0){cout << COUNTER << endl;}; //TODO rm
+    //cout << "*****************" << endl << endl; //todo rm
+    COUNTER++; //todo rm
+    //if (COUNTER % 10000 == 0)        {cout << COUNTER << endl;}; //TODO rm
     //if (memoizationSet.size() % 1 == 0){cout << memoizationSet.size() << endl;}; //TODO rm
 
     PuzzlePiece* piece;
@@ -51,7 +53,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
     }
 
     // Testing if pieces at given indices have sufficient straight edges to cover all straight edged that should be covered:
-    if (!checkSufficientStraightEdges(indices, &pm)){
+    if (!checkSufficientConstraints(indices, &pm)){
         return false;
     }
 
@@ -59,7 +61,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
     if (indices.size() == _puzzle.getSize()) {
         for (int pieceIndex : indices){
             piece = _puzzle.getPieceAt(pieceIndex);
-            if (piece->getEdge(TOP) == STRAIGHT && piece->getEdge(LEFT) == STRAIGHT){ // piece can be place at TL
+            if (piece->getConstraint(TOP) == STRAIGHT && piece->getConstraint(LEFT) == STRAIGHT){ // piece can be place at TL
                 PuzzleMatrix new_pm = pm;
                 new_pm.assignPieceToCell(piece, 0, 0);
                 pmAsString = new_pm.toString();
@@ -111,6 +113,7 @@ void Solver::solve(){
     memoizationSet.clear();
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
+    //sizesVec = {pair<int, int>(4,4)}; //todo rm
     vector<int> indices(_puzzle.getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     int i=1;
@@ -138,30 +141,77 @@ void Solver::solve(){
 
 
 /*
- * check if pieces at the given indices have sufficient straight edges to cover all the non-covered
+ * 1.check if pieces at the given indices have sufficient straight edges to cover all the non-covered
  * straight edges in PuzzleMatrix. if not, there's no point to continue exploring this solution.
+ * 2.check sufficient cover of non-covered corners.
+ * 3.check that there are enough make/female/straights in the remaining pieces.
  */
-bool Solver::checkSufficientStraightEdges(vector<int> indices, PuzzleMatrix* pm){
+bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
     int straightLEFTs = 0, straightTOPs = 0, straightRIGHTs = 0, straightBOTTOMs = 0;
     PuzzlePiece* piece;
+    bool TL_corner = false, BL_corner = false, TR_corner = false, BR_corner = false;
+    std::map<Constraints , int> sumConstraints;
     for (auto i: indices){
         piece = _puzzle.getPieceAt(i);
-        if (piece->getEdge(LEFT) == STRAIGHT) {straightLEFTs++;}
-        if (piece->getEdge(TOP) == STRAIGHT) {straightTOPs++;}
-        if (piece->getEdge(RIGHT) == STRAIGHT) {straightRIGHTs++;}
-        if (piece->getEdge(BOTTOM) == STRAIGHT) {straightBOTTOMs++;}
+        if (piece->getConstraint(LEFT) == STRAIGHT) {
+            straightLEFTs++;
+            if ((!TL_corner) && piece->getConstraint(TOP) == STRAIGHT) { TL_corner = true;}
+            if ((!BL_corner) && piece->getConstraint(BOTTOM) == STRAIGHT) { BL_corner = true;}
+        }
+        if (piece->getConstraint(TOP) == STRAIGHT) {straightTOPs++;}
+        if (piece->getConstraint(RIGHT) == STRAIGHT) {
+            straightRIGHTs++;
+            if ((!TR_corner) && piece->getConstraint(TOP) == STRAIGHT) { TR_corner = true;}
+            if ((!BR_corner) && piece->getConstraint(BOTTOM) == STRAIGHT) { BR_corner = true;}
+        }
+        if (piece->getConstraint(BOTTOM) == STRAIGHT) {straightBOTTOMs++;}
+
+        sumConstraints[piece->getConstraint(LEFT)]++;
+        sumConstraints[piece->getConstraint(TOP)]++;
+        sumConstraints[piece->getConstraint(RIGHT)]++;
+        sumConstraints[piece->getConstraint(BOTTOM)]++;
     }
+
+    for (int c = FEMALE; c <= MALE; c++)
+        {
+            if (sumConstraints[(Constraints) c] < pm->requiredCounters[(Constraints) c])
+            {
+//                cout << "\nconstraints mismatch in matrix: \n" << endl; //todo: rm
+//                pm->print(); //todo: rm
+//                cout << "\nindices:";
+//                for (auto i: indices) {cout <<i<< " ";}
+//                cout << "\n";
+                return false;
+            }
+        }
+
+
+    bool TL_required = (pm->matrix[0][0].piece == NULL),
+         BL_required = (pm->matrix[pm->getNrows()-1][0].piece == NULL),
+         TR_required = (pm->matrix[0][pm->getNcols()-1].piece == NULL),
+         BR_required = (pm->matrix[pm->getNrows()-1][pm->getNcols()-1].piece == NULL);
+    if (BL_required && (!BL_corner) ||
+        BR_required && (!BR_corner) ||
+        TR_required && (!TR_corner) ||
+        TL_required && (!TL_corner) ) {
+            //cout << "corner redundancy in matrix: \n" << endl; todo: rm
+            //pm->print(); todo: rm
+            return false;
+    }
+
+
     int requiredStraightUps=0,requiredStraightBottoms=0,requiredStraightLeft=0,requiredStraightRights=0;
     for (int i=0; i<pm->getNcols(); i++) {
-        if (pm->matrix[0][i].piece == NULL){requiredStraightUps++;}
-        if (pm->matrix[pm->getNrows() - 1][i].piece == NULL){requiredStraightBottoms++;}
+        if (pm->matrix[0][i].piece == nullptr){requiredStraightUps++;}
+        if (pm->matrix[pm->getNrows() - 1][i].piece == nullptr){requiredStraightBottoms++;}
     }
     for (int i=1; i<pm->getNrows()-1; i++) {
-        if (pm->matrix[i][0].piece == NULL){requiredStraightLeft++;}
-        if (pm->matrix[i][pm->getNcols() - 1].piece == NULL){requiredStraightRights++;}
+        if (pm->matrix[i][0].piece == nullptr){requiredStraightLeft++;}
+        if (pm->matrix[i][pm->getNcols() - 1].piece == nullptr){requiredStraightRights++;}
     }
     if (straightRIGHTs < requiredStraightRights || straightTOPs < requiredStraightUps ||
         straightLEFTs < requiredStraightLeft || straightBOTTOMs < requiredStraightBottoms )
         return false;
     return true;
 }
+

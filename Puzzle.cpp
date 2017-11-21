@@ -15,7 +15,6 @@
 #include <string>
 
 
-
 int numPieces; //initialization of global variable.
 
 //constructors:
@@ -122,22 +121,22 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
 	for (int edge = LEFT; edge != LAST; ++edge){
-		_constraintEdgsMaps[edgeConstraintToInt((Edge) edge,piece.getEdge((Edge)edge) )].push_back(piece);
-		sum += piece.getEdge((Edge)edge);
+		_constraintEdgsMaps[edgeConstraintToInt((Edge) edge, piece.getConstraint((Edge) edge) )].push_back(piece);
+		sum += piece.getConstraint((Edge) edge);
 	}
 
 	//check corners:
 	//<TL><TR><BL><BR>
-	if ((0== piece.getEdge(TOP)) && (0==piece.getEdge(LEFT))){
+	if ((0== piece.getConstraint(TOP)) && (0== piece.getConstraint(LEFT))){
 		_corners[TL]++;
 	}
-	if ((0== piece.getEdge(TOP)) && (0==piece.getEdge(RIGHT))){
+	if ((0== piece.getConstraint(TOP)) && (0== piece.getConstraint(RIGHT))){
 		_corners[TR]++;
 	}
-	if ((0== piece.getEdge(BOTTOM)) && (0==piece.getEdge(LEFT))){
+	if ((0== piece.getConstraint(BOTTOM)) && (0== piece.getConstraint(LEFT))){
 		_corners[BL]++;
 	}
-	if ((0== piece.getEdge(BOTTOM)) && (0==piece.getEdge(RIGHT))){
+	if ((0== piece.getConstraint(BOTTOM)) && (0== piece.getConstraint(RIGHT))){
 		_corners[BR]++;
 	}
 	return sum;

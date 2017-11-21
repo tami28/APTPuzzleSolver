@@ -100,6 +100,17 @@ bool PuzzlePiece::canConnect(PuzzlePiece other, Edge edge){
 }
 
 
-Constraints PuzzlePiece::getEdge(Edge edge){
+Constraints PuzzlePiece::getConstraint(Edge edge){
     return this->edges[edge];
+}
+
+Constraints PuzzlePiece::getOppositeConstraint(Edge edge){
+    switch (this->edges[edge]){
+        case MALE:
+            return FEMALE;
+        case FEMALE:
+            return MALE;
+        case STRAIGHT:
+            return STRAIGHT;
+    }
 }

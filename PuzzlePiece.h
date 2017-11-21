@@ -29,7 +29,8 @@ public:
     PuzzlePiece(const std::string& inputFileLine); //c'tor from file-line
 
     int getId();
-    Constraints getEdge(Edge edge); //TODO: return int* ??...
+    Constraints getConstraint(Edge edge);
+    Constraints getOppositeConstraint(Edge edge);
     bool canConnect(PuzzlePiece other, Edge edge); //can connect with other on given edge
 };
 

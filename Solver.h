@@ -18,7 +18,7 @@ private:
     Puzzle _puzzle;
     std::vector<int> indices;
     unordered_set<string> memoizationSet;
-    bool checkSufficientStraightEdges(vector<int> indices, PuzzleMatrix* pm);
+    bool checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm);
 
 public:
     Solver();
