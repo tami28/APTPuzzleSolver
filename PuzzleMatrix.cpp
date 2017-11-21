@@ -260,26 +260,42 @@ string PuzzleMatrix::toString(){
         s.append("\n");
     }
     return s;
-
 }
 
 
-void PuzzleMatrix::constraintsOfCell(int i, int j, char res[]){
+
+void PuzzleMatrix::constraintsOfCell(int i, int j, char res[]) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
-    if (j == 0){
+    if (j == 0) {
         res[0] == STRAIGHT;
-    }else{
-        res[0] = matrix[i][j-1].piece->getConstraint(LEFT);
+    } else {
+        res[0] = matrix[i][j - 1].piece->getConstraint(LEFT);
     }
-    if (j==(ncols-1)){
+    if (j == (ncols - 1)) {
         res[2] == STRAIGHT;
     }
-    if (i == 0){
+    if (i == 0) {
         res[1] = STRAIGHT;
-    } else{
-        res[1] = matrix[i-1][j].piece->getConstraint(BOTTOM);
+    } else {
+        res[1] = matrix[i - 1][j].piece->getConstraint(BOTTOM);
     }
-    if (i==(nrows-1)){
+    if (i == (nrows - 1)) {
         res[3] == STRAIGHT;
     }
+}
+
+string PuzzleMatrix::encode(){
+    string s;
+    for (int i=0; i<nrows; i++){
+        for (int j=0; j<ncols; j++){
+            if (matrix[i][j].piece == NULL) {
+                s.append("N");
+                s.append("|");
+                continue;
+            }
+            s.append(std::to_string(matrix[i][j].piece->getEncoding()));
+            s.append("|");
+        }
+    }
+    return s;
 }

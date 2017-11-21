@@ -49,6 +49,7 @@ public:
 
     void toFile(string path);
     string toString();
+    string encode();
     void print();
 
     std::map<Constraints , int> requiredCounters;

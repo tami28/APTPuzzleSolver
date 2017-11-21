@@ -29,6 +29,7 @@ public:
     bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* result); //TODO: move back to private
     void solve();
     int COUNTER = 0; //todo rm
+    int COUNT_MEMOIZATION_SUCCESSES=0; //todo rm
     //TODO: destructors
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
