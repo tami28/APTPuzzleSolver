@@ -12,11 +12,15 @@
 #include "Exceptions.h"
 #include <vector>
 #include <string.h>
+#include <map>
 using namespace std;
 
 //TODO: how to output the errors in the needed order?
 
 #define ILLEGAL_PIECE -5
+
+
+inline int edgeConstraintToInt(Edge e, Constraints c){return e*10+c;};
 
 class Puzzle{
 //members:
@@ -25,6 +29,7 @@ private:
 	int _size = 0;
 	int _numEdges[4] = {0}; //for each one of the sides..
 	int _corners[4] = {0}; //<TL><TR><BL><BR>
+	std::map<int, std::vector<PuzzlePiece>> _constraintEdgsMaps;
 	//TODO: represent here possible corners?
 //functions:
 public:
@@ -38,6 +43,7 @@ public:
 	void buildPuzzleFromFile(const string& fileName);
 	PuzzlePiece* getPieceAt(int i);
     int getSize();
+    std::map<int, std::vector<PuzzlePiece>>* getEdgeConstraintsMap();
 
 private:
 	void sumEdges();
