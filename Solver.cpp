@@ -186,20 +186,22 @@ void Solver::solve(){
     PuzzleMatrix* solution;
     // Try and solve for every puzzle size:
     COUNTER=0; //todo rm
+    PuzzleMatrix pm(0,0);//TODO TAMI
     for (auto size : sizesVec){
         row = size.first;
         col = size.second;
         solution = new PuzzleMatrix(row,col);
         //cout << "In Solver. now trying size: " << row << " "<<col << endl; //TODO rm
-        PuzzleMatrix pm = PuzzleMatrix(row, col);
+        pm = PuzzleMatrix(row, col);
 
-        solved = _solveForSize(pm, indices, solution, 0, 0); // Found a solution for size (row,col)
+        solved = _solveForSize(pm, indices, solution, 0, 0); // Found a solution for size (row,col) //TODO: TAMI
         if (solved) {
             break;
         } else {delete solution;}
     }
     if (solved){
-        solution->toFile("SOLUTION.txt"); //TODO: rename this file?
+        //solution->toFile("SOLUTION.txt"); //TODO: rename this file?
+        pm.toFile("SOLUTION.txt");
         delete solution;
     }
 
@@ -282,10 +284,11 @@ bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
 }
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col) {
-    if(row == (pm.getNrows()-1) && col==(pm.getNcols()-1) && indices.empty()){
+    if(row == (pm.getNrows()) && col== 0 && indices.empty()){
+        result = &pm;
         return true;
     }
-    char consts[4] = {NONE};
+    char consts[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(row,col,consts);
     for (int i :indices){
         if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts)){
@@ -311,7 +314,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
 
 bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
     for(int e = LEFT; e <= BOTTOM; ++e){
-        if (!((int)piece.getConstraint((Edge)e) == (int)constraints[e] || constraints[e] == NONE)) {
+        if (!(0 == ((int)piece.getConstraint((Edge)e) +(int)constraints[e]) || constraints[e] == NONE)) {
             return false;
         }
     }

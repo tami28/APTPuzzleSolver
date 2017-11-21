@@ -28,7 +28,6 @@ private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
 	int _corners[4] = {0}; //<TL><TR><BL><BR>
-	std::map<int, std::vector<PuzzlePiece>> _constraintEdgsMaps;
 	//TODO: represent here possible corners?
 //functions:
 public:
@@ -42,11 +41,8 @@ public:
 	void buildPuzzleFromFile(const string& fileName);
 	PuzzlePiece* getPieceAt(int i);
     int getSize();
-    std::map<int, std::vector<PuzzlePiece>>* getEdgeConstraintsMap();
 
 private:
-	void sumEdges();
-	void missingCorner();
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);
 

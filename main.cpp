@@ -10,13 +10,16 @@
 #include "PuzzleMatrix.h"
 int main(){
     string infile = "testFile.txt";
+#if DEBUG
+    printf("IN DEBUG MODE!!!!\n");
+#endif
 
     int row = 2;
     int col=2;
     bool fits;
 
 
-    Puzzle puzzle = Puzzle("solvable4by5.txt");
+    Puzzle puzzle = Puzzle("..\\tests\\TEST12.txt");
     Solver solver = Solver(puzzle);
     solver.solve();
 

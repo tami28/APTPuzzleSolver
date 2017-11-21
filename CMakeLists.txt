@@ -5,3 +5,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # enable C++11 standard
 set(SOURCE_FILES main.cpp PuzzlePiece.cpp Exceptions.cpp Puzzle.cpp PuzzleMatrix.cpp Solver.cpp)
 set(HEADER_FILES PuzzlePiece.h Exceptions.h Puzzle.h const.h Solver.h PuzzleMatrix.h)
 add_executable(APTPuzzleSolver ${SOURCE_FILES})
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+add_definitions(-DDEBUG=1)
+endif()
+

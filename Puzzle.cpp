@@ -22,26 +22,12 @@ int numPieces; //initialization of global variable.
 /*
  * initialize basic Puzzle
  */
-Puzzle::Puzzle() {
-	for (int e = LEFT; e!= LAST; ++e){
-		for (int c=FEMALE; c!= NONE; ++c){
-			_constraintEdgsMaps[edgeConstraintToInt((Edge)e,(Constraints)c)] =  std::vector<PuzzlePiece>();
-		}
-
-	}
-
-}
+Puzzle::Puzzle() {}
 
 /*
  * initialize Puzzle from file:
  */
 Puzzle::Puzzle(string fileName){
-	for (int e = LEFT; e!= LAST; ++e){
-		for (int c=FEMALE; c!= NONE; ++c){
-			_constraintEdgsMaps[edgeConstraintToInt((Edge)e,(Constraints)c)] =  std::vector<PuzzlePiece>();
-		}
-
-	}
 
 	Puzzle::buildPuzzleFromFile(fileName);
 }
@@ -121,7 +107,6 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
 	for (int edge = LEFT; edge != LAST; ++edge){
-		_constraintEdgsMaps[edgeConstraintToInt((Edge) edge, piece.getConstraint((Edge) edge) )].push_back(piece);
 		sum += piece.getConstraint((Edge) edge);
 	}
 
@@ -146,6 +131,3 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 int Puzzle::getSize(){
 	return this->_size;
 }
-std::map<int, std::vector<PuzzlePiece>>* Puzzle::getEdgeConstraintsMap(){
-	return &_constraintEdgsMaps;
-};

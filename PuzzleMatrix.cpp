@@ -264,23 +264,25 @@ string PuzzleMatrix::toString(){
 
 
 
-void PuzzleMatrix::constraintsOfCell(int i, int j, char res[]) {
+void PuzzleMatrix::constraintsOfCell(int i, int j, char* res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (j == 0) {
-        res[0] == STRAIGHT;
+        std::cout <<"here\n";
+        res[LEFT] = STRAIGHT;
     } else {
-        res[0] = matrix[i][j - 1].piece->getConstraint(LEFT);
+        res[LEFT] = matrix[i][j - 1].piece->getConstraint(RIGHT);
     }
     if (j == (ncols - 1)) {
-        res[2] == STRAIGHT;
+        res[RIGHT] = STRAIGHT;
     }
     if (i == 0) {
-        res[1] = STRAIGHT;
+        res[TOP] = STRAIGHT;
     } else {
-        res[1] = matrix[i - 1][j].piece->getConstraint(BOTTOM);
+        res[TOP] = matrix[i - 1][j].piece->getConstraint(BOTTOM);
     }
+
     if (i == (nrows - 1)) {
-        res[3] == STRAIGHT;
+        res[BOTTOM] = STRAIGHT;
     }
 }
 
