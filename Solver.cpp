@@ -142,9 +142,9 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
 
 
     for (int pieceIndex : indices){
+        piece = _puzzle.getPieceAt(pieceIndex);
         for (pair<int,int> frontierCell : pm.frontierCells){
             // Attempt to insert piece at index pieceIndex to frontierCell:
-            piece = _puzzle.getPieceAt(pieceIndex);
             if (pm.isFit(piece, frontierCell.first, frontierCell.second)){
                 PuzzleMatrix new_pm = pm;
                 new_pm.assignPieceToCell(piece, frontierCell.first, frontierCell.second);
