@@ -22,9 +22,13 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
     vector<pair<int,int>> result;
     int sqr = (int) sqrt(puzzleSize) + 1;
     for (int i = 1; i < sqr; i++) {
-        if (puzzleSize % i == 0)
-           result.push_back(pair<int,int>(i, puzzleSize/i));
-           result.push_back(pair<int,int>(puzzleSize/i,i)); //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
+        if (puzzleSize % i == 0) {
+            result.push_back(pair<int, int>(i, puzzleSize / i));
+            if (i != puzzleSize / i) {
+                result.push_back(pair<int, int>(puzzleSize / i,
+                                                i)); //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
+            }
+        }
     }
     return result;
 }
@@ -74,6 +78,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
         }
     }
 
+
+
     for (int pieceIndex : indices){
         for (pair<int,int> frontierCell : pm.frontierCells){
             // Attempt to insert piece at index pieceIndex to frontierCell:
@@ -83,7 +89,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
                 new_pm.assignPieceToCell(piece, frontierCell.first, frontierCell.second);
                 pmAsString = new_pm.toString();
                 if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
-                     continue;
+                    continue;
                 }
                 else {
                     memoizationSet.insert(pmAsString);
