@@ -260,5 +260,20 @@ string PuzzleMatrix::toString(){
         s.append("\n");
     }
     return s;
+}
 
+string PuzzleMatrix::encode(){
+    string s;
+    for (int i=0; i<nrows; i++){
+        for (int j=0; j<ncols; j++){
+            if (matrix[i][j].piece == NULL) {
+                s.append("N");
+                s.append("|");
+                continue;
+            }
+            s.append(std::to_string(matrix[i][j].piece->getEncoding()));
+            s.append("|");
+        }
+    }
+    return s;
 }

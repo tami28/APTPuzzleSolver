@@ -17,9 +17,13 @@ PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), edges{DEFAULT_EDGE,DEFAULT_EDG
  */
 PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
         : id(id) {
+    this->encoding = 0;
     for (int i=0; i<4; i++){
         edges[i] = (Constraints) inputEdges[i];
+        this->encoding +=  (inputEdges[i]+1)*pow(3,i); //encode the shape of the piece as a base-3 number (after increasing value of each edge by 1)
+
     }
+
 }
 
 
@@ -113,4 +117,9 @@ Constraints PuzzlePiece::getOppositeConstraint(Edge edge){
         case STRAIGHT:
             return STRAIGHT;
     }
+}
+
+
+int PuzzlePiece::getEncoding(){
+    return this->encoding;
 }

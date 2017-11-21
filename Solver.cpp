@@ -58,29 +58,86 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
         return false;
     }
 
-    //First iteration (assign TL corner to matrix):
-    if (indices.size() == _puzzle.getSize()) {
-        for (int pieceIndex : indices){
-            piece = _puzzle.getPieceAt(pieceIndex);
-            if (piece->getConstraint(TOP) == STRAIGHT && piece->getConstraint(LEFT) == STRAIGHT){ // piece can be place at TL
-                PuzzleMatrix new_pm = pm;
-                new_pm.assignPieceToCell(piece, 0, 0);
-                pmAsString = new_pm.toString();
 
-                if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
-                    continue;
-                }
-                else {
-                    memoizationSet.insert(pmAsString);
-                }
-                vector<int> new_indices = indices;
-                new_indices.erase(find(new_indices.begin(), new_indices.end(), pieceIndex));
-                if (_solveForSize(new_pm, new_indices, resultMatrix)){
-                    return true;
-                }
-            }
-        }
-    }
+    PuzzlePiece *piece1, *piece2, *piece3, *piece4;
+    //TRY : 4 sides
+    if (indices.size() == _puzzle.getSize()) {
+        for (int piece1Index : indices){
+            piece1 = _puzzle.getPieceAt(piece1Index);
+
+
+            if (piece1->getConstraint(TOP) == STRAIGHT && piece1->getConstraint(LEFT) == STRAIGHT){ // piece can be place at TL
+                vector<int> inds_wo_p1 = indices;
+                inds_wo_p1.erase(find(inds_wo_p1.begin(), inds_wo_p1.end(), piece1Index));
+                for (int piece2Index : inds_wo_p1){
+                    piece2 = _puzzle.getPieceAt(piece2Index);
+                    if (piece2->getConstraint(TOP) == STRAIGHT && piece2->getConstraint(RIGHT) == STRAIGHT){ // piece can be place at TR
+                        vector<int> inds_wo_p2 = inds_wo_p1;
+                        inds_wo_p2.erase(find(inds_wo_p2.begin(), inds_wo_p2.end(), piece2Index));
+                        for (int piece3Index : inds_wo_p2) {
+                            piece3 = _puzzle.getPieceAt(piece3Index);
+                            if (piece3->getConstraint(BOTTOM) == STRAIGHT &&
+                                piece3->getConstraint(LEFT) == STRAIGHT) { // piece can be place at BL
+                                vector<int> inds_wo_p3 = inds_wo_p2;
+                                inds_wo_p3.erase(find(inds_wo_p3.begin(), inds_wo_p3.end(), piece3Index));
+                                for (int piece4Index : inds_wo_p3) {
+                                    piece4 = _puzzle.getPieceAt(piece4Index);
+                                    if (piece4->getConstraint(BOTTOM) == STRAIGHT &&
+                                        piece4->getConstraint(RIGHT) == STRAIGHT) { // piece can be place at BR
+                                        PuzzleMatrix new_pm = pm;
+                                        new_pm.assignPieceToCell(piece1, 0, 0);
+                                        new_pm.assignPieceToCell(piece2, 0, pm.getNcols()-1);
+                                        new_pm.assignPieceToCell(piece3, pm.getNrows()-1, 0);
+                                        new_pm.assignPieceToCell(piece4, pm.getNrows()-1, pm.getNcols()-1);
+                                        //pmAsString = new_pm.toString();
+                                        pmAsString = new_pm.encode();
+                                        if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
+                                            continue;
+                                            COUNT_MEMOIZATION_SUCCESSES++; // TODO rm
+                                        }
+                                        else {
+                                            memoizationSet.insert(pmAsString);
+                                        }
+                                        vector<int> new_indices = inds_wo_p3;
+                                        new_indices.erase(find(new_indices.begin(), new_indices.end(), piece4Index));
+                                        if (_solveForSize(new_pm, new_indices, resultMatrix)){
+                                            return true;
+                                        }
+
+                                    }
+
+                            }
+                        }
+                        }
+                    }}}}}
+
+
+
+
+
+//    First iteration (assign TL corner to matrix):
+//    if (indices.size() == _puzzle.getSize()) {
+//        for (int pieceIndex : indices){
+//            piece = _puzzle.getPieceAt(pieceIndex);
+//            if (piece->getConstraint(TOP) == STRAIGHT && piece->getConstraint(LEFT) == STRAIGHT){ // piece can be place at TL
+//                PuzzleMatrix new_pm = pm;
+//                new_pm.assignPieceToCell(piece, 0, 0);
+//                pmAsString = new_pm.toString();
+//
+//                if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
+//                    continue;
+//                }
+//                else {
+//                    memoizationSet.insert(pmAsString);
+//                }
+//                vector<int> new_indices = indices;
+//                new_indices.erase(find(new_indices.begin(), new_indices.end(), pieceIndex));
+//                if (_solveForSize(new_pm, new_indices, resultMatrix)){
+//                    return true;
+//                }
+//            }
+//        }
+//    }
 
 
 
@@ -91,11 +148,13 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
             if (pm.isFit(piece, frontierCell.first, frontierCell.second)){
                 PuzzleMatrix new_pm = pm;
                 new_pm.assignPieceToCell(piece, frontierCell.first, frontierCell.second);
-                pmAsString = new_pm.toString();
+                //pmAsString = new_pm.toString();
+                pmAsString = new_pm.encode();
                 //cout<< "trying:\n";//TODO rm
                 //cout << pmAsString << "\n";//TODO rm
                 if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
                     //cout << "found in meme table!\n";//TODO rm
+                    COUNT_MEMOIZATION_SUCCESSES++; // TODO rm
                     continue;
                 }
                 else {
