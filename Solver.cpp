@@ -37,9 +37,10 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* resultMatrix){
-    //cout << "now attempting :\n" << pm.toString() << endl; // todo rm
-    //cout << pm.toString() << endl;
-    //cout << "*****************" << endl << endl; //todo rm
+    //cout << "now solving :\n" << pm.toString() << endl; // todo rm
+    //cout << "MEMIZset = \n";
+    //for (auto s : memoizationSet) {cout << s << endl;}
+    //cout << "\n**********************" << endl << endl; //todo rm
     COUNTER++; //todo rm
     //if (COUNTER % 10000 == 0)        {cout << COUNTER << endl;}; //TODO rm
     //if (memoizationSet.size() % 1 == 0){cout << memoizationSet.size() << endl;}; //TODO rm
@@ -65,6 +66,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
                 PuzzleMatrix new_pm = pm;
                 new_pm.assignPieceToCell(piece, 0, 0);
                 pmAsString = new_pm.toString();
+
                 if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
                     continue;
                 }
@@ -90,7 +92,10 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix* 
                 PuzzleMatrix new_pm = pm;
                 new_pm.assignPieceToCell(piece, frontierCell.first, frontierCell.second);
                 pmAsString = new_pm.toString();
+                //cout<< "trying:\n";//TODO rm
+                //cout << pmAsString << "\n";//TODO rm
                 if (memoizationSet.find(pmAsString) !=  memoizationSet.end()) { //We have already tried this subSolution.
+                    //cout << "found in meme table!\n";//TODO rm
                     continue;
                 }
                 else {
@@ -113,28 +118,30 @@ void Solver::solve(){
     memoizationSet.clear();
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
-    //sizesVec = {pair<int, int>(4,4)}; //todo rm
+    //sizesVec = {pair<int, int>(4,3)}; //todo rm
     vector<int> indices(_puzzle.getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     int i=1;
     std::iota(indices.begin(), indices.end(), 1);
     // Allocate buffer for solution matrix:
-    PuzzleMatrix* solution = new PuzzleMatrix(row,col);
+    PuzzleMatrix* solution;
     // Try and solve for every puzzle size:
     COUNTER=0; //todo rm
     for (auto size : sizesVec){
         row = size.first;
         col = size.second;
+        solution = new PuzzleMatrix(row,col);
         //cout << "In Solver. now trying size: " << row << " "<<col << endl; //TODO rm
         PuzzleMatrix pm = PuzzleMatrix(row, col);
 
         solved = _solveForSize(pm, indices, solution); // Found a solution for size (row,col)
         if (solved) {
             break;
-        }
+        } else {delete solution;}
     }
     if (solved){
         solution->toFile("SOLUTION.txt"); //TODO: rename this file?
+        delete solution;
     }
 
 }
