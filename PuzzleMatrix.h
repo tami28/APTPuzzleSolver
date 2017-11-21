@@ -18,6 +18,7 @@
 using namespace std;
 
 class PuzzleMatrix{
+
     int nrows;
     int ncols;
     typedef std::vector<Constraints> ConstraintsArray;
@@ -28,11 +29,6 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
-
-
-
-
-
 public:
     CellArray2D matrix; // TODO: make private again
     PuzzleMatrix(int row, int col);
@@ -55,10 +51,9 @@ public:
     string toString();
     void print();
 
-
     std::map<Constraints , int> requiredCounters;
 
-
+    void constraintsOfCell(int i,int j, char[]);
     //TODO: destructor:
     //~PuzzleMatrix();
 };

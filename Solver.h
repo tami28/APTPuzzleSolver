@@ -30,6 +30,9 @@ public:
     void solve();
     int COUNTER = 0; //todo rm
     //TODO: destructors
+
+    bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
+    bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
 };
 
 //solution table

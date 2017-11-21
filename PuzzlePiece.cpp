@@ -87,7 +87,7 @@ int PuzzlePiece::getId(){
 /*
  * Given another piece, return true if they can legally connect on a given edge (LEFT, TOP, RIGHT or BOTTOM), false o/w.
  */
-bool PuzzlePiece::canConnect(PuzzlePiece other, Edge edge){
+bool PuzzlePiece::canConnect(PuzzlePiece& other, Edge edge){
     switch (this->edges[edge]){
         case Constraints::STRAIGHT:
             return other.edges[edge] == Constraints::STRAIGHT;

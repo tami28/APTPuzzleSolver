@@ -134,7 +134,7 @@ void Solver::solve(){
         //cout << "In Solver. now trying size: " << row << " "<<col << endl; //TODO rm
         PuzzleMatrix pm = PuzzleMatrix(row, col);
 
-        solved = _solveForSize(pm, indices, solution); // Found a solution for size (row,col)
+        solved = _solveForSize(pm, indices, solution, 0, 0); // Found a solution for size (row,col)
         if (solved) {
             break;
         } else {delete solution;}
@@ -222,3 +222,41 @@ bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
     return true;
 }
 
+bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col) {
+    if(row == (pm.getNrows()-1) && col==(pm.getNcols()-1) && indices.empty()){
+        return true;
+    }
+    char consts[4] = {NONE};
+    pm.constraintsOfCell(row,col,consts);
+    for (int i :indices){
+        if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts)){
+            pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col);
+            vector<int> newIndices (indices);
+            newIndices.erase(find(newIndices.begin(), newIndices.end(), i));
+            int newRow=row, newCol=col;
+            if( col < (pm.getNcols()-1)){
+                if (_solveForSize(pm, newIndices, result, row, col+1)){
+                    return true;
+                }
+            } else{
+                if(_solveForSize(pm, newIndices, result, row+1, 0)){
+                    return true;
+                }
+            }
+         }
+    }
+    return false;
+}
+
+
+
+bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
+    for(int e = LEFT; e <= BOTTOM; ++e){
+        if (!((int)piece.getConstraint((Edge)e) == (int)constraints[e] || constraints[e] == NONE)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+///TODO: change get piece to return ref not pointer
