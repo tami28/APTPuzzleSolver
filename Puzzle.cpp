@@ -52,7 +52,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 		try {
 			curr = PuzzlePiece(line);
 			int i = addPiece(curr);
-			if (i == ILLEGAL_PIECE){
+			if (i == ILLEGAL_PIECE){ //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
 				continue; //TODO
 			}
 			totalSum +=i;
@@ -102,7 +102,7 @@ PuzzlePiece* Puzzle::getPieceAt(int i){
 
 int Puzzle::addPiece(PuzzlePiece &piece) {
 	if (0 >= piece.getId()){
-		return ILLEGAL_PIECE;
+		return ILLEGAL_PIECE; //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
 	}
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
