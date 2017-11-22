@@ -40,12 +40,8 @@ public:
                                                     int neighbourRow, int neighbourCol);
     void assignPieceToCell(PuzzlePiece* piece, int row, int col);
     bool isFit(PuzzlePiece* piece, int row, int col);
-    void updateFrontiers(int row, int col);
-    std::set<pair<int,int>>::iterator getFrontierCellsIterator() const;
     const int getNrows() const;
     const int getNcols() const;
-
-    std::set<pair<int,int>> frontierCells; //TODO: can change to unorderd_set. needs to be private with appropriate getters..
 
     void toFile(string path);
     string toString();
