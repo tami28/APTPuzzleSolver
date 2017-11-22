@@ -11,7 +11,7 @@
 #include "Puzzle.h"
 #include "const.h"
 #include "PuzzleMatrix.h"
-
+#include "Exceptions.h"
 
 class Solver{
 private:

@@ -66,11 +66,16 @@ void Solver::solve(){
         pm.toFile("..\\tests\\SOLUTION.txt");
         delete solution;
     }
+    else {
+        (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
+
+    }
 
 }
 
 
 /*
+ * TODO: if we don't use this, remove.
  * 1.check if pieces at the given indices have sufficient straight edges to cover all the non-covered
  * straight edges in PuzzleMatrix. if not, there's no point to continue exploring this solution.
  * 2.check sufficient cover of non-covered corners.
