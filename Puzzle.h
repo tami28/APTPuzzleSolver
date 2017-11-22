@@ -20,7 +20,6 @@ using namespace std;
 #define ILLEGAL_PIECE -5
 
 
-inline int edgeConstraintToInt(Edge e, Constraints c){return e*10+c;};
 
 class Puzzle{
 //members:
@@ -28,6 +27,7 @@ private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
 	int _corners[4] = {0}; //<TL><TR><BL><BR>
+	int _straightEdges[4] = {0};
 	//TODO: represent here possible corners?
 //functions:
 public:
@@ -41,6 +41,8 @@ public:
 	void buildPuzzleFromFile(const string& fileName);
 	PuzzlePiece* getPieceAt(int i);
     int getSize();
+	int getMaxHeight();
+	int getMaxWidth();
 
 private:
 	void parseFirstLine(string line);

@@ -34,6 +34,7 @@ public:
     Constraints getConstraint(Edge edge);
     Constraints getOppositeConstraint(Edge edge);
     bool canConnect(PuzzlePiece& other, Edge edge); //can connect with other on given edge
+    string getConstraintStr();
 };
 
 

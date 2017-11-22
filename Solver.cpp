@@ -24,7 +24,7 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
     vector<pair<int,int>> result;
     int sqr = (int) sqrt(puzzleSize) + 1;
     for (int i = 1; i < sqr; i++) {
-        if (puzzleSize % i == 0) {
+        if (puzzleSize % i == 0 && i<=max(_puzzle.getMaxWidth(), _puzzle.getMaxHeight())&& (puzzleSize/i)<=max(_puzzle.getMaxWidth(), _puzzle.getMaxHeight())) {
             result.push_back(pair<int, int>(i, puzzleSize / i));
             if (i != puzzleSize / i) {
                 result.push_back(pair<int, int>(puzzleSize / i,
@@ -190,6 +190,7 @@ void Solver::solve(){
     for (auto size : sizesVec){
         row = size.first;
         col = size.second;
+        std::cout<< "Trying size "<<row<<"X"<<col<<std::endl;
         solution = new PuzzleMatrix(row,col);
         //cout << "In Solver. now trying size: " << row << " "<<col << endl; //TODO rm
         pm = PuzzleMatrix(row, col);
@@ -288,14 +289,17 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
         result = &pm;
         return true;
     }
+
+
+    std::cout<<"new loop"<<std::endl;
     char consts[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(row,col,consts);
+    unordered_set<string> badPieces;
     for (int i :indices){
-        if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts)){
+        if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts) && badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end()){
             pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col);
             vector<int> newIndices (indices);
             newIndices.erase(find(newIndices.begin(), newIndices.end(), i));
-            int newRow=row, newCol=col;
             if( col < (pm.getNcols()-1)){
                 if (_solveForSize(pm, newIndices, result, row, col+1)){
                     return true;
@@ -305,6 +309,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
                     return true;
                 }
             }
+            badPieces.insert((*_puzzle.getPieceAt(i)).getConstraintStr());
          }
     }
     return false;

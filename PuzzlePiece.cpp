@@ -123,3 +123,12 @@ Constraints PuzzlePiece::getOppositeConstraint(Edge edge){
 int PuzzlePiece::getEncoding(){
     return this->encoding;
 }
+
+
+string PuzzlePiece::getConstraintStr(){
+    char c[4];
+    for (int i = LEFT; i<= BOTTOM; i++){
+        c[i] = edges[i];
+    }
+    return string(c, 4);
+}

@@ -17,9 +17,7 @@ int main(){
     int row = 2;
     int col=2;
     bool fits;
-
-
-    Puzzle puzzle = Puzzle("..\\tests\\TEST12.txt");
+    Puzzle puzzle = Puzzle("..\\tests\\TEST15.txt");
     Solver solver = Solver(puzzle);
     solver.solve();
 

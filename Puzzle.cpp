@@ -108,6 +108,9 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	_pieces[piece.getId() -1] = piece;
 	for (int edge = LEFT; edge != LAST; ++edge){
 		sum += piece.getConstraint((Edge) edge);
+        if (piece.getConstraint((Edge) edge) == STRAIGHT){
+            _straightEdges[edge]++;
+        }
 	}
 
 	//check corners:
@@ -130,4 +133,12 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 
 int Puzzle::getSize(){
 	return this->_size;
+}
+
+int Puzzle::getMaxHeight() {
+    return min(_straightEdges[LEFT], _straightEdges[RIGHT]);
+}
+
+int Puzzle::getMaxWidth() {
+    return min(_straightEdges[TOP], _straightEdges[BOTTOM]);
 }

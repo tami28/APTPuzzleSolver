@@ -267,7 +267,6 @@ string PuzzleMatrix::toString(){
 void PuzzleMatrix::constraintsOfCell(int i, int j, char* res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (j == 0) {
-        std::cout <<"here\n";
         res[LEFT] = STRAIGHT;
     } else {
         res[LEFT] = matrix[i][j - 1].piece->getConstraint(RIGHT);
