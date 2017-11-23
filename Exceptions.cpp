@@ -48,7 +48,7 @@ std::string Error::toString(){
 	std::stringstream strm;
 	switch (_err){
 		case WRONG_PIECE_FORMAT:
-			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1 << endl;
+			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1;
 			return strm.str();
 
 
@@ -105,7 +105,6 @@ void ErrorList::add(Error e){
 void ErrorList::toFile(){
 	ofstream fout(outFilePath);
 	for (Error err : _errVec){ //TODO: make sure we are going over this in order of precendece.
-		fout << "hahhaa\n";
 		fout << err.toString() << endl;
 	}
 	fout.close();
