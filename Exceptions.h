@@ -17,7 +17,7 @@
 using namespace std;
 
 enum ErrorType{SUCCESS,
-		MISSING_PIECE,
+		MISSING_PIECES,
 		_WRONG_PIECE_ID,
         WRONG_PIECE_IDS,
 		PIECE_ID_NAN,

@@ -52,6 +52,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	std::vector<int> wrongIDs;
+	std::vector<int> idsFromFile; //holds all integer IDs seen in file (for detecting missing IDs).
 	while(getline(fin,line)){
 		try {
 			curr = PuzzlePiece(line);
@@ -59,6 +60,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			if (i == ILLEGAL_PIECE){ //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
 				continue; //TODO
 			}
+			idsFromFile.push_back(curr.getId());
 			totalSum +=i;
 		}
 		catch (Error e) {
@@ -79,6 +81,14 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 		(*ErrorList::getErrorList()).add(Error(WRONG_PIECE_IDS, infoStr));
 	}
 
+	//Check for missing pieces:
+	vector<int> missingPieces;
+	if (!checkForMissingPieces(idsFromFile, missingPieces)){
+		stringstream ss;
+		copy(missingPieces.begin(), missingPieces.end(), ostream_iterator<int>(ss, ", "));
+		string infoStr = ss.str().substr(0, (ss.str()).length() - 2);
+		(*ErrorList::getErrorList()).add(Error(MISSING_PIECES, infoStr));
+	}
 
 	fin.close();
 	if(0 != totalSum){
@@ -93,6 +103,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 
 }
+
 
 void Puzzle::parseFirstLine(std::string line){
 	std::string num;
@@ -119,6 +130,23 @@ void Puzzle::parseFirstLine(std::string line){
 PuzzlePiece* Puzzle::getPieceAt(int i){
 	return &(_pieces[i-1]);
 }
+
+
+bool Puzzle::checkForMissingPieces(vector<int> &idsFromFile, vector<int> &ids){
+	vector<int> expected_ids(numPieces);
+	std::iota(expected_ids.begin(), expected_ids.end(), 1);
+	for (int id : idsFromFile){
+		expected_ids.erase( std::remove(expected_ids.begin(), expected_ids.end(), id ), expected_ids.end() );
+	}
+	if (expected_ids.empty()){
+		return true;
+	}
+	std::sort(expected_ids.begin(), expected_ids.end());
+	ids = expected_ids;
+	return false;
+
+}
+
 
 int Puzzle::addPiece(PuzzlePiece &piece) {
 	if (0 >= piece.getId()){

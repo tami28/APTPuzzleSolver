@@ -43,6 +43,7 @@ public:
     int getSize();
 	int getMaxHeight();
 	int getMaxWidth();
+	bool checkForMissingPieces(vector<int>& ids, vector<int> &idsFromFile);
 
 private:
 	void parseFirstLine(string line);
