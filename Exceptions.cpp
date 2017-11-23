@@ -43,6 +43,14 @@ ErrorType Error::getErrorType(){
 	return _err;
 }
 
+int Error::getIntInfo(){
+	return _extraInt1;
+}
+string Error::getStrInfo(){
+	return _extraString1;
+}
+
+
 std::string Error::toString(){
 	string res = "";
 	std::stringstream strm;
@@ -50,9 +58,11 @@ std::string Error::toString(){
 		case WRONG_PIECE_FORMAT:
 			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1;
 			return strm.str();
-
-
+		case WRONG_PIECE_IDS:
+			strm << "Puzzle of size " << numPieces << " cannot have the following IDs: " << this->_extraString1;
+			return strm.str();
 	}
+	return "";
 }
 
 
@@ -104,9 +114,9 @@ void ErrorList::add(Error e){
  */
 void ErrorList::toFile(){
 	ofstream fout(outFilePath);
-	for (Error err : _errVec){ //TODO: make sure we are going over this in order of precendece.
+	for (Error err : _errVec){ //TODO: make sure we are going over this in correct order of precendece!
 		fout << err.toString() << endl;
+
 	}
 	fout.close();
-
 }

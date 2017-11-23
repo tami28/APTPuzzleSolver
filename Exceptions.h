@@ -18,7 +18,8 @@ using namespace std;
 
 enum ErrorType{SUCCESS,
 		MISSING_PIECE,
-		WRONG_PIECE_ID,
+		_WRONG_PIECE_ID,
+        WRONG_PIECE_IDS,
 		PIECE_ID_NAN,
 		WRONG_PIECE_FORMAT,
 		MISSING_CORNER,
@@ -42,6 +43,8 @@ public:
 	Error(ErrorType err, std::string str);
 	Error(ErrorType err, std::string str, int id);
 	ErrorType getErrorType();
+    int getIntInfo();
+    string getStrInfo();
 	std::string toString();
 };
 

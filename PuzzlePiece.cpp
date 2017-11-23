@@ -70,7 +70,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
         args[argsCount-1] = param;
         if (argsCount == 1 && (param < 1 || param > numPieces)) {
             //Input ID is numeric but not in the valid range:
-            throw Error(WRONG_PIECE_ID, param);
+            throw Error(_WRONG_PIECE_ID, param);
         }
         else if (argsCount != 1 &&
                 (param != Constraints::MALE &&

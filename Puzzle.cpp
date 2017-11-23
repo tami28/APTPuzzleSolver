@@ -13,6 +13,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iterator>
 
 
 int numPieces; //initialization of global variable.
@@ -33,6 +35,7 @@ Puzzle::Puzzle(string fileName){
 }
 
 
+
 void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	ifstream fin(fileName);
 	std::string line;
@@ -48,6 +51,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	//TODO: what if failed reading size? fix this!
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
+	std::vector<int> wrongIDs;
 	while(getline(fin,line)){
 		try {
 			curr = PuzzlePiece(line);
@@ -58,10 +62,23 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			totalSum +=i;
 		}
 		catch (Error e) {
-			(*ErrorList::getErrorList()).add(e);
+			if (e.getErrorType() == _WRONG_PIECE_ID){ //collect all wring IDs' as they need to create one error.
+				wrongIDs.push_back(e.getIntInfo());
+			}
+			else {
+				(*ErrorList::getErrorList()).add(e);
+			}
 			continue;
 		};
 	}
+	//Write to errors list an error for all wrong (numeric) IDs:
+	if (!wrongIDs.empty()) {
+		stringstream ss;
+		copy(wrongIDs.begin(), wrongIDs.end(), ostream_iterator<int>(ss, ", "));
+		string infoStr = ss.str().substr(0, (ss.str()).length() - 2);
+		(*ErrorList::getErrorList()).add(Error(WRONG_PIECE_IDS, infoStr));
+	}
+
 
 	fin.close();
 	if(0 != totalSum){
@@ -72,6 +89,9 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			(*ErrorList::getErrorList()).add(Error(MISSING_CORNER, i));
 		}
 	}
+
+
+
 }
 
 void Puzzle::parseFirstLine(std::string line){
