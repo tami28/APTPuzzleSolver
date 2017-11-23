@@ -10,6 +10,10 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include <map>
+#include "const.h"
+#include <fstream>
 using namespace std;
 
 enum ErrorType{SUCCESS,
@@ -21,8 +25,11 @@ enum ErrorType{SUCCESS,
 		SUM_EDGES_NOT_ZERO,
 		COULD_NOT_FIND_SOLUTION,
 		MISSING_SIZE,
-		WRONG_FORMET
+		WRONG_FIRST_LINE_FORMAT
 };
+
+
+
 
 class Error{
 private:
@@ -35,6 +42,7 @@ public:
 	Error(ErrorType err, std::string str);
 	Error(ErrorType err, std::string str, int id);
 	ErrorType getErrorType();
+	std::string toString();
 };
 
 
@@ -50,6 +58,7 @@ public:
 	static ErrorList* getErrorList();
 	void add(Error e);
 	static void close();
+	void toFile();
 };
 
 

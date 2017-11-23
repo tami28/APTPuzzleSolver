@@ -34,6 +34,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
     ErrorList* errList = ErrorList::getErrorList();
     size_t currDelimPos, prvDelimPos=0;
     int argsCount = 0;
+    int piece_id;
     string lineDelimiter = " ";
     int args[5], param;
     bool endOfLine = false;
@@ -54,13 +55,16 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
         }
         param = atoi(paramstr);
+        if (argsCount == 1){
+            piece_id = param;
+        }
         if (param == 0 && argsCount == 1){
             //the ID given in the input line is not an int --> Error 1.5 in exercise updates:
-            throw Error(PIECE_ID_NAN, param);
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
         if (param == 0 && argsCount > 1){
             //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
         args[argsCount-1] = param;
@@ -72,7 +76,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
                 (param != Constraints::MALE &&
                  param != Constraints::FEMALE &&
                  param != Constraints::STRAIGHT)) {
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
+            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
         prvDelimPos = currDelimPos+1;
 

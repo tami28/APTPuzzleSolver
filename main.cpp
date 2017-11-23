@@ -7,50 +7,34 @@
 
 #include "Puzzle.h"
 #include "Solver.h"
+#include "const.h"
+#include "Exceptions.h"
+#include <time.h>
 #include "PuzzleMatrix.h"
-int main(){
-    string infile = "testFile.txt";
+
+
+//TODO: add handling bad input params from cmnd line
+string outFilePath;
+
+int main(int argc, char** argv){
 #if DEBUG
     printf("IN DEBUG MODE!!!!\n");
 #endif
+    std::string inFilePath = argv[1];
+    outFilePath = argv[2];
+    Puzzle puzzle = Puzzle(inFilePath);
 
-    int row = 2;
-    int col=2;
-    bool fits;
-    Puzzle puzzle = Puzzle("..\\tests\\TEST15.txt");
+    //check for Errors before continuing to solve:
+    ErrorList::getErrorList()->toFile();
+
+
     Solver solver = Solver(puzzle);
+    clock_t t;
+    t = clock();
     solver.solve();
-
-
-
-//    puzzle = Puzzle("solvable2by2.txt");
-//    row,col = 2,2;
-//    solver = Solver(puzzle);
-//    PuzzleMatrix pmx = PuzzleMatrix(row,col);
-//    vector<int> indices = {1,2,3,4};
-//    PuzzleMatrix* result = new PuzzleMatrix(row,col);
-//    bool isSolved = solver._solveForSize(pmx ,  indices, result);
-//
-//    puzzle = Puzzle("NOTsolvable2by2.txt");
-//    row,col = 2,2;
-//    solver = Solver(puzzle);
-//    pmx = PuzzleMatrix(row,col);
-//    indices = {1,2,3,4};
-//    result = new PuzzleMatrix(row,col);
-//    isSolved = solver._solveForSize(pmx ,  indices, result);
-//
-//    puzzle = Puzzle("solvable3by2.txt");
-//    row = 3;
-//    col = 2;
-//    solver = Solver(puzzle);
-//    pmx = PuzzleMatrix(row,col);
-//    indices = {1,2,3,4,5,6};
-//    result = new PuzzleMatrix(row,col);
-//    isSolved = solver._solveForSize(pmx ,  indices, result);
-
-
-
-    printf("Done\n");
+    t = clock() - t;
+    printf ("took  %d clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC); // TODO rm
+    printf("Done\n");  // TODO rm
 }
 
 //TODO: close ErrorList

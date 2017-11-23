@@ -80,7 +80,7 @@ void Puzzle::parseFirstLine(std::string line){
 	std::size_t const foundEq = line.find("=", foundS+1);
 	//Make sure format is ok:
 	if (foundS ==std::string::npos || foundEq == std::string::npos){
-		(*ErrorList::getErrorList()).add(Error(WRONG_FORMET, line));
+		(*ErrorList::getErrorList()).add(Error(WRONG_FIRST_LINE_FORMAT, line));
 	}
 	//Read the number:
 	std::size_t const n = line.find_first_of("0123456789");

@@ -63,7 +63,7 @@ void Solver::solve(){
         } else {delete solution;}
     }
     if (solved){
-        pm.toFile("..\\tests\\SOLUTION.txt");
+        pm.toFile(outFilePath);
         delete solution;
     }
     else {

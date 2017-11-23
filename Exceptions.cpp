@@ -5,7 +5,13 @@
  *      Author: Tami
  */
 
+
+#include <sstream>
 #include "Exceptions.h"
+
+map<ErrorType ,string> ErrorTypeToStringMap = {
+		{WRONG_FIRST_LINE_FORMAT, "Error: Wrong first line format.\n"}
+};
 
 
 //Constructors for ERror:
@@ -37,6 +43,18 @@ ErrorType Error::getErrorType(){
 	return _err;
 }
 
+std::string Error::toString(){
+	string res = "";
+	std::stringstream strm;
+	switch (_err){
+		case WRONG_PIECE_FORMAT:
+			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1 << endl;
+			return strm.str();
+
+
+	}
+}
+
 
 //---------------ErrorList:---------------------//
 
@@ -46,6 +64,7 @@ bool ErrorList::_initialized;
 //constructors & destructors:
 ErrorList::ErrorList(){
 	_errVec = std::vector<Error>();
+	_initialized = true;
 }
 
 //TODO: is this needed?
@@ -76,4 +95,19 @@ void ErrorList::close(){
 void ErrorList::add(Error e){
 	//This runs on the instance of the class so it must be already initialized.
 	_errVec.push_back(e);
+}
+
+
+
+/*
+ * Print all existing errors to file, in order of precedence.
+ */
+void ErrorList::toFile(){
+	ofstream fout(outFilePath);
+	for (Error err : _errVec){ //TODO: make sure we are going over this in order of precendece.
+		fout << "hahhaa\n";
+		fout << err.toString() << endl;
+	}
+	fout.close();
+
 }
