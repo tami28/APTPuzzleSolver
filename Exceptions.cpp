@@ -73,6 +73,9 @@ std::string Error::toString(){
         case CORNERS_CANT_BE_COVERED:
             strm << "Cannot solve puzzle: Corners can't be covered";
             return strm.str();
+		case COULD_NOT_FIND_SOLUTION:
+			strm << "Cannot solve puzzle: it seems that there is no proper solution";
+			return strm.str();
 	}
 	return "";
 }
@@ -82,6 +85,7 @@ std::string Error::toString(){
 
 ErrorList* ErrorList::_errors;
 bool ErrorList::_initialized;
+int ErrorList::_numErrors;
 
 //constructors & destructors:
 ErrorList::ErrorList(){
@@ -117,9 +121,12 @@ void ErrorList::close(){
 void ErrorList::add(Error e){
 	//This runs on the instance of the class so it must be already initialized.
 	_errVec.push_back(e);
+	_numErrors++;
 }
 
-
+int ErrorList::getNumErrors(){
+	return _numErrors;
+}
 
 /*
  * Print all existing errors to file, in order of precedence.

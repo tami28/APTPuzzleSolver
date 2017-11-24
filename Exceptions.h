@@ -53,6 +53,7 @@ public:
 class ErrorList{
 private:
 	static bool _initialized;
+	static int _numErrors;
 	static ErrorList* _errors;
 	std::vector<Error> _errVec;
 	ErrorList();
@@ -63,6 +64,7 @@ public:
 	void add(Error e);
 	static void close();
 	void toFile();
+	static int getNumErrors();
 };
 
 

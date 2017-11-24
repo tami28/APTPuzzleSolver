@@ -25,13 +25,17 @@ int main(int argc, char** argv){
     Puzzle puzzle = Puzzle(inFilePath);
 
     //check for Errors before continuing to solve:
-    ErrorList::getErrorList()->toFile();
-
+    if (ErrorList::getNumErrors() > 0) {
+        ErrorList::getErrorList()->toFile();
+    }
 
     Solver solver = Solver(puzzle);
     clock_t t;
     t = clock();
     solver.solve();
+    if (ErrorList::getNumErrors() > 0) {
+        ErrorList::getErrorList()->toFile();
+    }
     t = clock() - t;
     printf ("took  %d clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC); // TODO rm
     printf("Done\n");  // TODO rm
