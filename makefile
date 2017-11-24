@@ -6,9 +6,18 @@ EXEC = ex1
 CPP_COMP_FLAG = -std=c++11 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
 
 $(EXEC): $(OBJS)
-	$(COMP) $(OBJS) -o $@ $(CPP_COMP_FLAG)
-#a rule for building a simple c++ source file
-#use g++ -MM main.cpp to see dependencies
+	$(COMP) $(OBJS) -o $@
+Exceptions.o: Exceptions.cpp
+    $(COMP) $(CPP_COMP_FLAG) -c Exceptions.cpp
+Puzzle.o: Puzzle.cpp
+    $(COMP) $(CPP_COMP_FLAG) -c Puzzle.cpp
+PuzzlePiece.o: PuzzlePiece.cpp
+    $(COMP) $(CPP_COMP_FLAG) -c PuzzlePiece.cpp
+PuzzleMatrix.o: PuzzleMatrix.cpp
+    $(COMP) $(CPP_COMP_FLAG) -c PuzzleMatrix.cpp
+Solver.o: Solver.cpp
+    $(COMP) $(CPP_COMP_FLAG) -c Solver.cpp
+
 main.o: main.cpp Puzzle.h PuzzlePiece.h const.h Exceptions.h Solver.h PuzzleMatrix.h#put dependencies here!
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 clean:
