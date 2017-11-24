@@ -30,14 +30,14 @@ PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
 /*
  * constructor for a Piece object from a line in the text file.
  */
-PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
-    ErrorList* errList = ErrorList::getErrorList();
+PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromFile) {
     size_t currDelimPos, prvDelimPos=0;
-    int argsCount = 0;
-    int piece_id;
+    int argsCount = 0, piece_id, args[5], param;
     string lineDelimiter = " ";
-    int args[5], param;
-    bool endOfLine = false;
+    bool endOfLine = false, encounteredError = false;
+    int numNumericParams = 0;
+
+    vector<Error> errVec;
     while (!endOfLine){
         if ((currDelimPos = inputFileLine.substr(prvDelimPos).find(lineDelimiter)) == string::npos){
             endOfLine = true;
@@ -46,11 +46,13 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
         argsCount +=1;
         if (argsCount > 5) {
             //More than 5 numbers in line --> invalid piece representation.
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine);
+            encounteredError = true;
+            errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine));
+            //throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
         char* paramstr =new char[inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).length() + 1];
         std::strcpy(paramstr,inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).c_str() );
-        // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's error value being 0.
+        // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's encounteredError value being 0.
         if (strcmp(paramstr,"0") == 0){
             paramstr = (char *) ALTERNATIVE_ZERO_STRING;
         }
@@ -58,7 +60,9 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
 
         if (param == 0 && argsCount == 1){
             //the ID given in the input line is not an int --> Error 1.5 in exercise updates:
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
+            encounteredError = true;
+            errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
+            //throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
 
         if (argsCount == 1) {
@@ -66,24 +70,36 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine) {
         }
         if (param == 0 && argsCount > 1){
             //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
+            encounteredError = true;
+            errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
+            //throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
+        numNumericParams++; // Got here -> the parameter we are parsing now is an integer.
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
         args[argsCount-1] = param;
         if (argsCount == 1 && (param < 1 || param > numPieces)) {
             //Input ID is numeric but not in the valid range:
-            throw Error(_WRONG_PIECE_ID, param);
+            encounteredError = true;
+            errVec.push_back(Error(_WRONG_PIECE_ID, param));
+            //throw Error(_WRONG_PIECE_ID, param);
         }
         else if (argsCount != 1 &&
                 (param != Constraints::MALE &&
                  param != Constraints::FEMALE &&
                  param != Constraints::STRAIGHT)) {
-            throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
+            encounteredError = true;
+            errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
+            //throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
         prvDelimPos = currDelimPos+1;
-
-
     }
+
+    //If all parsed parameters are numeric:
+    if (numNumericParams == 5) {
+        idsFromFile.push_back(piece_id);
+    }
+    // Report errors:
+    if (encounteredError) { throw errVec; }
     //Call regular Piece c'tor on parsed arguments:
     *this = PuzzlePiece(args[0], args+1);
 }

@@ -27,7 +27,7 @@ class PuzzlePiece {
 public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
-    PuzzlePiece(const std::string& inputFileLine); //c'tor from file-line
+    PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromFile); //c'tor from file-line
 
     int getId();
     int getEncoding();

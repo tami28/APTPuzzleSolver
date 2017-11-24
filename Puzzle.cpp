@@ -55,22 +55,24 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	std::vector<int> idsFromFile; //holds all integer IDs seen in file (for detecting missing IDs).
 	while(getline(fin,line)){
 		try {
-			curr = PuzzlePiece(line);
+			curr = PuzzlePiece(line, idsFromFile);
 			int i = addPiece(curr);
 			if (i == ILLEGAL_PIECE){ //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
 				continue; //TODO
 			}
-			idsFromFile.push_back(curr.getId());
+			//idsFromFile.push_back(curr.getId());
 			totalSum +=i;
 		}
-		catch (Error e) {
-			if (e.getErrorType() == _WRONG_PIECE_ID){ //collect all wring IDs' as they need to create one error.
-				wrongIDs.push_back(e.getIntInfo());
-			}
-			else {
-				(*ErrorList::getErrorList()).add(e);
-			}
-			continue;
+		catch (vector<Error> eVec) {
+            for (Error e: eVec) {
+                if (e.getErrorType() == _WRONG_PIECE_ID) { //collect all wrong ID's as they need to create one error.
+                    wrongIDs.push_back(e.getIntInfo());
+                } else {
+                    (*ErrorList::getErrorList()).add(e);
+                }
+            }
+                continue;
+
 		};
 	}
 	//Write to errors list an error for all wrong (numeric) IDs:
