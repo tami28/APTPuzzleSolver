@@ -43,12 +43,12 @@ PuzzleMatrix::PuzzleMatrix(const PuzzleMatrix &other){
     this->matrix = other.matrix;
 }
 
-const int PuzzleMatrix::getNrows() const{
-    const int res = this->nrows;
+int PuzzleMatrix::getNrows() const{
+    int res = this->nrows;
     return res;
 }
-const int PuzzleMatrix::getNcols() const{
-    const int res = this->ncols;
+int PuzzleMatrix::getNcols() const{
+    int res = this->ncols;
     return res;
 }
 

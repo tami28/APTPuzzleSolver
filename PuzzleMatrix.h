@@ -40,8 +40,8 @@ public:
                                                     int neighbourRow, int neighbourCol);
     void assignPieceToCell(PuzzlePiece* piece, int row, int col);
     bool isFit(PuzzlePiece* piece, int row, int col);
-    const int getNrows() const;
-    const int getNcols() const;
+    int getNrows() const;
+    int getNcols() const;
 
     void toFile(string path);
     string toString();
