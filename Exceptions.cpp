@@ -77,6 +77,10 @@ std::string Error::toString(){
         case WRONG_NUM_STRAIGHT_EDGES:
             strm << "Cannot solve puzzle: wrong number of straight edges";
             return strm.str();
+
+        default:
+            break;
+        //TODO! not all enum types are handlel
 	}
 	return "";
 }

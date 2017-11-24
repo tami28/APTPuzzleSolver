@@ -123,6 +123,8 @@ bool PuzzlePiece::canConnect(PuzzlePiece& other, Edge edge){
             return other.edges[edge] == Constraints::FEMALE;
         case Constraints::FEMALE:
             return other.edges[edge] == Constraints::MALE;
+        case Constraints::NONE:
+            return true;
     }
     return false;
 }
@@ -140,6 +142,8 @@ Constraints PuzzlePiece::getOppositeConstraint(Edge edge){
             return MALE;
         case STRAIGHT:
             return STRAIGHT;
+        default:
+            return NONE;
     }
 }
 

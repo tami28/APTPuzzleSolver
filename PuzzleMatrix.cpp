@@ -182,10 +182,14 @@ void PuzzleMatrix::toFile(string path) {
                 fout << "NA" << " ";
                 continue;
             }
-            fout << matrix[i][j].piece->getId() << " ";
+            fout << matrix[i][j].piece->getId();
+            if (j < (ncols-1)){
+                fout<< " ";
+            }
         }
         if (i < nrows -1 ){fout << endl;}
     }
+    fout<<std::endl;
     fout.close();
 }
 

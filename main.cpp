@@ -31,7 +31,7 @@ int main(int argc, char** argv){
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
-        return -1;
+        return 1;
     }
     //TODO: check here if can continue based on the errors?
     // Try to solve:
