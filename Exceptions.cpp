@@ -34,7 +34,7 @@ Error::Error(ErrorType err, string str){
 	_extraString1 = str;
 }
 
-ErrorType Error::getErrorType(){
+ErrorType Error::getErrorType() const{
 	return _err;
 }
 
@@ -50,6 +50,9 @@ std::string Error::toString(){
 	string res = "";
 	std::stringstream strm;
 	switch (_err){
+        case WRONG_FIRST_LINE_FORMAT:
+            strm << "Invalid input file.";
+            return strm.str();
 		case WRONG_PIECE_FORMAT:
 			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1;
 			return strm.str();
@@ -131,7 +134,9 @@ int ErrorList::getNumErrors(){
  */
 void ErrorList::toFile(){
 	ofstream fout(outFilePath);
-	for (Error err : _errVec){ //TODO: make sure we are going over this in correct order of precendece!
+    sort(_errVec.begin(), _errVec.end(), [] (const Error &e1,const Error &e2) {
+        return (int) e1.getErrorType() < (int) e2.getErrorType();});
+	for (Error err : _errVec  ){ //TODO: make sure we are going over this in correct order of precendece!
 		fout << err.toString() << endl;
 
 	}
