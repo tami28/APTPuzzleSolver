@@ -109,7 +109,6 @@ ErrorList* ErrorList::getErrorList(){
 	return ErrorList::_errors;
 }
 
-//TODO: find design where close doesn't have to be closed?
 //delete the errorList
 void ErrorList::close(){
 	if (ErrorList::_errors != 0 && ErrorList::_initialized){

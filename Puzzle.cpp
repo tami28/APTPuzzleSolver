@@ -95,14 +95,15 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	fin.close();
 
 	//TODO: should the following errors be reported even if one of the above errors had occurred?
-
-	//check for wrong-num-of-straight-edges-error:
-	checkStraightEdges();
-	//check for missing corner error:
-	checkCorners();
-	//check for sum-not-zero error:
-    if(0 != totalSum){
-		(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
+	if (0 == ErrorList::getNumErrors()){
+		//check for wrong-num-of-straight-edges-error:
+		checkStraightEdges();
+		//check for missing corner error:
+		checkCorners();
+		//check for sum-not-zero error:
+		if(0 != totalSum){
+			(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
+		}
 	}
 
 

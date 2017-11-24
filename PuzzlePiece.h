@@ -28,7 +28,6 @@ public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
     PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromFile); //c'tor from file-line
-
     int getId();
     int getEncoding();
     Constraints getConstraint(Edge edge);
@@ -36,6 +35,12 @@ public:
     bool canConnect(PuzzlePiece& other, Edge edge); //can connect with other on given edge
     string getConstraintStr();
 };
+
+/*
+ * No need here for Dt'r because we use simple types. & assigment of type arr[int] is not allocated by us, so we are cool.
+ * Note: didn't delete operator=, because we use it, and against my initial thoughts it works even on the array of constraints.
+ * Same things go for the copy Ct'r which we need because of the use of vectors.
+ */
 
 
 #endif //PROJECT_PUZZLEPIECE_H
