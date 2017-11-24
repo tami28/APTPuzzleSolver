@@ -243,6 +243,7 @@ void PuzzleMatrix::constraintsOfCell(int i, int j, char* res) {
     }
 }
 
+//TODO: is this needed:
 string PuzzleMatrix::encode(){
     string s;
     for (int i=0; i<nrows; i++){

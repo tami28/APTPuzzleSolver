@@ -35,8 +35,7 @@ public:
 	Puzzle();
 	Puzzle(string fileName);
 
-	//destructors:
-	//TODO!
+	//Dt'r: We didn't assign anything with new, nor de we have pointers therefore we don't need to implement a Dt'r.
 
 	void buildPuzzleFromFile(const string& fileName);
 	PuzzlePiece* getPieceAt(int i);

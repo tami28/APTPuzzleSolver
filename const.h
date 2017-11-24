@@ -20,3 +20,5 @@ enum Edge {LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
 enum Corners {TL = 0, TR, BL, BR, LAST_C};
 
 extern std::string outFilePath;
+
+#define DEFAULT_OUTPUT_FILE "solution.out"
