@@ -16,18 +16,20 @@
 #include <fstream>
 using namespace std;
 
-enum ErrorType{SUCCESS,
-		MISSING_PIECES,
-        WRONG_NUM_STRAIGHT_EDGES,
-		_WRONG_PIECE_ID,
-        WRONG_PIECE_IDS,
-		WRONG_PIECE_FORMAT,
-		MISSING_CORNER,
-		CORNERS_CANT_BE_COVERED,
-		SUM_EDGES_NOT_ZERO,
-		COULD_NOT_FIND_SOLUTION,
-		MISSING_SIZE,
-		WRONG_FIRST_LINE_FORMAT
+enum ErrorType{ //Values represent order of output to file.
+    WRONG_FIRST_LINE_FORMAT = 0,
+    MISSING_PIECES = 1,
+    WRONG_PIECE_IDS = 2,
+    WRONG_PIECE_FORMAT = 3,
+    WRONG_NUM_STRAIGHT_EDGES = 4,
+    MISSING_CORNER = 5,
+    CORNERS_CANT_BE_COVERED = 6,
+    SUM_EDGES_NOT_ZERO = 7,
+    COULD_NOT_FIND_SOLUTION = 8,
+    _WRONG_PIECE_ID,
+    MISSING_SIZE,
+    SUCCESS
+
 };
 
 
@@ -43,7 +45,7 @@ public:
 	Error(ErrorType err, int id);
 	Error(ErrorType err, std::string str);
 	Error(ErrorType err, std::string str, int id);
-	ErrorType getErrorType();
+	ErrorType getErrorType() const;
     int getIntInfo();
     string getStrInfo();
 	std::string toString();
