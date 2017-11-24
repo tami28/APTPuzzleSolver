@@ -189,37 +189,43 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 
 /*
  * check that there are enough sufficient corner pieces to solve puzzle, and report error if not
+ * according to: http://moodle.tau.ac.il/mod/forum/discuss.php?d=10775#p16816
  */
 void Puzzle::checkCorners(){
 	string errStr = "";
-	if (_corners[TL].empty()) { errStr.append("<TL>"); }
-	if (_corners[TR].empty()) { errStr.append("<TR>"); }
-	if (_corners[BL].empty()) { errStr.append("<BL>"); }
-	if (_corners[BR].empty()) { errStr.append("<BR>"); }
-	if (errStr != "") {
-		(*ErrorList::getErrorList()).add(Error(MISSING_CORNER, errStr));
-		return;
-	}
-
-	//enter this if if we have all the corners but the next for won't work..
-	if(_size == 1){
-		return;
-	}
-
-    for (auto tl_candidate : _corners[TL]){
-        for (auto tr_candidate : _corners[TR]){
-            for (auto bl_candidate : _corners[BL]){
-                for (auto br_candidate : _corners[BR]){
-                    if (set<int>({tl_candidate, bl_candidate, tr_candidate, br_candidate}).size() >= 4) {
-						return; // Got here --> all 4 corners can be covered with 4 different pieces
-                    }
-                }
+    //enter this if if we have all the corners and the following checks are irrelevant as _size=1
+    if (_size == 1 && _corners[TL].empty() && (_corners[TR].empty())
+            && (_corners[BL].empty())  && (_corners[BR].empty()) ){
+        return;
+    }
+    int pieceUsedForCurrentCorner;
+    for (int corner = TL ; corner <= BR ; corner++){
+        if (_corners[(Corners) corner].empty()){
+            switch (corner){
+                case 0:
+                    errStr.append("<TL>");
+                    break;
+                case 1:
+                    errStr.append("<TR>");
+                    break;
+                case 2:
+                    errStr.append("<BL>");
+                    break;
+                case 3:
+                    errStr.append("<BR>");
+                    break;
+            }
+        }
+        else{
+            pieceUsedForCurrentCorner = *(_corners[(Corners) corner].begin());
+            for (int corner2 = TL ; corner2 <= BR ; corner2++){
+                _corners[(Corners) corner2].erase(pieceUsedForCurrentCorner);
             }
         }
     }
-	//TODO: get an answer for what to print for this err
-	(*ErrorList::getErrorList()).add(Error(CORNERS_CANT_BE_COVERED));
-
+    if (errStr != "") {
+        (*ErrorList::getErrorList()).add(Error(MISSING_CORNER, errStr));
+    }
 }
 
 
