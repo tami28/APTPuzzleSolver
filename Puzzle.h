@@ -26,7 +26,7 @@ class Puzzle{
 private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
-	int _corners[4] = {0}; //<TL><TR><BL><BR>
+	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
 	//TODO: represent here possible corners?
 //functions:
@@ -48,6 +48,7 @@ public:
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);
+	void checkCorners();
 
 };
 

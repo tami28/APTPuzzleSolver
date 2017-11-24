@@ -95,14 +95,14 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	fin.close();
 
 	//TODO: should the following errors be reported even if one of the above errors had occurred?
-	if(0 != totalSum){
+
+	//Report missing corner error:
+	checkCorners();
+	//Report sum-not-zero error:
+    if(0 != totalSum){
 		(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
 	}
-	for (int i=TL; i!= LAST_C; i++){
-		if(0 == _corners[i]){
-			(*ErrorList::getErrorList()).add(Error(MISSING_CORNER, i));
-		}
-	}
+
 
 
 
@@ -168,20 +168,48 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 	//check corners:
 	//<TL><TR><BL><BR>
 	if ((0== piece.getConstraint(TOP)) && (0== piece.getConstraint(LEFT))){
-		_corners[TL]++;
+		_corners[TL].insert(piece.getId());
 	}
 	if ((0== piece.getConstraint(TOP)) && (0== piece.getConstraint(RIGHT))){
-		_corners[TR]++;
+		_corners[TR].insert(piece.getId());
 	}
 	if ((0== piece.getConstraint(BOTTOM)) && (0== piece.getConstraint(LEFT))){
-		_corners[BL]++;
+		_corners[BL].insert(piece.getId());
 	}
 	if ((0== piece.getConstraint(BOTTOM)) && (0== piece.getConstraint(RIGHT))){
-		_corners[BR]++;
+		_corners[BR].insert(piece.getId());
 	}
 	return sum;
 
 }
+
+void Puzzle::checkCorners(){
+	string errStr = "";
+	if (_corners[TL].empty()) { errStr.append("<TL>"); }
+	if (_corners[TR].empty()) { errStr.append("<TR>"); }
+	if (_corners[BL].empty()) { errStr.append("<BL>"); }
+	if (_corners[BR].empty()) { errStr.append("<BR>"); }
+	if (errStr != "") {
+		(*ErrorList::getErrorList()).add(Error(MISSING_CORNER, errStr));
+		return;
+	}
+
+    for (auto tl_candidate : _corners[TL]){
+        for (auto tr_candidate : _corners[TR]){
+            for (auto bl_candidate : _corners[BL]){
+                for (auto br_candidate : _corners[BR]){
+                    if (set<int>({tl_candidate, bl_candidate, tr_candidate, br_candidate}).size() >= 4) {
+						return; // Got here --> all 4 corners can be covered with 4 different pieces
+                    }
+                }
+            }
+        }
+    }
+	//TODO: get an answer for what to print for this err
+	(*ErrorList::getErrorList()).add(Error(CORNERS_CANT_BE_COVERED));
+
+}
+
 
 int Puzzle::getSize(){
 	return this->_size;

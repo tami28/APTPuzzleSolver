@@ -67,6 +67,12 @@ std::string Error::toString(){
 		case SUM_EDGES_NOT_ZERO:
 			strm << "Cannot solve puzzle: sum of edges is not zero";
 			return strm.str();
+        case MISSING_CORNER:
+            strm << "Cannot solve puzzle: missing corner element: " << this->_extraString1;
+            return strm.str();
+        case CORNERS_CANT_BE_COVERED:
+            strm << "Cannot solve puzzle: Corners can't be covered";
+            return strm.str();
 	}
 	return "";
 }
