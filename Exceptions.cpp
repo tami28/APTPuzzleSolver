@@ -64,6 +64,9 @@ std::string Error::toString(){
 		case MISSING_PIECES:
 			strm << "Missing puzzle element(s) with the following IDs: "<< this->_extraString1;
 			return strm.str();
+		case SUM_EDGES_NOT_ZERO:
+			strm << "Cannot solve puzzle: sum of edges is not zero";
+			return strm.str();
 	}
 	return "";
 }

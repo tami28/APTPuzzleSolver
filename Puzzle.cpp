@@ -93,6 +93,8 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	}
 
 	fin.close();
+
+	//TODO: should the following errors be reported even if one of the above errors had occurred?
 	if(0 != totalSum){
 		(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
 	}
