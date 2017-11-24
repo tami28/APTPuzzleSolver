@@ -249,7 +249,7 @@ void Puzzle::checkStraightEdges(){
 		nrows = size.first;
 		ncols = size.second;
 		if ( (numStraightEdges >= 2*nrows + 2*ncols)
-			 && (numStraightEdges - (2*nrows + 2*ncols) % 2 == 0) ){
+			 && ((numStraightEdges - (2*nrows + 2*ncols)) % 2 == 0) ){
 			sufficient = true;
 			break;
 		}
