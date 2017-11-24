@@ -62,6 +62,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromF
             //the ID given in the input line is not an int --> Error 1.5 in exercise updates:
             encounteredError = true;
             errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
+            throw errVec; //Throwing here because of correction 1.7 in excersize corrections.
             //throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
 
@@ -81,6 +82,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromF
             //Input ID is numeric but not in the valid range:
             encounteredError = true;
             errVec.push_back(Error(_WRONG_PIECE_ID, param));
+            throw errVec; //Throwing here because of correction 1.7 in excersize corrections.
             //throw Error(_WRONG_PIECE_ID, param);
         }
         else if (argsCount != 1 &&
