@@ -201,6 +201,11 @@ void Puzzle::checkCorners(){
 		return;
 	}
 
+	//enter this if if we have all the corners but the next for won't work..
+	if(_size == 1){
+		return;
+	}
+
     for (auto tl_candidate : _corners[TL]){
         for (auto tr_candidate : _corners[TR]){
             for (auto bl_candidate : _corners[BL]){
