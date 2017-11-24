@@ -9,11 +9,6 @@
 #include <sstream>
 #include "Exceptions.h"
 
-map<ErrorType ,string> ErrorTypeToStringMap = {
-		{WRONG_FIRST_LINE_FORMAT, "Error: Wrong first line format.\n"}
-};
-
-
 //Constructors for ERror:
 Error::Error(ErrorType err){
 	_err = err;
@@ -76,6 +71,9 @@ std::string Error::toString(){
 		case COULD_NOT_FIND_SOLUTION:
 			strm << "Cannot solve puzzle: it seems that there is no proper solution";
 			return strm.str();
+        case WRONG_NUM_STRAIGHT_EDGES:
+            strm << "Cannot solve puzzle: wrong number of straight edges";
+            return strm.str();
 	}
 	return "";
 }

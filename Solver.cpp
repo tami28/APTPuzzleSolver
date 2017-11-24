@@ -20,18 +20,8 @@ Solver::Solver(Puzzle& p){ //c'tor from Puzzle
  * returns a vector of all pairs of ints r,c s.t r*c == puzzle.get_Size()
  */
 std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
-    int puzzleSize = _puzzle.getSize();
     vector<pair<int,int>> result;
-    int sqr = (int) sqrt(puzzleSize) + 1;
-    for (int i = 1; i < sqr; i++) {
-        if (puzzleSize % i == 0 && i<=max(_puzzle.getMaxWidth(), _puzzle.getMaxHeight())&& (puzzleSize/i)<=max(_puzzle.getMaxWidth(), _puzzle.getMaxHeight())) {
-            result.push_back(pair<int, int>(i, puzzleSize / i));
-            if (i != puzzleSize / i) {
-                result.push_back(pair<int, int>(puzzleSize / i,
-                                                i)); //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
-            }
-        }
-    }
+    _puzzle.getPossibleSizes(result);
     return result;
 }
 

@@ -44,11 +44,13 @@ public:
 	int getMaxHeight();
 	int getMaxWidth();
 	bool checkForMissingPieces(vector<int>& ids, vector<int> &idsFromFile);
+	void getPossibleSizes(vector<pair<int,int>> & result);
 
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);
 	void checkCorners();
+	void checkStraightEdges();
 
 };
 

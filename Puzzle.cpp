@@ -96,9 +96,11 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 	//TODO: should the following errors be reported even if one of the above errors had occurred?
 
-	//Report missing corner error:
+	//check for wrong-num-of-straight-edges-error:
+	checkStraightEdges();
+	//check for missing corner error:
 	checkCorners();
-	//Report sum-not-zero error:
+	//check for sum-not-zero error:
     if(0 != totalSum){
 		(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
 	}
@@ -183,6 +185,10 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 
 }
 
+
+/*
+ * check that there are enough sufficient corner pieces to solve puzzle, and report error if not
+ */
 void Puzzle::checkCorners(){
 	string errStr = "";
 	if (_corners[TL].empty()) { errStr.append("<TL>"); }
@@ -210,6 +216,49 @@ void Puzzle::checkCorners(){
 
 }
 
+
+void Puzzle::getPossibleSizes(vector<pair<int,int>> & result){
+	int puzzleSize = _size;
+	int sqr = (int) sqrt(puzzleSize) + 1;
+	for (int i = 1; i < sqr; i++) {
+		if (puzzleSize % i == 0 && i<=max(getMaxWidth(), getMaxHeight())&& (puzzleSize/i)<=max(getMaxWidth(), getMaxHeight())) {
+			result.push_back(pair<int, int>(i, puzzleSize / i));
+			if (i != puzzleSize / i) {
+				result.push_back(pair<int, int>(puzzleSize / i,
+												i)); //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
+			}
+		}
+	}
+}
+
+/*
+ * check that there are sufficient straight edges to solve puzzle, and report error if not.
+ * There are sufficient straight edges if there exists nrows, ncols such that:
+ * 	 	1. nrows*ncols == numPieces
+ * 		2. numStraightEdges >= 2*nrows + 2*ncols
+ * 		3. (numStraightEdges - 2*nrows + 2*ncols) % 2 == 0
+ */
+void Puzzle::checkStraightEdges(){
+	vector<pair<int,int>> possibleSizes;
+	getPossibleSizes(possibleSizes);
+	int nrows, ncols;
+	int numStraightEdges = _straightEdges[LEFT] + _straightEdges[RIGHT] + _straightEdges[TOP] + _straightEdges[BOTTOM];
+	bool sufficient = false;
+	for (auto size : possibleSizes) {
+		nrows = size.first;
+		ncols = size.second;
+		if ( (numStraightEdges >= 2*nrows + 2*ncols)
+			 && (numStraightEdges - (2*nrows + 2*ncols) % 2 == 0) ){
+			sufficient = true;
+			break;
+		}
+	}
+
+	if (!sufficient){
+		(*ErrorList::getErrorList()).add(Error(WRONG_NUM_STRAIGHT_EDGES));
+	}
+
+}
 
 int Puzzle::getSize(){
 	return this->_size;
