@@ -15,6 +15,7 @@
 #include <string>
 #include <sstream>
 #include <iterator>
+#include <numeric>
 
 
 int numPieces; //initialization of global variable.
@@ -39,7 +40,6 @@ Puzzle::Puzzle(string fileName){
 void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	ifstream fin(fileName);
 	std::string line;
-	ErrorList* errList = ErrorList::getErrorList();
 	PuzzlePiece curr;
 	getline(fin, line);
 	int totalSum = 0;

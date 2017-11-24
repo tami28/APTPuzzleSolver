@@ -70,6 +70,8 @@ void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdg
         case FEMALE:
             matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = MALE;
             break;
+        case NONE:
+            break;
     }
 }
 
