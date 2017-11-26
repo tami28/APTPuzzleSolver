@@ -51,7 +51,5 @@ public:
     std::map<Constraints , int> requiredCounters;
 
     void constraintsOfCell(int i,int j, char*);
-    //TODO: destructor:
-    //~PuzzleMatrix();
 };
 

@@ -42,7 +42,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	parseFirstLine(line);
 	_pieces.resize(_size);
 	numPieces = _size;
-	//TODO: what if failed reading size? fix this!
 
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	std::vector<int> wrongIDs;
@@ -51,9 +50,9 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 		try {
 			curr = PuzzlePiece(line, idsFromFile);
 			int i = addPiece(curr);
-			if (i == ILLEGAL_PIECE){ //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
-				continue; //TODO
-			}
+//			if (i == ILLEGAL_PIECE){
+//				continue;
+//			}
 			totalSum +=i;
 		}
 		catch (vector<Error> eVec) {
@@ -148,9 +147,6 @@ bool Puzzle::checkForMissingPieces(vector<int> &idsFromFile, vector<int> &ids){
 
 
 int Puzzle::addPiece(PuzzlePiece &piece) {
-	if (0 >= piece.getId()){
-		return ILLEGAL_PIECE; //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
-	}
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
 	for (int edge = LEFT; edge != LAST; ++edge){
@@ -238,7 +234,8 @@ void Puzzle::getPossibleSizes(vector<pair<int,int>> & result){
 			result.push_back(pair<int, int>(i, puzzleSize / i));
 			if (i != puzzleSize / i) {
 				result.push_back(pair<int, int>(puzzleSize / i,
-												i)); //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
+												i));
+                //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
 			}
 		}
 	}

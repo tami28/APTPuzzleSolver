@@ -26,10 +26,7 @@ enum ErrorType{ //Values represent order of output to file.
     CORNERS_CANT_BE_COVERED = 6,
     SUM_EDGES_NOT_ZERO = 7,
     COULD_NOT_FIND_SOLUTION = 8,
-    _WRONG_PIECE_ID,
-    MISSING_SIZE,
-    SUCCESS
-
+    _WRONG_PIECE_ID
 };
 
 

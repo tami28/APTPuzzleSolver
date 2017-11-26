@@ -134,7 +134,7 @@ void ErrorList::toFile(){
 	ofstream fout(outFilePath);
     sort(_errVec.begin(), _errVec.end(), [] (const Error &e1,const Error &e2) {
         return (int) e1.getErrorType() < (int) e2.getErrorType();});
-	for (Error err : _errVec  ){ //TODO: make sure we are going over this in correct order of precendece!
+	for (Error err : _errVec  ){
 		fout << err.toString() << endl;
 
 	}

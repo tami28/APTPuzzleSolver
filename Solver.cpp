@@ -70,6 +70,7 @@ void Solver::solve(){
  * 2.check sufficient cover of non-covered corners.
  * 3.check that there are enough make/female/straights in the remaining pieces.
  */
+
 bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
     int straightLEFTs = 0, straightTOPs = 0, straightRIGHTs = 0, straightBOTTOMs = 0;
     PuzzlePiece* piece;
@@ -168,9 +169,6 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
     }
     return true;
 }
-
-///TODO: change get piece to return ref not pointer
-
 
 
 

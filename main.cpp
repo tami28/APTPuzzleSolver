@@ -31,11 +31,9 @@ int main(int argc, char** argv){
         ErrorList::getErrorList()->toFile();
         return 1;
     }
-    //TODO: check here if can continue based on the errors?
     // Try to solve:
     Solver solver = Solver(puzzle);
     solver.solve();
-    //TODO : this print more errors..
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
     }
@@ -43,7 +41,5 @@ int main(int argc, char** argv){
     ErrorList::close();
 
 }
-
-//TODO: close ErrorList
 
 
