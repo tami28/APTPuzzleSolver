@@ -189,7 +189,7 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 void Puzzle::checkCorners(){
 
     Solver solver = Solver(*this);
-    if (solver.hasSingleRowColSolution()) {
+    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
         return; //See doc!
     }
 
@@ -284,4 +284,13 @@ int Puzzle::getMaxHeight() {
 
 int Puzzle::getMaxWidth() {
     return min(_straightEdges[TOP], _straightEdges[BOTTOM]);
+}
+
+
+bool Puzzle::isPrime(int n){
+    if (n < 2) { return false; }
+    for (int i = 2; i <= int(floor(sqrt(n))); i ++) {
+        if (n % i == 0) { return false; };
+    }
+    return true;
 }
