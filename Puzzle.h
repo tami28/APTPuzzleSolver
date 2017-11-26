@@ -50,6 +50,7 @@ private:
 	int addPiece(PuzzlePiece& piece);
 	void checkCorners();
 	void checkStraightEdges();
+	bool isPrime(int n);
 
 };
 
