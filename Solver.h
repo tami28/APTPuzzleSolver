@@ -32,6 +32,7 @@ public:
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
     bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
+    bool hasSingleRowColSolution();
 };
 
 //solution table

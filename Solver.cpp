@@ -163,7 +163,6 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
 }
 
 
-
 bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
     for(int e = LEFT; e <= BOTTOM; ++e){
         if (!(0 == ((int)piece.getConstraint((Edge)e) +(int)constraints[e]) || constraints[e] == NONE)) {
@@ -174,3 +173,24 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 ///TODO: change get piece to return ref not pointer
+
+
+
+
+bool Solver::hasSingleRowColSolution(){
+    PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.getSize());
+    vector<int> indices(_puzzle.getSize());
+    // Fill indices vector with all relevant indices (1...numPieces)
+    std::iota(indices.begin(), indices.end(), 1);
+    if (_solveForSize(row_pm, indices, &row_pm, 0, 0)){
+        return true;
+    }
+
+    PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.getSize(), 1);
+    // Fill indices vector with all relevant indices (1...numPieces)
+    std::iota(indices.begin(), indices.end(), 1);
+    if (_solveForSize(col_pm, indices, &col_pm, 0, 0)){
+        return true;
+    }
+    return false;
+}

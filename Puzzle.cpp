@@ -7,16 +7,10 @@
  */
 
 #include "Puzzle.h"
-#include "const.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <sstream>
 #include <iterator>
-#include <numeric>
-
+#include "solver.h"
+#include "PuzzleMatrix.h"
 
 int numPieces; //initialization of global variable.
 
@@ -60,7 +54,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			if (i == ILLEGAL_PIECE){ //TODO: Yoav: I think this is no longer needed (piece c'tor will throw the relevant error).
 				continue; //TODO
 			}
-			//idsFromFile.push_back(curr.getId());
 			totalSum +=i;
 		}
 		catch (vector<Error> eVec) {
@@ -94,7 +87,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 
 	fin.close();
 
-	//TODO: should the following errors be reported even if one of the above errors had occurred?
 	if (0 == ErrorList::getNumErrors()){
 		//check for wrong-num-of-straight-edges-error:
 		checkStraightEdges();
@@ -190,9 +182,18 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
 /*
  * check that there are enough sufficient corner pieces to solve puzzle, and report error if not
  * according to: http://moodle.tau.ac.il/mod/forum/discuss.php?d=10775#p16816
+ * in case there's a single-row/single-column solution for the puzzle, we skip the corners check (according to
+ * http://moodle.tau.ac.il/mod/forum/discuss.php?d=10775  we don't have to output a special message for missing
+ * corners in the single-row / single-col case).
  */
 void Puzzle::checkCorners(){
-	string errStr = "";
+
+    Solver solver = Solver(*this);
+    if (solver.hasSingleRowColSolution()) {
+        return; //See doc!
+    }
+
+    string errStr = "";
     //enter this if if we have all the corners and the following checks are irrelevant as _size=1
     if (_size == 1 && _corners[TL].empty() && (_corners[TR].empty())
             && (_corners[BL].empty())  && (_corners[BR].empty()) ){
@@ -271,6 +272,7 @@ void Puzzle::checkStraightEdges(){
 	}
 
 }
+
 
 int Puzzle::getSize(){
 	return this->_size;
