@@ -24,6 +24,7 @@ class Puzzle{
 private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
+    int _totalSum = 0;
 	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
 //functions:
@@ -39,15 +40,17 @@ public:
     int getSize();
 	int getMaxHeight();
 	int getMaxWidth();
+    int getTotalSum(){return _totalSum}
 	bool checkForMissingPieces(vector<int>& ids, vector<int> &idsFromFile);
 	void getPossibleSizes(vector<pair<int,int>> & result);
+    bool isPrime(int n);
+    void checkCorners();
+    void checkStraightEdges();
 
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);
-	void checkCorners();
-	void checkStraightEdges();
-	bool isPrime(int n);
+
 
 };
 

@@ -30,7 +30,27 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
 void Solver::solve(){
     int row, col;
     bool solved;
-    memoizationSet.clear();
+    memoizationSet.clear(); //left for a different type of solution we might add
+
+    //Check:
+    if (0 == ErrorList::getNumErrors()){
+        //check for wrong-num-of-straight-edges-error:
+        _puzzle.checkStraightEdges();
+        //check for missing corner error:
+        if (_puzzle.isPrime(_puzzle.getSize()) || _puzzle.getSize()== 1 || hasSingleRowColSolution()) {
+            return; //See doc!
+        }
+        else{
+            _puzzle.checkCorners();
+        }
+        //check for sum-not-zero error:
+        if(0 != _puzzle.getTotalSum()){
+            (*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
+        }
+    }
+    if (ErrorList::getNumErrors() > 0) {
+        return;
+    }
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
     vector<int> indices(_puzzle.getSize());

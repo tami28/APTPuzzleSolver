@@ -9,7 +9,7 @@
 #include "Puzzle.h"
 #include <sstream>
 #include <iterator>
-#include "solver.h"
+//#include "solver.h"
 #include "PuzzleMatrix.h"
 
 int numPieces; //initialization of global variable.
@@ -36,7 +36,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	std::string line;
 	PuzzlePiece curr;
 	getline(fin, line);
-	int totalSum = 0;
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
 
 	parseFirstLine(line);
@@ -51,9 +50,10 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 			curr = PuzzlePiece(line, idsFromFile);
 			int i = addPiece(curr);
 //			if (i == ILLEGAL_PIECE){
+
 //				continue;
 //			}
-			totalSum +=i;
+			_totalSum +=i;
 		}
 		catch (vector<Error> eVec) {
             for (Error e: eVec) {
@@ -85,21 +85,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	}
 
 	fin.close();
-
-	if (0 == ErrorList::getNumErrors()){
-		//check for wrong-num-of-straight-edges-error:
-		checkStraightEdges();
-		//check for missing corner error:
-		checkCorners();
-		//check for sum-not-zero error:
-		if(0 != totalSum){
-			(*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
-		}
-	}
-
-
-
-
 }
 
 
@@ -184,10 +169,10 @@ int Puzzle::addPiece(PuzzlePiece &piece) {
  */
 void Puzzle::checkCorners(){
 
-    Solver solver = Solver(*this);
-    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
-        return; //See doc!
-    }
+//    Solver solver = Solver(*this);
+//    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
+//        return; //See doc!
+//    }
 
     string errStr = "";
     //enter this if if we have all the corners and the following checks are irrelevant as _size=1
