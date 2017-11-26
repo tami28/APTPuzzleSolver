@@ -5,7 +5,7 @@
  *  Created on: 11 nov 2017
  *      Author: Tami
  */
-
+#include <string>
 #include "Puzzle.h"
 #include <sstream>
 #include <iterator>
