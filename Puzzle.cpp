@@ -11,6 +11,7 @@
 #include <iterator>
 //#include "solver.h"
 #include "PuzzleMatrix.h"
+#include <numeric>
 
 int numPieces; //initialization of global variable.
 
@@ -41,7 +42,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	parseFirstLine(line);
 	_pieces.resize(_size);
 	numPieces = _size;
-
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	std::vector<int> wrongIDs;
 	std::vector<int> idsFromFile; //holds all integer IDs seen in file (for detecting missing IDs).
@@ -175,11 +175,6 @@ void Puzzle::checkCorners(){
 //    }
 
     string errStr = "";
-    //enter this if if we have all the corners and the following checks are irrelevant as _size=1
-    if (_size == 1 && _corners[TL].empty() && (_corners[TR].empty())
-            && (_corners[BL].empty())  && (_corners[BR].empty()) ){
-        return;
-    }
     int pieceUsedForCurrentCorner;
     for (int corner = TL ; corner <= BR ; corner++){
         if (_corners[(Corners) corner].empty()){

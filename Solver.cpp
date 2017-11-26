@@ -3,6 +3,7 @@
 //
 
 #include "Solver.h"
+#include <numeric>
 
 
 
@@ -37,10 +38,7 @@ void Solver::solve(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.checkStraightEdges();
         //check for missing corner error:
-        if (_puzzle.isPrime(_puzzle.getSize()) || _puzzle.getSize()== 1 || hasSingleRowColSolution()) {
-            return; //See doc!
-        }
-        else{
+        if (!(_puzzle.isPrime(_puzzle.getSize()) || _puzzle.getSize()== 1 || hasSingleRowColSolution())) {
             _puzzle.checkCorners();
         }
         //check for sum-not-zero error:

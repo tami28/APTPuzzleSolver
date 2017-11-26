@@ -40,7 +40,7 @@ public:
     int getSize();
 	int getMaxHeight();
 	int getMaxWidth();
-    int getTotalSum(){return _totalSum}
+    int getTotalSum(){return _totalSum;};
 	bool checkForMissingPieces(vector<int>& ids, vector<int> &idsFromFile);
 	void getPossibleSizes(vector<pair<int,int>> & result);
     bool isPrime(int n);
