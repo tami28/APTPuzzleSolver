@@ -8,8 +8,6 @@
 #include "Puzzle.h"
 #include "Solver.h"
 
-
-//TODO: add handling bad input params from cmnd line
 string outFilePath;
 
 int main(int argc, char** argv){

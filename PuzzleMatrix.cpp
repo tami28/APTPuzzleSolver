@@ -207,7 +207,7 @@ void PuzzleMatrix::print() {
     }
 }
 
-//TODO: is it ok to return a string this way? no need to allocate it dynamically?
+
 string PuzzleMatrix::toString(){
     string s;
     for (int i=0; i<nrows; i++){
@@ -249,19 +249,3 @@ void PuzzleMatrix::constraintsOfCell(int i, int j, char* res) {
     }
 }
 
-//TODO: is this needed:
-string PuzzleMatrix::encode(){
-    string s;
-    for (int i=0; i<nrows; i++){
-        for (int j=0; j<ncols; j++){
-            if (matrix[i][j].piece == NULL) {
-                s.append("N");
-                s.append("|");
-                continue;
-            }
-            s.append(std::to_string(matrix[i][j].piece->getEncoding()));
-            s.append("|");
-        }
-    }
-    return s;
-}

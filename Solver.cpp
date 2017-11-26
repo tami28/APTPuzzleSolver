@@ -3,9 +3,9 @@
 //
 
 #include "Solver.h"
-#include <numeric>
 
-// #TODO: condider adding an innitial solvability test, to check if there are enough corners/straight edges/sums of male-female etc.
+
+
 Solver::Solver(){} //empty c'tor
 
 Solver::Solver(Puzzle& p){ //c'tor from Puzzle
@@ -104,17 +104,14 @@ bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
             }
         }
 
-    bool TL_required = (pm->matrix[0][0].piece == NULL),
-         BL_required = (pm->matrix[pm->getNrows()-1][0].piece == NULL),
-         TR_required = (pm->matrix[0][pm->getNcols()-1].piece == NULL),
-         BR_required = (pm->matrix[pm->getNrows()-1][pm->getNcols()-1].piece == NULL);
+    bool TL_required = (pm->matrix[0][0].piece == nullptr),
+         BL_required = (pm->matrix[pm->getNrows()-1][0].piece == nullptr),
+         TR_required = (pm->matrix[0][pm->getNcols()-1].piece == nullptr),
+         BR_required = (pm->matrix[pm->getNrows()-1][pm->getNcols()-1].piece == nullptr);
     if ((BL_required && (!BL_corner)) ||
             (BR_required && (!BR_corner)) ||
             (TR_required && (!TR_corner)) ||
             (TL_required && (!TL_corner) )) {
-            //cout << "corner redundancy in matrix: \n" << endl; todo: rm
-            //pm->print(); todo: rm
-        //TODO: was this the meaning of order?
             return false;
     }
 

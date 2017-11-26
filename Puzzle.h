@@ -15,8 +15,6 @@
 #include <map>
 using namespace std;
 
-//TODO: how to output the errors in the needed order?
-
 #define ILLEGAL_PIECE -5
 
 
@@ -28,7 +26,6 @@ private:
 	int _size = 0;
 	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
-	//TODO: represent here possible corners?
 //functions:
 public:
 	//constructors:

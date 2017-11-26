@@ -98,12 +98,7 @@ ErrorList::ErrorList(){
 	_initialized = true;
 }
 
-//TODO: is this needed?
-/*
-ErrorList::~ErrorList(){
-	_errVec.clear();
-}
-*/
+
 
 //Public methods:
 ErrorList* ErrorList::getErrorList(){

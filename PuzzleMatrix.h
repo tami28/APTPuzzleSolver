@@ -29,8 +29,9 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
+
 public:
-    CellArray2D matrix; // TODO: make private again
+    CellArray2D matrix;
     PuzzleMatrix(int row, int col);
     PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
@@ -45,7 +46,6 @@ public:
 
     void toFile(string path);
     string toString();
-    string encode();
     void print();
 
     std::map<Constraints , int> requiredCounters;
