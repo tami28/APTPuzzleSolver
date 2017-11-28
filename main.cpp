@@ -15,6 +15,9 @@ int main(int argc, char** argv){
     printf("IN DEBUG MODE!!!!\n");
 #endif
 
+    ConstraintsTable tab = ConstraintsTable();
+
+
     if (argc <2){
         std::cout<<"Error, no input file. Run COMMAND inputFilePath or COMMAND inputFilePath outputFilePath for specific output file location";
     }

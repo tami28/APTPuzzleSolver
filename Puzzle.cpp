@@ -83,8 +83,12 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 		string infoStr = ss.str().substr(0, (ss.str()).length() - 2);
 		(*ErrorList::getErrorList()).add(Error(MISSING_PIECES, infoStr));
 	}
-
 	fin.close();
+
+	for (auto p : _pieces){
+		constraintsTable.insertPiece(p);
+	}
+
 }
 
 
