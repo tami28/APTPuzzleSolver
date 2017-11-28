@@ -63,8 +63,10 @@ void Solver::solve(){
         col = size.second;
         solution = new PuzzleMatrix(row,col);
         pm = PuzzleMatrix(row, col);
-
-        solved = _solveForSize(pm, indices, solution, 0, 0); // Find a solution for size (row,col)
+        _puzzle.selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
+        unordered_set<int> usedIDs; //TODO: note now calling 2nd version of _solveForSize! (overloaded)
+        solved = _solveForSize(pm, usedIDs, solution, 0, 0); // Find a solution for size (row,col)
+        //solved = _solveForSize(pm, indices, solution, 0, 0); // Find a solution for size (row,col)
         if (solved) {
             break;
         } else {delete solution;}
@@ -150,6 +152,9 @@ bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
     return true;
 }
 
+
+
+
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col) {
     if(row == (pm.getNrows()) && col== 0 && indices.empty()){
         return true;
@@ -173,10 +178,48 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
                 }
             }
             badPieces.insert((*_puzzle.getPieceAt(i)).getConstraintStr());
-         }
+        }
     }
     return false;
 }
+
+
+
+bool Solver::_solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col) {
+    if(row == (pm.getNrows()) && col== 0 && usedIDs.size() == numPieces){
+        return true;
+    }
+
+    char consts[4] = {NONE, NONE, NONE, NONE};
+    pm.constraintsOfCell(row,col,consts);
+    int constraints[4];
+    for (int i; i < 4; i++) { constraints[i] = (int) consts[i]; } //TODO: ugly patch..
+    unordered_set<string> badPieces;
+    set<int> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints);
+    for (int i : relevantPieceIDs){
+        if (usedIDs.find(i) != usedIDs.end()) { continue; }
+        if (badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end()){
+            pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col);
+            unordered_set<int> newUsedIDs(usedIDs);
+            newUsedIDs.insert(i);
+            if( col < (pm.getNcols()-1)){
+                if (_solveForSize(pm, newUsedIDs, result, row, col+1)){
+                    return true;
+                }
+            } else{
+                if(_solveForSize(pm, newUsedIDs, result, row+1, 0)){
+                    return true;
+                }
+            }
+            badPieces.insert((*_puzzle.getPieceAt(i)).getConstraintStr());
+        }
+    }
+    return false;
+}
+
+
+
+
 
 
 bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
@@ -195,6 +238,7 @@ bool Solver::hasSingleRowColSolution(){
     vector<int> indices(_puzzle.getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
+    _puzzle.selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
     if (_solveForSize(row_pm, indices, &row_pm, 0, 0)){
         return true;
     }
@@ -202,6 +246,7 @@ bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.getSize(), 1);
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
+    _puzzle.selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
     if (_solveForSize(col_pm, indices, &col_pm, 0, 0)){
         return true;
     }

@@ -12,6 +12,8 @@
 #include <sstream>
 
 class ConstraintsTable {
+public: //TODO: return to private
+
     unordered_map<std::string, set<int>> _table;
 
 public:

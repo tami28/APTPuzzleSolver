@@ -21,18 +21,24 @@ void ConstraintsTable::insertPiece(PuzzlePiece& p){
     Constraints pieceFittingConstraints[4];
     for (int i = LEFT; i < LAST; i++) { pieceFittingConstraints[i] = p.getOppositeConstraint( (Edge) i ); }
 
+    int right, top, left, bottom;
     for (int i = 0; i <= 1; i++)
         for (int j = 0; j <= 1; j++)
             for (int k = 0; k <= 1; k++)
                 for (int m = 0; m <= 1; m++){
-                    if (i) { pieceFittingConstraints[3] = Constraints::NONE; }
-                    if (j) { pieceFittingConstraints[2] = Constraints::NONE; }
-                    if (k) { pieceFittingConstraints[1] = Constraints::NONE; }
-                    if (m) { pieceFittingConstraints[0] = Constraints::NONE; }
+                    right = pieceFittingConstraints[0];
+                    top = pieceFittingConstraints[1];
+                    left = pieceFittingConstraints[2];
+                    bottom = pieceFittingConstraints[3];
+                    if (i) { bottom = Constraints::NONE; }
+                    if (j) { left = Constraints::NONE; }
+                    if (k) { top = Constraints::NONE; }
+                    if (m) { right = Constraints::NONE; }
 
                     std::stringstream key;
-                    key << pieceFittingConstraints[0] << pieceFittingConstraints[1] << pieceFittingConstraints[2] << pieceFittingConstraints[3];
-                    _table.at(key.str()).insert(p.getId());
+                    key << right << top << left << bottom;
+                    string ky = key.str();
+                    _table.at(ky).insert(p.getId());
                 }
 }
 
@@ -40,5 +46,7 @@ void ConstraintsTable::insertPiece(PuzzlePiece& p){
 set<int> ConstraintsTable::getIDsFittingConstraints(int consts[4]){
     std::stringstream key;
     key << consts[0] << consts[1] << consts[2] << consts[3];
-    return _table.at(key.str());
+    string k = key.str();
+    set<int> res = _table.at(key.str());
+    return res;
     }

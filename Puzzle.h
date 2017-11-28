@@ -49,7 +49,7 @@ public:
     bool isPrime(int n);
     void checkCorners();
     void checkStraightEdges();
-
+	void selAllPiecesValid();
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);

@@ -85,9 +85,12 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	}
 	fin.close();
 
+	//Insert all pieces to the constraintsTable:
 	for (auto p : _pieces){
 		constraintsTable.insertPiece(p);
 	}
+
+
 
 }
 
@@ -274,4 +277,11 @@ bool Puzzle::isPrime(int n){
         if (n % i == 0) { return false; };
     }
     return true;
+}
+
+void Puzzle::selAllPiecesValid(){
+	for (PuzzlePiece& p : _pieces){
+		//p.setIsValid(true);
+		p.isValid = true;
+	}
 }
