@@ -14,8 +14,8 @@
 class ConstraintsTable {
 public: //TODO: return to private
 
-    unordered_map<std::string, set<int>> _table;
-
+    unordered_map<int, set<int>> _table;
+    int getKey(int right, int top, int left, int bottom);
 public:
     ConstraintsTable();
     void insertPiece(PuzzlePiece& p);
