@@ -91,12 +91,17 @@ void Solver::solve(){
  * 3.check that there are enough make/female/straights in the remaining pieces.
  */
 
-bool Solver::checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm){
+bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
     int straightLEFTs = 0, straightTOPs = 0, straightRIGHTs = 0, straightBOTTOMs = 0;
     PuzzlePiece* piece;
     bool TL_corner = false, BL_corner = false, TR_corner = false, BR_corner = false;
-    std::map<Constraints , int> sumConstraints;
-    for (auto i: indices){
+    std::unordered_map<int, int> sumConstraints;
+    sumConstraints.insert({1, 0});
+    sumConstraints.insert({-1, 0});
+    sumConstraints.insert({0, 0});
+
+    for (int i=1; (i <= numPieces) ; i++){
+        if ((std::find(usedIDs.begin(), usedIDs.end(), i) != usedIDs.end())) {continue;}
         piece = _puzzle.getPieceAt(i);
         if (piece->getConstraint(LEFT) == STRAIGHT) {
             straightLEFTs++;
@@ -162,7 +167,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, PuzzleMatrix *
     if(row == (pm.getNrows()) && col== 0 && usedIDs.size() == numPieces){
         return true;
     }
-
+    //TODO: decide about the constant here (0.5? 0.3?)
+    if (numPieces > 30 && usedIDs.size() > numPieces*(0.5) && !checkSufficientConstraints(usedIDs, &pm)) { return false; }
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(row,col,constraints);
     unordered_set<string> badPieces;
