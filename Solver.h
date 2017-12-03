@@ -29,10 +29,12 @@ public:
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
+    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
     bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     bool hasSingleRowColSolution();
-};
+    virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces, char consts[]);
+
+    };
 
 //solution table
 //Solution finder gets puzzle & solution table and return a table of pieces representing the solution

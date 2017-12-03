@@ -23,6 +23,7 @@ class PuzzlePiece {
     int id;
     int encoding;
     Constraints edges[4];
+    Rotate rotate = NO;
 
 public:
     PuzzlePiece(); // Empty c'tor

@@ -164,7 +164,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *
     pm.constraintsOfCell(row,col,consts);
     unordered_set<string> badPieces;
     for (int i :indices){
-        if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts) && badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end()){
+        if (_isFitForCell(i, badPieces, consts)){
+        //if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts) && badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end()){
             pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col);
             vector<int> newIndices (indices);
             newIndices.erase(find(newIndices.begin(), newIndices.end(), i));
@@ -218,6 +219,9 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleM
 }
 
 
+bool Solver::_isFitForCell(int i, std::unordered_set<string>& badPieces, char consts[]){
+    return (piecefitsConstrains(*_puzzle.getPieceAt(i), consts) && badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end());
+}
 
 
 
