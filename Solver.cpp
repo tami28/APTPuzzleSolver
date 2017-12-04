@@ -7,7 +7,7 @@
 
 
 
-Solver::Solver(){} //empty c'tor
+//Solver::Solver(){} //empty c'tor
 
 Solver::Solver(Puzzle& p){ //c'tor from Puzzle
     this->_puzzle = p;

@@ -69,13 +69,13 @@ public:
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, int i, int j);
+    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
+    //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces,  vector<int> usedIDs);
-    virtual bool solverFinished(PuzzleMatrix& pm,vector<int>& usedIDs);
+    virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs, int row, int col);
     int COUNT; //TODO; rem
 };
-
 
 //solution table
 //Solution finder gets puzzle & solution table and return a table of pieces representing the solution
