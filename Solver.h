@@ -12,15 +12,56 @@
 #include "const.h"
 #include "PuzzleMatrix.h"
 #include "Exceptions.h"
+#include <memory>
+
+/*
+ * Used to determine in what order to go over the puzzle.
+ */
+class Step{
+    friend class Solver;
+    friend class RotateSolver;
+protected:
+    int i = 0;
+    int j =0 ;
+    int nrow = 0;
+    int ncol = 0;
+public:
+    /*
+     * update i&j to the next cell to go over. If we are at the end of the puzzle, meaning no next step - return false.
+     */
+    virtual bool nextStep();
+    /*
+     * update i&j to the previous cell we wentover. If we are at the start of the puzzle, meaning no prev step s- return false.
+     */
+    virtual bool prevStep();
+    Step(){};
+    Step(int n, int m) : nrow(n), ncol(m){};
+};
+
+/*
+ * Used to go over frame, then by row inside.
+ */
+class StepFrame :public Step{
+    friend class Solver;
+    friend class RotateSolver;
+public:
+    bool nextStep();
+    bool prevStep();
+    StepFrame(int n, int m) : Step(n,m){};
+
+};
+
 
 class Solver{
 private:
     Puzzle _puzzle;
     std::vector<int> indices;
+    std::unique_ptr<Step> next;
     virtual bool checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm);
+    bool isFrame = false;
 
 public:
-    Solver();
+    Solver() = default ;;
     Solver(Puzzle& p);
     //void setPuzzle(Puzzle& p);
     virtual std::vector<pair<int, int>> getPossiblePuzzleSizes();
@@ -28,13 +69,13 @@ public:
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
-    //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
+    bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, int i, int j);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces,  vector<int> usedIDs);
-    virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs, int row, int col);
+    virtual bool solverFinished(PuzzleMatrix& pm,vector<int>& usedIDs);
     int COUNT; //TODO; rem
 };
+
 
 //solution table
 //Solution finder gets puzzle & solution table and return a table of pieces representing the solution

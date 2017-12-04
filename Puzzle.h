@@ -22,8 +22,9 @@ using namespace std;
 
 
 class Puzzle{
+
 //members:
-protected:
+private:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
     int _totalSum = 0;
@@ -48,6 +49,7 @@ public:
     void checkCorners();
     void checkStraightEdges();
 	void selAllPiecesValid();
+	int totalStraightEdges(){ return _straightEdges[0] + _straightEdges[1]+_straightEdges[2]+_straightEdges[3];};
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);

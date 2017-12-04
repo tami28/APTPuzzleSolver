@@ -249,3 +249,61 @@ void PuzzleMatrix::constraintsOfCell(int i, int j, int* res) {
     }
 }
 
+void PuzzleMatrix::constraintsOfCellFrameStep(int i, int j,int* constraints){
+    //first col
+    if (j == 0){
+        constraints[LEFT] = STRAIGHT;
+        if (i == 0){
+            constraints[TOP] = STRAIGHT;
+        } else {
+            if (i == nrows - 1) {
+                constraints[BOTTOM] = STRAIGHT;
+            } else {
+                constraints[BOTTOM] = matrix[i + 1][j].piece->getConstraint(TOP);
+            }
+        }
+    }
+    //last col:
+    if (j == ncols-1){
+        constraints[RIGHT] = STRAIGHT;
+        if (i == nrows-1){
+            constraints[BOTTOM] = STRAIGHT;
+        }
+        else{
+            if (i==0){
+                constraints[TOP] = STRAIGHT;
+            } else{
+                constraints[TOP] = matrix[i-1][j].piece->getConstraint(TOP);
+            }
+        }
+    }
+    //first row:
+    if( i ==0){
+        constraints[TOP] = STRAIGHT;
+        if (j > 0 && j<ncols -1){ //handled j=0..
+            constraints[LEFT] = matrix[i][j-1].piece->getConstraint(RIGHT);
+        }
+    }
+    //last row:
+    if (i == nrows-1){
+        constraints[BOTTOM] = STRAIGHT;
+        if (j < ncols-1){
+            constraints[RIGHT] = matrix[i][j+1].piece->getConstraint(LEFT);
+        }
+    }
+
+    //inside:
+    if(j>0 && j<ncols-1 && i>0 && i<nrows-1){
+        constraints[LEFT] = matrix[i][j-1].piece->getConstraint(RIGHT);
+        constraints[TOP] = matrix[i-1][j].piece->getConstraint(BOTTOM);
+    }
+    //inner right frame
+    if (j == ncols-2&& i>0 && i<nrows-1){
+        constraints[RIGHT] = matrix[i][j+1].piece->getConstraint(LEFT);
+    }
+    //inner bottom frame
+    if (i == nrows-2&& j>0 && j<ncols-1){
+        constraints[BOTTOM] = matrix[i+1][j].piece->getConstraint(TOP);
+    }
+
+}
