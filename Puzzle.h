@@ -15,7 +15,6 @@
 #include <map>
 #include "const.h"
 #include "ConstraintsTable.h"
-
 using namespace std;
 
 #define ILLEGAL_PIECE -5
@@ -24,7 +23,7 @@ using namespace std;
 
 class Puzzle{
 //members:
-private:
+protected:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
     int _totalSum = 0;
@@ -36,10 +35,9 @@ public:
 	Puzzle();
 	Puzzle(string fileName);
 	ConstraintsTable constraintsTable;
-	//Dt'r: We didn't assign anyt	hing with new, nor de we have pointers therefore we don't need to implement a Dt'r.
-
+	//Dt'r: We didn't assign anything with new, nor de we have pointers therefore we don't need to implement a Dt'r.
 	void buildPuzzleFromFile(const string& fileName);
-	PuzzlePiece* getPieceAt(int i);
+    PuzzlePiece* getPieceAt(int i);
     int getSize();
 	int getMaxHeight();
 	int getMaxWidth();

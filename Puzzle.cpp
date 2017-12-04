@@ -138,10 +138,10 @@ bool Puzzle::checkForMissingPieces(vector<int> &idsFromFile, vector<int> &ids){
 }
 
 
-int Puzzle::addPiece(PuzzlePiece &piece) {
+int Puzzle::addPiece(PuzzlePiece& piece) {
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
-	for (int edge = LEFT; edge != LAST; ++edge){
+	for (int edge = LEFT; edge != LAST; ++edge){ //TODO
 		sum += piece.getConstraint((Edge) edge);
         if (piece.getConstraint((Edge) edge) == STRAIGHT){
             _straightEdges[edge]++;

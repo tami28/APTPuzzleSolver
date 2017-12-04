@@ -228,7 +228,7 @@ string PuzzleMatrix::toString(){
 
 
 
-void PuzzleMatrix::constraintsOfCell(int i, int j, char* res) {
+void PuzzleMatrix::constraintsOfCell(int i, int j, int* res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (j == 0) {
         res[LEFT] = STRAIGHT;

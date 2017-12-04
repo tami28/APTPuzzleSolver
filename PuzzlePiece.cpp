@@ -9,6 +9,7 @@
 /*
  * empy constructor for a Piece object
  */
+
 PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), isValid(true), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
 
 /*

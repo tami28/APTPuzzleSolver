@@ -10,9 +10,11 @@ ConstraintsTable::ConstraintsTable(){
         for (int j = FEMALE; j <= NONE; j++)
             for (int k = FEMALE; k <= NONE; k++)
                 for (int m = FEMALE; m <= NONE; m++){
-                    std::stringstream key;
-                    key << i << j << k << m;
-                    _table.insert( {key.str(), set<int>()} );
+                    //std::stringstream key;
+                    //key << i << j << k << m;
+                    //_table.insert( {key.str(), set<int>()} );
+                    int key = getKey(i,j,k,m);
+                    _table.insert( {key, set<int>()} );
                 }
 }
 
@@ -35,18 +37,27 @@ void ConstraintsTable::insertPiece(PuzzlePiece& p){
                     if (k) { top = Constraints::NONE; }
                     if (m) { right = Constraints::NONE; }
 
-                    std::stringstream key;
-                    key << right << top << left << bottom;
-                    string ky = key.str();
-                    _table.at(ky).insert(p.getId());
+                    //std::stringstream key;
+                    //key << right << top << left << bottom;
+                    //string ky = key.str();
+                    //_table.at(ky).insert(p.getId());
+                    int key = getKey(right, top, left, bottom);
+                    _table.at(key).insert(p.getId());
                 }
 }
 
 
 set<int> ConstraintsTable::getIDsFittingConstraints(int consts[4]){
-    std::stringstream key;
-    key << consts[0] << consts[1] << consts[2] << consts[3];
-    string k = key.str();
-    set<int> res = _table.at(key.str());
+    //std::stringstream key;
+    //key << consts[0] << consts[1] << consts[2] << consts[3];
+    //string k = key.str();
+    //set<int> res = _table.at(key.str());
+    int key = getKey(consts[0], consts[1], consts[2],consts[3]);
+    set<int> res = _table.at(key);
     return res;
     }
+
+
+int ConstraintsTable::getKey(int right, int top, int left, int bottom){
+    return (right + 1)*1000 + (top + 1)*100 + (left + 1)*10 + (bottom + 1);
+}

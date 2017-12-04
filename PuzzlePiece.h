@@ -19,12 +19,11 @@
 
 using namespace std;
 
-class PuzzlePiece {
+class PuzzlePiece  {
+protected:
+    Constraints edges[4];
     int id;
     int encoding;
-    Constraints edges[4];
-    Rotate rotate = NO;
-
 public:
     PuzzlePiece(); // Empty c'tor
     PuzzlePiece(int id, int edges[4]);//PuzzlePiece(const PuzzlePiece& otherPiece); //copy c'tor
