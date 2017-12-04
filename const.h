@@ -19,7 +19,7 @@ enum Edge {LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST = 4};
 
 enum Corners {TL = 0, TR = 1, BL = 2, BR = 3, LAST_C};
 
-enum Rotate {NO = 0, DEG90, DEG180, DEG270};
+enum Rotate {NO = 0, DEG90 = 90, DEG180 = 180, DEG270 = 270};
 extern std::string outFilePath;
-
+extern bool withRotations;
 #define DEFAULT_OUTPUT_FILE "solution.out"

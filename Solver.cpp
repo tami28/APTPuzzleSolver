@@ -12,8 +12,8 @@ Solver::Solver(){} //empty c'tor
 Solver::Solver(Puzzle& p){ //c'tor from Puzzle
     this->_puzzle = p;
     // Initialize vector of indices:
-    for( int i = 1; i <= p.getSize(); i++ )
-        this->indices.push_back( i );
+//    for( int i = 1; i <= p.getSize(); i++ )
+//        this->indices.push_back( i );
 }
 
 
@@ -199,10 +199,14 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, PuzzleMatrix *
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(row,col,constraints);
     unordered_set<string> badPieces;
-    set<int> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
-    for (int i : relevantPieceIDs){
+    set<IDandRotation> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
+    int i;
+    Rotate rotation;
+    for (auto PieceIDandRotation : relevantPieceIDs){
+        i = PieceIDandRotation.first;
+        rotation = PieceIDandRotation.second;
         if (_isFitForCell(i, badPieces, usedIDs)){
-            pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col); //TODO should rotate before.
+            pm.assignPieceToCell(_puzzle.getPieceAt(i),rotation, row,col); //TODO should rotate before.
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
             if( col < (pm.getNcols()-1)){

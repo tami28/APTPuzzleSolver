@@ -58,9 +58,9 @@ int PuzzleMatrix::getNcols() const{
  * Update the constraints of a given neighbour, according to a specific edge of the piece that was
  * placed near that neighbour.
  */
-void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
+void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece, Rotate rotation, Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
                                                 int neighbourRow, int neighbourCol) {
-    switch (piece->getConstraint(pieceEdgeToUpdateBy)) {
+    switch (piece->getConstraint(pieceEdgeToUpdateBy, rotation)) {
         case STRAIGHT:
             matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = STRAIGHT;
             break;
@@ -81,27 +81,28 @@ void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdg
  * assign a given piece to a cell in the PuzzleMatrix, and updates the constraints of the neighbouring cells accordingly
  * assumes piece can be legally assigned there.
  */
-void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, int row, int col){
-    matrix[row][col].piece = piece;
+void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, Rotate rotation, int row, int col){
+    matrix[row][col].piece = piece; //TODO: maybe no need to actually keep Piece in matrix? just id?
+    matrix[row][col].rotation = rotation;
     //Update constraints of neighbours:
     if (row > 0){//cell has a neighbour above
-        UpdateConstraintsOfNeighbour(piece, TOP, BOTTOM, row-1, col);
+        UpdateConstraintsOfNeighbour(piece, rotation, TOP, BOTTOM, row-1, col); //TODO: maybe send piece here byRef?
         }
     if (row < nrows - 1){//cell has a neighbour below
-        UpdateConstraintsOfNeighbour(piece, BOTTOM, TOP, row+1, col);
+        UpdateConstraintsOfNeighbour(piece, rotation,  BOTTOM, TOP, row+1, col);
     }
     if (col > 0){//cell has a neighbour on the left
-        UpdateConstraintsOfNeighbour(piece, LEFT, RIGHT, row, col-1);
+        UpdateConstraintsOfNeighbour(piece, rotation, LEFT, RIGHT, row, col-1);
     }
     if (col < ncols - 1){//cell has a neighbour on the right
-        UpdateConstraintsOfNeighbour(piece, RIGHT, LEFT, row, col+1);
+        UpdateConstraintsOfNeighbour(piece, rotation, RIGHT, LEFT, row, col+1);
     }
 
-    updateRequiredCounters(piece, row, col);
+    updateRequiredCounters(piece, rotation, row, col);
 }
 
 
-void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, int row, int col){
+void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, Rotate rotation, int row, int col){
     //If piece was placed at edge of matrix, update requiredStraights:
     if (row == 0 || row == this->nrows -1) { this->requiredCounters[STRAIGHT]--; }
     if (col == 0 || col == this->ncols -1) { this->requiredCounters[STRAIGHT]--; }
@@ -110,25 +111,25 @@ void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, int row, int col){
         if (matrix[row - 1][col].piece == nullptr) // The neighbour is vacant
             this->requiredCounters[piece->getOppositeConstraint(TOP)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(TOP)]--;
+            this->requiredCounters[piece->getConstraint(TOP, rotation)]--;
     }
     if (row < nrows - 1){//Given cell has a neighbour below
         if (matrix[row+1][col].piece == nullptr) // The neighbour is vacant
             this->requiredCounters[piece->getOppositeConstraint(BOTTOM)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(BOTTOM)]--;
+            this->requiredCounters[piece->getConstraint(BOTTOM, rotation)]--;
     }
     if (col > 0){//Given cell has a neighbour on the left
         if (matrix[row][col-1].piece == nullptr) // The neighbour is vacant
             this->requiredCounters[piece->getOppositeConstraint(LEFT)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(LEFT)]--;
+            this->requiredCounters[piece->getConstraint(LEFT, rotation)]--;
     }
     if (col < ncols - 1 ){//Given cell has a neighbour on the right
         if (matrix[row][col+1].piece == nullptr) // The neighbour is vacant
             this->requiredCounters[piece->getOppositeConstraint(RIGHT)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(RIGHT)]--;
+            this->requiredCounters[piece->getConstraint(RIGHT, rotation)]--;
     }
 
 
@@ -176,13 +177,15 @@ bool PuzzleMatrix:: isFit(PuzzlePiece* piece, int row, int col){
 void PuzzleMatrix::toFile(string path) {
     ofstream fout(path);
     for (int i=0; i<nrows; i++){
-
         for (int j=0; j<ncols; j++){
             if (matrix[i][j].piece == NULL) {
                 fout << "NA" << " ";
                 continue;
             }
             fout << matrix[i][j].piece->getId();
+            if (matrix[i][j].rotation != Rotate::NO) {
+                fout << " [" << matrix[i][j].rotation << "]";
+            }
             if (j < (ncols-1)){
                 fout<< " ";
             }
@@ -228,6 +231,7 @@ string PuzzleMatrix::toString(){
 
 
 
+//TODO: not applicable for rotations, remove if no other need for this func (replaced by getConstraintsOfCell)
 void PuzzleMatrix::constraintsOfCell(int i, int j, int* res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (j == 0) {
@@ -249,3 +253,6 @@ void PuzzleMatrix::constraintsOfCell(int i, int j, int* res) {
     }
 }
 
+void PuzzleMatrix::getConstraintsOfCell(int row, int col, int* res){
+    for (int i=0; i<4; i++) { res[i] = (*this).matrix[row][col].constraints.at(i); }
+}

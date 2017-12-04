@@ -26,6 +26,7 @@ class PuzzleMatrix{
     typedef struct Cell{
         PuzzlePiece* piece = NULL;
         ConstraintsArray constraints = ConstraintsArray(4, Constraints::NONE);
+        Rotate rotation;
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
@@ -36,10 +37,10 @@ public:
     PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
 
-    void updateRequiredCounters(PuzzlePiece* piece, int row, int col);
-    void UpdateConstraintsOfNeighbour(PuzzlePiece* piece,Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
+    void updateRequiredCounters(PuzzlePiece* piece, Rotate rotation, int row, int col);
+    void UpdateConstraintsOfNeighbour(PuzzlePiece* piece, Rotate rotation, Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
                                                     int neighbourRow, int neighbourCol);
-    void assignPieceToCell(PuzzlePiece* piece, int row, int col);
+    void assignPieceToCell(PuzzlePiece* piece,Rotate rotation, int row, int col);
     bool isFit(PuzzlePiece* piece, int row, int col);
     int getNrows() const;
     int getNcols() const;
@@ -51,5 +52,6 @@ public:
     std::map<Constraints , int> requiredCounters;
 
     void constraintsOfCell(int i,int j, int*);
+    void getConstraintsOfCell(int row, int col, int* res);
 };
 

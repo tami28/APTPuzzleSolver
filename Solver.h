@@ -16,7 +16,7 @@
 class Solver{
 private:
     Puzzle _puzzle;
-    std::vector<int> indices;
+    //std::vector<int> indices;
     virtual bool checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm);
 
 public:

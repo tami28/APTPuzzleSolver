@@ -30,6 +30,7 @@ public:
     PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromFile); //c'tor from file-line
     int getId();
     int getEncoding();
+    Constraints getConstraint(Edge edge, Rotate rotation);
     Constraints getConstraint(Edge edge);
     Constraints getOppositeConstraint(Edge edge);
     bool canConnect(PuzzlePiece& other, Edge edge); //can connect with other on given edge

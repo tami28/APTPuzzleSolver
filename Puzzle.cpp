@@ -90,6 +90,16 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 		constraintsTable.insertPiece(p);
 	}
 
+    //DEBUG:: todo rm
+//    for (auto e : constraintsTable._table) {
+//        cout << e.first << "->";
+//        for (auto p : e.second) {
+//            cout << "(" << p.first << "," << p.second << ") | ";
+//        }
+//        cout << endl;
+//
+//    }
+
 
 
 }
