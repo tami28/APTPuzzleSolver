@@ -75,6 +75,7 @@ void Solver::solve(){
         delete solution;
     }
     else {
+        cout << "NO SOL" << endl; //todo rm
         (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
 
     }
@@ -199,10 +200,14 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, PuzzleMatrix *
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(row,col,constraints);
     unordered_set<string> badPieces;
-    set<int> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
-    for (int i : relevantPieceIDs){
+    set<IDandRotation> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
+    int i;
+    Rotate rotation;
+    for (auto PieceIDandRotation : relevantPieceIDs){
+        i = PieceIDandRotation.first;
+        rotation = PieceIDandRotation.second;
         if (_isFitForCell(i, badPieces, usedIDs)){
-            pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col); //TODO should rotate before.
+            pm.assignPieceToCell(_puzzle.getPieceAt(i),rotation, row,col);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
             if( col < (pm.getNcols()-1)){

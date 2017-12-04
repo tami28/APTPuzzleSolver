@@ -7,8 +7,11 @@
 
 #include "Puzzle.h"
 #include "Solver.h"
-
+#include <chrono>
+#include "const.h"
+typedef std::chrono::high_resolution_clock Clock;
 string outFilePath;
+bool withRotations = false;
 
 int main(int argc, char** argv){
 #if DEBUG
@@ -28,6 +31,11 @@ int main(int argc, char** argv){
     } else{
         outFilePath = argv[2];
     }
+    if (argc == 4){
+        withRotations = (strcmp(argv[3], "-rotate") == 0); //TODO: fix so -rotate can be anywhere in cmnd line..
+    }
+
+
     Puzzle puzzle = Puzzle(inFilePath);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {

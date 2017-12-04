@@ -131,6 +131,12 @@ bool PuzzlePiece::canConnect(PuzzlePiece& other, Edge edge){
 }
 
 
+Constraints PuzzlePiece::getConstraint(Edge edge, Rotate rotation){
+    auto res =  this->edges[( (int) edge + (rotation / 90) ) % 4];
+    return res;
+
+}
+
 Constraints PuzzlePiece::getConstraint(Edge edge){
     return this->edges[edge];
 }
