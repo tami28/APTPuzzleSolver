@@ -160,10 +160,10 @@ int PuzzlePiece::getEncoding(){
 }
 
 
-string PuzzlePiece::getConstraintStr(){
+string PuzzlePiece::getConstraintStr(Rotate rotation){
     char c[4];
     for (int i = LEFT; i<= BOTTOM; i++){
-        c[i] = edges[i];
+        c[i] = edges[(i+(int)rotation/90)%4];
     }
     return string(c, 4);
 }

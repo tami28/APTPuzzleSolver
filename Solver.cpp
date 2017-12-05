@@ -9,12 +9,6 @@
 
 //Solver::Solver(){} //empty c'tor
 
-Solver::Solver(Puzzle& p){ //c'tor from Puzzle
-    this->_puzzle = p;
-    // Initialize vector of indices:
-    for( int i = 1; i <= p.getSize(); i++ )
-        this->indices.push_back( i );
-}
 
 
 /*
@@ -22,7 +16,7 @@ Solver::Solver(Puzzle& p){ //c'tor from Puzzle
  */
 std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
     vector<pair<int,int>> result;
-    _puzzle.getPossibleSizes(result);
+    _puzzle.get()->getPossibleSizes(result);
     return result;
 }
 
@@ -35,22 +29,23 @@ void Solver::solve(){
     //Check:
     if (0 == ErrorList::getNumErrors()){
         //check for wrong-num-of-straight-edges-error:
-        _puzzle.checkStraightEdges();
+        _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        if (!(_puzzle.isPrime(_puzzle.getSize()) || _puzzle.getSize()== 1 || hasSingleRowColSolution())) {
-            _puzzle.checkCorners();
+        if (!(_puzzle.get()->isPrime(_puzzle.get()->getSize()) || _puzzle.get()->getSize()== 1 || hasSingleRowColSolution())) {
+            _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
-        if(0 != _puzzle.getTotalSum()){
+        if(0 != _puzzle.get()->getTotalSum()){
             (*ErrorList::getErrorList()).add(Error(SUM_EDGES_NOT_ZERO));
         }
     }
     if (ErrorList::getNumErrors() > 0) {
         return;
     }
+    std::cout <<"finished checking constraints" << std::endl;
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
-    vector<int> indices(_puzzle.getSize());
+    vector<int> indices(_puzzle.get()->getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
     // Allocate buffer for solution matrix:
@@ -60,19 +55,19 @@ void Solver::solve(){
     for (auto size : sizesVec){
         row = size.first;
         col = size.second;
-        solution = new PuzzleMatrix(row,col);
         pm = PuzzleMatrix(row, col);
-        _puzzle.selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
+        _puzzle.get()->selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
         //unordered_set<int> usedIDs; //TODO: note now calling 2nd version of _solveForSize! (overloaded)
         vector<int> usedIDs;
-        solved = _solveForSize(pm, usedIDs, solution, 0, 0); // Find a solution for size (row,col)
+        next = std::make_unique<Step>(row, col); //TODO: fix frame step?
+        solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
         if (solved) {
             break;
-        } else {delete solution;}
+        }
     }
     if (solved){
         pm.toFile(outFilePath);
-        delete solution;
+
     }
     else {
         cout << "NO SOL" << endl; //todo rm
@@ -92,6 +87,9 @@ void Solver::solve(){
  */
 
 bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
+    if (withRotations){
+        return true;
+    }
     int straightLEFTs = 0, straightTOPs = 0, straightRIGHTs = 0, straightBOTTOMs = 0;
     PuzzlePiece* piece;
     bool TL_corner = false, BL_corner = false, TR_corner = false, BR_corner = false;
@@ -102,7 +100,7 @@ bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
 
     for (int i=1; (i <= numPieces) ; i++){
         if ((std::find(usedIDs.begin(), usedIDs.end(), i) != usedIDs.end())) {continue;}
-        piece = _puzzle.getPieceAt(i);
+        piece = _puzzle.get()->getPieceAt(i);
         if (piece->getConstraint(LEFT) == STRAIGHT) {
             straightLEFTs++;
             if ((!TL_corner) && piece->getConstraint(TOP) == STRAIGHT) { TL_corner = true;}
@@ -158,77 +156,40 @@ bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
 }
 
 
-
-//
-//bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col) {
-//    if(row == (pm.getNrows()) && col== 0 && indices.empty()){
-//        return true;
-//    }
-//
-//    char consts[4] = {NONE, NONE, NONE, NONE};
-//    pm.constraintsOfCell(row,col,consts);
-//    unordered_set<string> badPieces;
-//    for (int i :indices){
-//        if (_isFitForCell(i, badPieces, consts)){
-//        //if (piecefitsConstrains(*_puzzle.getPieceAt(i), consts) && badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end()){
-//            pm.assignPieceToCell(_puzzle.getPieceAt(i), row,col);
-//            vector<int> newIndices (indices);
-//            newIndices.erase(find(newIndices.begin(), newIndices.end(), i));
-//            if( col < (pm.getNcols()-1)){
-//                if (_solveForSize(pm, newIndices, result, row, col+1)){
-//                    return true;
-//                }
-//            } else{
-//                if(_solveForSize(pm, newIndices, result, row+1, 0)){
-//                    return true;
-//                }
-//            }
-//            badPieces.insert((*_puzzle.getPieceAt(i)).getConstraintStr());
-//        }
-//    }
-//    return false;
-//}
-
-
-bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, PuzzleMatrix *result, int row, int col) {
+bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
     COUNT++;
-    if(solverFinished(pm, usedIDs, row, col)){
-        return true;
-    }
     //TODO: decide about the constant here (0.5? 0.3?)
     if (numPieces > 30 && usedIDs.size() > numPieces*(0.5) && !checkSufficientConstraints(usedIDs, &pm)) { return false; }
     int constraints[4] = {NONE, NONE, NONE, NONE};
-    pm.constraintsOfCell(row,col,constraints);
+    pm.constraintsOfCell(next.get()->i,next.get()->j,constraints);
     unordered_set<string> badPieces;
-    set<IDandRotation> relevantPieceIDs = _puzzle.constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
+    set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
     int i;
     Rotate rotation;
     for (auto PieceIDandRotation : relevantPieceIDs){
         i = PieceIDandRotation.first;
         rotation = PieceIDandRotation.second;
-        if (_isFitForCell(i, badPieces, usedIDs)){
-            pm.assignPieceToCell(_puzzle.getPieceAt(i),rotation, row,col);
+        if (_isFitForCell(i, badPieces, usedIDs, rotation)){
+            pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, next.get()->i,next.get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
-            if( col < (pm.getNcols()-1)){
-                if (_solveForSize(pm, newUsedIDs, result, row, col+1)){
-                    return true;
-                }
-            } else{
-                if(_solveForSize(pm, newUsedIDs, result, row+1, 0)){
-                    return true;
-                }
+            if(solverFinished(pm, newUsedIDs)){
+                return true;
             }
-            badPieces.insert((*_puzzle.getPieceAt(i)).getConstraintStr());
+            if (_solveForSize(pm, newUsedIDs)){
+                return true;
+            }
+            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)); //TODO: insert according to rotation.
+            next.get()->prevStep();
         }
     }
     return false;
 }
 
 
-bool Solver::_isFitForCell(int i, std::unordered_set<string>& badPieces, vector<int> usedIDs){
+bool Solver::_isFitForCell(int i, std::unordered_set<string>& badPieces, vector<int> usedIDs, Rotate rotation){
     return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&
-            badPieces.find((*_puzzle.getPieceAt(i)).getConstraintStr()) == badPieces.end());
+            badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)) == badPieces.end());
 }
 
 
@@ -246,25 +207,171 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 
 //TODO
 bool Solver::hasSingleRowColSolution(){
-    PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.getSize());
-    vector<int> indices(_puzzle.getSize());
+    PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
+    vector<int> indices(_puzzle.get()->getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
-    _puzzle.selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
-    if (_solveForSize(row_pm, indices, &row_pm, 0, 0)){
+    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
+    next = std::make_unique<Step>(_puzzle.get()->getSize(), 1);
+    if (_solveForSize(row_pm, indices)){
         return true;
     }
 
-    PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.getSize(), 1);
+    PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
-    _puzzle.selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
-    if (_solveForSize(col_pm, indices, &col_pm, 0, 0)){
+    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
+    next = std::make_unique<Step>(1, _puzzle.get()->getSize());
+    if (_solveForSize(col_pm, indices)){
         return true;
     }
     return false;
 }
 
-bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs, int row, int col){
-    return row == (pm.getNrows()) && col== 0 && usedIDs.size() == numPieces;
+bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
+    if ((!next.get()->nextStep()) && usedIDs.size() == numPieces){
+        return true;
+    }
+    return false;
+}
+
+bool Step::nextStep(){
+    if ( i == nrow-1){
+        if (j == ncol-1){
+            return false;
+        }
+        j++;
+        return true;
+    }
+    if(j==ncol -1){
+        i++;
+        j = 0;
+    } else{
+        j++;
+    }
+    return true;
+}
+
+bool Step::prevStep(){
+    if ( i == 0){
+        if (j == 0){
+            return false;
+        }
+        j--;
+        return true;
+    }
+    if(j==0){
+        i--;
+        j = ncol-1;
+    } else{
+        j--;
+    }
+    return true;
+}
+
+bool StepFrame::nextStep(){
+    //on first row till corner + 1:
+    if ( i == 0){
+        if (j < ncol-1){
+            j++;
+        } else{
+            i++; //turn the corner
+        }
+        return true;
+    }
+    //last col till corner:
+    if(j==ncol -1){
+        if(i < nrow - 1){
+            i++;
+        } else{ //turn the corner:
+            j--;
+        }
+        return true;
+    }
+    //last row:
+    if (i == nrow-1){
+        if (j>0){
+            j--;
+        }else{
+            i--; //turn the corner
+        }
+        return true;
+    }
+    //first col:
+    if (j==0){
+        if(i>1){ //not to go over 0,0 again!
+            i--;
+        } else{ //finished frame, start inside!
+            i=1;
+            j=1;
+        }
+        return true;
+    }
+    //go over inside by rows:
+    if ( i == nrow-2){
+        if (j == ncol-2){
+            return false;
+        }
+        j++;
+        return true;
+    }
+    if(j==ncol -2){
+        i++;
+        j = 1;
+    } else{
+        j++;
+    }
+    return true;
+}
+
+bool StepFrame::prevStep(){
+    //on first row till corner:
+    if ( i == 0){
+        if (j > 0){
+            j--;
+        } else{ //corner:
+            return false;
+        }
+        return true;
+    }
+    //last col till corner:
+    if(j==ncol -1){
+        if(i >0){
+            i--;
+        } else{ //return on first row..
+            j--;
+        }
+        return true;
+    }
+    //last row:
+    if (i == nrow-1){
+        if (j<ncol -1){
+            j++;
+        }else{ //turn the corner to last col
+            i--;
+        }
+        return true;
+    }
+    //first col:
+    if (j==0) {
+        if (i < nrow - 1) { //not to go over 0,0 again!
+            i++;
+        } else {
+            j++;
+        }
+        return true;
+    }
+    //    //go over inside by rows:
+    if (i == 1 && j==1) {
+        j--;
+        return true;
+    }
+    if (j == 1){
+        j = ncol -2;
+        i--;
+        return true;
+    }else{
+        j--;
+    }
+    return true;
 }

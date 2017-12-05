@@ -24,7 +24,7 @@ using namespace std;
 class Puzzle{
 
 //members:
-private:
+protected:
 	vector<PuzzlePiece> _pieces;
 	int _size = 0;
     int _totalSum = 0;
@@ -44,9 +44,9 @@ public:
 	int getMaxWidth();
     int getTotalSum(){return _totalSum;};
 	bool checkForMissingPieces(vector<int>& ids, vector<int> &idsFromFile);
-	void getPossibleSizes(vector<pair<int,int>> & result);
+	virtual void getPossibleSizes(vector<pair<int,int>> & result);
     bool isPrime(int n);
-    void checkCorners();
+    virtual void checkCorners();
     void checkStraightEdges();
 	void selAllPiecesValid();
 	int totalStraightEdges(){ return _straightEdges[0] + _straightEdges[1]+_straightEdges[2]+_straightEdges[3];};

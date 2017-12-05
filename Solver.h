@@ -9,6 +9,7 @@
 #define SOLVER_H_
 
 #include "Puzzle.h"
+#include "RotatePuzzle.h"
 #include "const.h"
 #include "PuzzleMatrix.h"
 #include "Exceptions.h"
@@ -54,7 +55,7 @@ public:
 
 class Solver{
 private:
-    Puzzle _puzzle;
+    std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
     std::unique_ptr<Step> next;
     virtual bool checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm);
@@ -62,18 +63,25 @@ private:
 
 public:
     Solver() = default ;;
-    Solver(Puzzle& p);
+    Solver(string fileName){
+        if (withRotations){
+            _puzzle = std::make_unique<RotatePuzzle>(fileName);
+        }else {
+            _puzzle = std::make_unique<Puzzle>(fileName);
+        }
+
+    };
     //void setPuzzle(Puzzle& p);
     virtual std::vector<pair<int, int>> getPossiblePuzzleSizes();
 
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, PuzzleMatrix *result, int row, int col);
+    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices);
     //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
-    virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces,  vector<int> usedIDs);
-    virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs, int row, int col);
+    virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces,  vector<int> usedIDs, Rotate rotation);
+    virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs);
     int COUNT; //TODO; rem
 };
 

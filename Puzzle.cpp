@@ -175,7 +175,6 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  * corners in the single-row / single-col case).
  */
 void Puzzle::checkCorners(){
-
 //    Solver solver = Solver(*this);
 //    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
 //        return; //See doc!
@@ -222,7 +221,6 @@ void Puzzle::getPossibleSizes(vector<pair<int,int>> & result){
 			if (i != puzzleSize / i) {
 				result.push_back(pair<int, int>(puzzleSize / i,
 												i));
-                //TODO: currently we don't rotate pieces, so we need to check both n*m and m*n for m!=n (o/w will not find solution)
 			}
 		}
 	}

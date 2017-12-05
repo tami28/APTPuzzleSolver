@@ -6,6 +6,7 @@
  */
 
 #include "Puzzle.h"
+#include "RotatePuzzle.h"
 #include "Solver.h"
 #include <chrono>
 #include "const.h"
@@ -20,30 +21,50 @@ int main(int argc, char** argv){
 
     ConstraintsTable tab = ConstraintsTable();
 
+    bool hasInputFile = false;
+    std::string inFilePath;
+    outFilePath = DEFAULT_OUTPUT_FILE;
 
     if (argc <2){
         std::cout<<"Error, no input file. Run COMMAND inputFilePath or COMMAND inputFilePath outputFilePath for specific output file location";
+        return 1;
     }
     // Construct Puzzle:
-    std::string inFilePath = argv[1];
+    if ((strcmp(argv[1], "-rotate") == 0)){
+        withRotations = true;
+    } else{
+        inFilePath = argv[1];
+        hasInputFile = true;
+    }
+
     if (argc < 3){
+        if (!hasInputFile){
+            std::cout<<"Error, no input file. Run COMMAND inputFilePath or COMMAND inputFilePath outputFilePath for specific output file location";
+            return 1;
+        }
         outFilePath = DEFAULT_OUTPUT_FILE;
     } else{
-        outFilePath = argv[2];
+        if ((strcmp(argv[2], "-rotate") == 0)){
+            withRotations = true;
+        } else{
+            outFilePath = argv[2];
+        }
     }
     if (argc == 4){
-        withRotations = (strcmp(argv[3], "-rotate") == 0); //TODO: fix so -rotate can be anywhere in cmnd line..
+        if ((strcmp(argv[3], "-rotate") == 0)){
+            withRotations = true;
+        } else{
+            outFilePath = argv[3];
+        }
     }
 
-
-    Puzzle puzzle = Puzzle(inFilePath);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
         return 1;
     }
     // Try to solve:
-    Solver solver = Solver(puzzle);
+    Solver solver = Solver(inFilePath);
     solver.solve();
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
