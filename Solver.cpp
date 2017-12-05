@@ -42,7 +42,6 @@ void Solver::solve(){
     if (ErrorList::getNumErrors() > 0) {
         return;
     }
-    std::cout <<"finished checking constraints" << std::endl;
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
     vector<int> indices(_puzzle.get()->getSize());
@@ -158,6 +157,7 @@ bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
     COUNT++;
+//    std::cout << next.get()->i << ","<<next.get()->j << " " <<next.get()->nrow<<","<<next.get()->ncol<<std::endl;
     //TODO: decide about the constant here (0.5? 0.3?)
     if (numPieces > 30 && usedIDs.size() > numPieces*(0.5) && !checkSufficientConstraints(usedIDs, &pm)) { return false; }
     int constraints[4] = {NONE, NONE, NONE, NONE};
@@ -179,8 +179,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
-            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)); //TODO: insert according to rotation.
             next.get()->prevStep();
+            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)); //TODO: insert according to rotation.
         }
     }
     return false;
@@ -188,6 +188,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
 
 
 bool Solver::_isFitForCell(int i, std::unordered_set<string>& badPieces, vector<int> usedIDs, Rotate rotation){
+
     return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&
             badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)) == badPieces.end());
 }
