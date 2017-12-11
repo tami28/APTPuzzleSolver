@@ -13,7 +13,13 @@
 #include "const.h"
 #include "PuzzleMatrix.h"
 #include "Exceptions.h"
+#include "SolvabilityVerifier.h"
 #include <memory>
+#include <numeric>
+
+//TODO: decide about these constants here (0.5? 0.3?)
+#define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
+#define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
 
 /*
  * Used to determine in what order to go over the puzzle.
@@ -58,11 +64,10 @@ private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
     std::unique_ptr<Step> next;
-    virtual bool checkSufficientConstraints(vector<int> indices, PuzzleMatrix *pm);
     bool isFrame = false;
 
 public:
-    Solver() = default ;;
+    Solver() = default ;
     Solver(string fileName){
         if (withRotations){
             _puzzle = std::make_unique<RotatePuzzle>(fileName);
@@ -80,7 +85,7 @@ public:
     virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices);
     //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
-    virtual bool _isFitForCell(int i, std::unordered_set<string>& badPieces,  vector<int> usedIDs, Rotate rotation);
+    virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
     virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs);
     int COUNT; //TODO; rem
 };

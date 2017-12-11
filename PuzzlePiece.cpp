@@ -168,5 +168,13 @@ string PuzzlePiece::getConstraintStr(Rotate rotation){
     return string(c, 4);
 }
 
+int PuzzlePiece::getConstraintsKey(Rotate rotation){
+    int key = 0;
+    for (int i = LEFT; i<= BOTTOM; i++){
+        key += (edges[(i+(int)rotation/90)%4] +1 )*pow(10,3-i);
+    }
+    return key;
+}
+
 bool PuzzlePiece::getIsValid() { return isValid; }
 void PuzzlePiece::setIsValid(bool value) { isValid = value; }

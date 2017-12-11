@@ -26,6 +26,11 @@ PuzzleMatrix::PuzzleMatrix(int row, int col){
     requiredCounters[MALE] = 0;
     requiredCounters[FEMALE] = 0;
 
+    //Initialize number of outer-frame straight edges needed for this puzzleMatrix:
+    _requieredFrameConstraints[outerFrameConstraints::LEFT_STRAIGHT] = nrows;
+    _requieredFrameConstraints[outerFrameConstraints::TOP_STRAIGHT] = ncols;
+    _requieredFrameConstraints[outerFrameConstraints::RIGHT_STAIGHT] = nrows;
+    _requieredFrameConstraints[outerFrameConstraints::BOTTOM_STRAIGHT] = ncols;
 }
 
 Constraints PuzzleMatrix::operator()(int row, int col, Edge edge){
@@ -132,11 +137,41 @@ void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, Rotate rotation, i
         else // The neighbour is NOT vacant
             this->requiredCounters[piece->getConstraint(RIGHT, rotation)]--;
     }
+    updateRequiredFrameCounters(row, col);
+}
 
+/*
+ * Update number of required leftStraight, bottomStraight, etc. (i.e, frame constraints) after assigning a piece at (row,col).
+ * Assumes piece was validly assigned.
+ */
+void PuzzleMatrix::updateRequiredFrameCounters(int row, int col){
+    if (row == 0) { _requieredFrameConstraints[outerFrameConstraints::TOP_STRAIGHT]--; }
+    if (row == nrows - 1) { _requieredFrameConstraints[outerFrameConstraints::BOTTOM_STRAIGHT]--; }
+    if (col == 0) { _requieredFrameConstraints[outerFrameConstraints::LEFT_STRAIGHT]--; }
+    if (col == ncols - 1) { _requieredFrameConstraints[outerFrameConstraints::RIGHT_STAIGHT]--; }
+}
 
+/*
+ * Return the number of required outer frame constraints (topRight, bottomLeft, etc.) for a given outerFrameConstraint.
+ */
+int PuzzleMatrix::getOuterFrameRequirementAt(outerFrameConstraints c){
+    return _requieredFrameConstraints[c];
 }
 
 
+bool PuzzleMatrix::isCornerRequired(Corners c){
+    switch (c){
+        case Corners::TL:
+            return (matrix[0][0].piece == nullptr);
+        case Corners::TR:
+            return (matrix[0][getNcols()-1].piece == nullptr);
+        case Corners::BR:
+            return (matrix[getNrows()-1][getNcols()-1].piece == nullptr);
+        case Corners::BL:
+            return (matrix[getNrows()-1][0].piece == nullptr);
+    }
+    return false;
+}
 
 /*
  * check if given PuzzlePiece can be fitted to PuzzleMatrix[row][col], according to constraints of that cell.

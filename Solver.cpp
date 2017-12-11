@@ -3,7 +3,7 @@
 //
 
 #include "Solver.h"
-#include <numeric>
+
 
 
 
@@ -77,92 +77,17 @@ void Solver::solve(){
 }
 
 
-/*
- * TODO: if we don't use this, remove.
- * 1.check if pieces at the given indices have sufficient straight edges to cover all the non-covered
- * straight edges in PuzzleMatrix. if not, there's no point to continue exploring this solution.
- * 2.check sufficient cover of non-covered corners.
- * 3.check that there are enough make/female/straights in the remaining pieces.
- */
-
-bool Solver::checkSufficientConstraints(vector<int> usedIDs, PuzzleMatrix *pm){
-    if (withRotations){
-        return true;
-    }
-    int straightLEFTs = 0, straightTOPs = 0, straightRIGHTs = 0, straightBOTTOMs = 0;
-    PuzzlePiece* piece;
-    bool TL_corner = false, BL_corner = false, TR_corner = false, BR_corner = false;
-    std::unordered_map<int, int> sumConstraints;
-    sumConstraints.insert({1, 0});
-    sumConstraints.insert({-1, 0});
-    sumConstraints.insert({0, 0});
-
-    for (int i=1; (i <= numPieces) ; i++){
-        if ((std::find(usedIDs.begin(), usedIDs.end(), i) != usedIDs.end())) {continue;}
-        piece = _puzzle.get()->getPieceAt(i);
-        if (piece->getConstraint(LEFT) == STRAIGHT) {
-            straightLEFTs++;
-            if ((!TL_corner) && piece->getConstraint(TOP) == STRAIGHT) { TL_corner = true;}
-            if ((!BL_corner) && piece->getConstraint(BOTTOM) == STRAIGHT) { BL_corner = true;}
-        }
-        if (piece->getConstraint(TOP) == STRAIGHT) {straightTOPs++;}
-        if (piece->getConstraint(RIGHT) == STRAIGHT) {
-            straightRIGHTs++;
-            if ((!TR_corner) && piece->getConstraint(TOP) == STRAIGHT) { TR_corner = true;}
-            if ((!BR_corner) && piece->getConstraint(BOTTOM) == STRAIGHT) { BR_corner = true;}
-        }
-        if (piece->getConstraint(BOTTOM) == STRAIGHT) {straightBOTTOMs++;}
-
-        sumConstraints[piece->getConstraint(LEFT)]++;
-        sumConstraints[piece->getConstraint(TOP)]++;
-        sumConstraints[piece->getConstraint(RIGHT)]++;
-        sumConstraints[piece->getConstraint(BOTTOM)]++;
-    }
-
-    for (int c = FEMALE; c <= MALE; c++)
-        {
-            if (sumConstraints[(Constraints) c] < pm->requiredCounters[(Constraints) c])
-            {
-                return false;
-            }
-        }
-
-    bool TL_required = (pm->matrix[0][0].piece == nullptr),
-         BL_required = (pm->matrix[pm->getNrows()-1][0].piece == nullptr),
-         TR_required = (pm->matrix[0][pm->getNcols()-1].piece == nullptr),
-         BR_required = (pm->matrix[pm->getNrows()-1][pm->getNcols()-1].piece == nullptr);
-    if ((BL_required && (!BL_corner)) ||
-            (BR_required && (!BR_corner)) ||
-            (TR_required && (!TR_corner)) ||
-            (TL_required && (!TL_corner) )) {
-            return false;
-    }
-
-
-    int requiredStraightUps=0,requiredStraightBottoms=0,requiredStraightLeft=0,requiredStraightRights=0;
-    for (int i=0; i<pm->getNcols(); i++) {
-        if (pm->matrix[0][i].piece == nullptr){requiredStraightUps++;}
-        if (pm->matrix[pm->getNrows() - 1][i].piece == nullptr){requiredStraightBottoms++;}
-    }
-    for (int i=1; i<pm->getNrows()-1; i++) {
-        if (pm->matrix[i][0].piece == nullptr){requiredStraightLeft++;}
-        if (pm->matrix[i][pm->getNcols() - 1].piece == nullptr){requiredStraightRights++;}
-    }
-    if (straightRIGHTs < requiredStraightRights || straightTOPs < requiredStraightUps ||
-        straightLEFTs < requiredStraightLeft || straightBOTTOMs < requiredStraightBottoms )
-        return false;
-    return true;
-}
-
-
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
     COUNT++;
 //    std::cout << next.get()->i << ","<<next.get()->j << " " <<next.get()->nrow<<","<<next.get()->ncol<<std::endl;
-    //TODO: decide about the constant here (0.5? 0.3?)
-    if (numPieces > 30 && usedIDs.size() > numPieces*(0.5) && !checkSufficientConstraints(usedIDs, &pm)) { return false; }
+    if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
+        && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
+        &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
+            return false;
+    }
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(next.get()->i,next.get()->j,constraints);
-    unordered_set<string> badPieces;
+    unordered_set<int> badPieces;
     set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
     int i;
     Rotate rotation;
@@ -170,27 +95,35 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
         i = PieceIDandRotation.first;
         rotation = PieceIDandRotation.second;
         if (_isFitForCell(i, badPieces, usedIDs, rotation)){
+            std::map<Constraints , int> requiredCountersSnapshot = pm.requiredCounters; //TODO: bad hack.. change
+            std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm._requieredFrameConstraints;//TODO: bad hack.. change
             pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, next.get()->i,next.get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
             if(solverFinished(pm, newUsedIDs)){
                 return true;
             }
+
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
+            pm.requiredCounters = requiredCountersSnapshot;
+            pm._requieredFrameConstraints = requieredFrameConstraintsSnapshot;
             next.get()->prevStep();
-            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)); //TODO: insert according to rotation.
+            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)); //TODO: insert according to rotation.
         }
     }
     return false;
 }
 
 
-bool Solver::_isFitForCell(int i, std::unordered_set<string>& badPieces, vector<int> usedIDs, Rotate rotation){
-
+bool Solver::_isFitForCell(int i, std::unordered_set<int>& badPieces, vector<int> usedIDs, Rotate rotation){
+    bool c1, c2;
+    //todo: rmove c1,c2..
+    c1 = find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end();
+    c2 = badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)) == badPieces.end();
     return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&
-            badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintStr(rotation)) == badPieces.end());
+            badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)) == badPieces.end());
 }
 
 
@@ -206,24 +139,24 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 
-//TODO
+//TODO: the new Step class causes this to crash, need to fix.
 bool Solver::hasSingleRowColSolution(){
+    return false; //todo: rm when fixed..
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
-    vector<int> indices(_puzzle.get()->getSize());
-    // Fill indices vector with all relevant indices (1...numPieces)
-    std::iota(indices.begin(), indices.end(), 1);
-    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
+
+    vector<int> usedIDs;
+
+
+    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used" todo: need this?
     next = std::make_unique<Step>(_puzzle.get()->getSize(), 1);
-    if (_solveForSize(row_pm, indices)){
+    if (_solveForSize(row_pm, usedIDs)){
         return true;
     }
-
+    usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
-    // Fill indices vector with all relevant indices (1...numPieces)
-    std::iota(indices.begin(), indices.end(), 1);
-    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"
-    next = std::make_unique<Step>(1, _puzzle.get()->getSize());
-    if (_solveForSize(col_pm, indices)){
+    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"todo: need this?
+    next = std::make_unique<Step>(1, _puzzle.get()->getSize() );
+    if (_solveForSize(col_pm, usedIDs)){
         return true;
     }
     return false;

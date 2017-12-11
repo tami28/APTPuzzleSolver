@@ -17,6 +17,8 @@
 
 using namespace std;
 
+
+
 class PuzzleMatrix{
 
     int nrows;
@@ -30,6 +32,8 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
+
+
 
 public:
     CellArray2D matrix;
@@ -49,9 +53,14 @@ public:
     string toString();
     void print();
 
-    std::map<Constraints , int> requiredCounters;
+    std::map<Constraints , int> requiredCounters; // TODO: move to priv and write getter
+    std::map<outerFrameConstraints, int> _requieredFrameConstraints; //number of outer-frame straight edges needed for this puzzleMatrix. //todo move to private
 
+    void updateRequiredFrameCounters(int row, int col);
+    int getOuterFrameRequirementAt(outerFrameConstraints c);
+    bool isCornerRequired(Corners c);
     void constraintsOfCell(int row,int col, int*);
     void getConstraintsOfCell(int row, int col, int* res);
+
 };
 

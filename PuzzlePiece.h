@@ -35,6 +35,7 @@ public:
     Constraints getOppositeConstraint(Edge edge);
     bool canConnect(PuzzlePiece& other, Edge edge); //can connect with other on given edge
     string getConstraintStr(Rotate rotation);
+    int getConstraintsKey(Rotate rotation);
     bool getIsValid();
     void setIsValid(bool value);
     bool isValid; //TODO should be private..
