@@ -110,7 +110,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             pm.requiredCounters = requiredCountersSnapshot;
             pm._requieredFrameConstraints = requieredFrameConstraintsSnapshot;
             next.get()->prevStep();
-            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)); //TODO: insert according to rotation.
+            badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation));
         }
     }
     return false;
@@ -118,11 +118,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
 
 
 bool Solver::_isFitForCell(int i, std::unordered_set<int>& badPieces, vector<int> usedIDs, Rotate rotation){
-    bool c1, c2;
-    //todo: rmove c1,c2..
-    c1 = find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end();
-    c2 = badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)) == badPieces.end();
-    return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&
+    return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&,
             badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)) == badPieces.end());
 }
 
@@ -139,7 +135,7 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 
-//TODO: the new Step class causes this to crash, need to fix.
+//TODO:  need to fix, then reinistate
 bool Solver::hasSingleRowColSolution(){
     return false; //todo: rm when fixed..
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());

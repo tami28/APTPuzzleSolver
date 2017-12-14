@@ -20,13 +20,6 @@ bool SolvabilityVerifier::verifySolvabilityConstraints(){
     _BR_corner = false;
 
     countConstraintsInPuzzleMatrix();
-
-    bool c1,c2,c3;
-    c1 = checkSufficientOuterFrameConstraints();
-    c2 = checkSufficientCorners();
-    c3 = checkSufficientEdgeTypes();
-    return c1&&c2&&c3;
-
     return ( checkSufficientOuterFrameConstraints() &&
             checkSufficientCorners() &&
              checkSufficientEdgeTypes() );

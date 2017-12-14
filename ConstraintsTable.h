@@ -14,14 +14,12 @@
 typedef pair<int, Rotate> IDandRotation;
 
 class ConstraintsTable {
-public: //TODO: return to private
+public:
 
-
-
-    unordered_map< int, set<IDandRotation> > _table;
     int getKey(int right, int top, int left, int bottom);
 public:
     ConstraintsTable();
     void insertPiece(PuzzlePiece& p);
     set<IDandRotation> getIDsFittingConstraints(int consts[4]);
+    unordered_map< int, set<IDandRotation> > _table;
 };
