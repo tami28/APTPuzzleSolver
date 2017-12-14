@@ -62,7 +62,7 @@ void SolvabilityVerifier::countConstraintsInPuzzleMatrix(){
  */
 bool SolvabilityVerifier::checkSufficientEdgeTypes() {
     for (int c = FEMALE; c <= MALE; c++){
-        if (_sumConstraints[(Constraints) c] < _pm.requiredCounters[(Constraints) c]) { return false; }
+        if (_sumConstraints[(Constraints) c] < _pm.getRequiredCounters()[(Constraints) c]) { return false; }
     }
     return true;
 }

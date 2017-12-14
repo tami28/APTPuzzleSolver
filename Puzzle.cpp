@@ -179,8 +179,20 @@ void Puzzle::checkCorners(){
 //    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
 //        return; //See doc!
 //    }
+	//todo: break down to 2-3 funcs
+	for (auto a : _corners[Corners::TL]) {
+		for (auto b : _corners[Corners::TR]) {
+			for (auto c : _corners[Corners::BL]) {
+				for (auto d : _corners[Corners::BR]) {
+					if (set<int>{a,b,c,d}.size() == 4) {
+						return;
+					}
+				}
+			}
+		}
+	}
 
-    string errStr = "";
+	string errStr = "";
     int pieceUsedForCurrentCorner;
     for (int corner = TL ; corner <= BR ; corner++){
         if (_corners[(Corners) corner].empty()){

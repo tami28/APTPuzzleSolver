@@ -85,18 +85,50 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
+
+
+    if (NULL!= pm.matrix[0][0].piece && pm.matrix[0][0].piece->getId() == 7) {
+        int a = 3;
+        if (NULL!= pm.matrix[0][1].piece && pm.matrix[0][1].piece->getId() == 4) {
+            int a = 3;
+            if (NULL!= pm.matrix[0][2].piece && pm.matrix[0][2].piece->getId() == 9) {
+                int a = 3;
+                if (NULL!= pm.matrix[1][0].piece && pm.matrix[1][0].piece->getId() == 6) {
+                    int a = 3;
+                    if (NULL!= pm.matrix[1][1].piece && pm.matrix[1][1].piece->getId() == 3) {
+                        int a = 3;
+                        if (NULL!= pm.matrix[1][2].piece && pm.matrix[1][2].piece->getId() == 1) {
+                            int a = 3;
+                            if (NULL!= pm.matrix[2][0].piece && pm.matrix[2][0].piece->getId() == 2) {
+                                int a = 3;
+                                if (NULL!= pm.matrix[2][1].piece && pm.matrix[2][1].piece->getId() == 5) {
+                                    int a = 3;
+                                    if (NULL!= pm.matrix[2][2].piece && pm.matrix[2][2].piece->getId() == 8) {
+                                        int a = 3;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }}
+
+
+
+
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(next.get()->i,next.get()->j,constraints);
     unordered_set<int> badPieces;
-    set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints); //TODO: polymorphism
+    set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints);
     int i;
     Rotate rotation;
     for (auto PieceIDandRotation : relevantPieceIDs){
         i = PieceIDandRotation.first;
         rotation = PieceIDandRotation.second;
         if (_isFitForCell(i, badPieces, usedIDs, rotation)){
-            std::map<Constraints , int> requiredCountersSnapshot = pm.requiredCounters; //TODO: bad hack.. change
-            std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm._requieredFrameConstraints;//TODO: bad hack.. change
+            std::map<Constraints , int> requiredCountersSnapshot = pm.getRequiredCounters(); //TODO: bad hack.. change
+            std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm.getRequiredFrameConstraints();//TODO: bad hack.. change
             pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, next.get()->i,next.get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
@@ -107,8 +139,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
-            pm.requiredCounters = requiredCountersSnapshot;
-            pm._requieredFrameConstraints = requieredFrameConstraintsSnapshot;
+            pm.setRequiredCounters(requiredCountersSnapshot);
+            pm.setRequiredFrameConstraints(requieredFrameConstraintsSnapshot);
             next.get()->prevStep();
             badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation));
         }
@@ -118,7 +150,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
 
 
 bool Solver::_isFitForCell(int i, std::unordered_set<int>& badPieces, vector<int> usedIDs, Rotate rotation){
-    return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&,
+    return (find(usedIDs.begin(),usedIDs.end(),i) == usedIDs.end() &&
             badPieces.find((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation)) == badPieces.end());
 }
 
@@ -135,7 +167,7 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 
-//TODO:  need to fix, then reinistate
+//TODO:  need to fix.
 bool Solver::hasSingleRowColSolution(){
     return false; //todo: rm when fixed..
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());

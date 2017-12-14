@@ -22,9 +22,9 @@ PuzzleMatrix::PuzzleMatrix(int row, int col){
             }
         }
     }
-    requiredCounters[STRAIGHT] = 2*nrows + 2*ncols;
-    requiredCounters[MALE] = 0;
-    requiredCounters[FEMALE] = 0;
+    _requiredCounters[STRAIGHT] = 2*nrows + 2*ncols;
+    _requiredCounters[MALE] = 0;
+    _requiredCounters[FEMALE] = 0;
 
     //Initialize number of outer-frame straight edges needed for this puzzleMatrix:
     _requieredFrameConstraints[outerFrameConstraints::LEFT_STRAIGHT] = nrows;
@@ -44,7 +44,7 @@ Constraints PuzzleMatrix::operator()(int row, int col, Edge edge){
 PuzzleMatrix::PuzzleMatrix(const PuzzleMatrix &other){
     nrows = other.getNrows();
     ncols = other.getNcols();
-    this->requiredCounters = other.requiredCounters;
+    this->_requiredCounters = other._requiredCounters;
     this->matrix = other.matrix;
 }
 
@@ -110,32 +110,32 @@ void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, Rotate rotation, int ro
 
 void PuzzleMatrix::updateRequiredCounters(PuzzlePiece* piece, Rotate rotation, int row, int col){
     //If piece was placed at edge of matrix, update requiredStraights:
-    if (row == 0 || row == this->nrows -1) { this->requiredCounters[STRAIGHT]--; }
-    if (col == 0 || col == this->ncols -1) { this->requiredCounters[STRAIGHT]--; }
+    if (row == 0 || row == this->nrows -1) { this->_requiredCounters[STRAIGHT]--; }
+    if (col == 0 || col == this->ncols -1) { this->_requiredCounters[STRAIGHT]--; }
 
     if (row > 0) {//Given cell has a neighbour above
         if (matrix[row - 1][col].piece == nullptr) // The neighbour is vacant
-            this->requiredCounters[piece->getOppositeConstraint(TOP)]++;
+            this->_requiredCounters[piece->getOppositeConstraint(TOP)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(TOP, rotation)]--;
+            this->_requiredCounters[piece->getConstraint(TOP, rotation)]--;
     }
     if (row < nrows - 1){//Given cell has a neighbour below
         if (matrix[row+1][col].piece == nullptr) // The neighbour is vacant
-            this->requiredCounters[piece->getOppositeConstraint(BOTTOM)]++;
+            this->_requiredCounters[piece->getOppositeConstraint(BOTTOM)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(BOTTOM, rotation)]--;
+            this->_requiredCounters[piece->getConstraint(BOTTOM, rotation)]--;
     }
     if (col > 0){//Given cell has a neighbour on the left
         if (matrix[row][col-1].piece == nullptr) // The neighbour is vacant
-            this->requiredCounters[piece->getOppositeConstraint(LEFT)]++;
+            this->_requiredCounters[piece->getOppositeConstraint(LEFT)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(LEFT, rotation)]--;
+            this->_requiredCounters[piece->getConstraint(LEFT, rotation)]--;
     }
     if (col < ncols - 1 ){//Given cell has a neighbour on the right
         if (matrix[row][col+1].piece == nullptr) // The neighbour is vacant
-            this->requiredCounters[piece->getOppositeConstraint(RIGHT)]++;
+            this->_requiredCounters[piece->getOppositeConstraint(RIGHT)]++;
         else // The neighbour is NOT vacant
-            this->requiredCounters[piece->getConstraint(RIGHT, rotation)]--;
+            this->_requiredCounters[piece->getConstraint(RIGHT, rotation)]--;
     }
     updateRequiredFrameCounters(row, col);
 }
@@ -268,7 +268,6 @@ string PuzzleMatrix::toString(){
 
 
 
-//TODO: not applicable for rotations, remove if no other need for this func (replaced by getConstraintsOfCell)
 void PuzzleMatrix::constraintsOfCell(int row, int col, int* res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (col == 0) {
@@ -280,10 +279,6 @@ void PuzzleMatrix::constraintsOfCell(int row, int col, int* res) {
     if (col == (ncols - 1)) {
         res[RIGHT] = STRAIGHT;
     }
-    else {
-       // res[RIGHT] = matrix[row][col + 1].piece->getConstraint(LEFT, matrix[row][col+1].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
-    }
     if (row == 0) {
         res[TOP] = STRAIGHT;
     } else {
@@ -292,12 +287,20 @@ void PuzzleMatrix::constraintsOfCell(int row, int col, int* res) {
     }
     if (row == (nrows - 1)) {
         res[BOTTOM] = STRAIGHT;
-    } else {
-      //  res[BOTTOM] = matrix[row+1][col].piece->getConstraint(TOP, matrix[row+1][col].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
     }
 }
 
-void PuzzleMatrix::getConstraintsOfCell(int row, int col, int* res){
-    for (int i=0; i<4; i++) { res[i] = (*this).matrix[row][col].constraints.at(i); }
+
+std::map<Constraints , int> PuzzleMatrix::getRequiredCounters() {
+    return this->_requiredCounters;
+};
+std::map<outerFrameConstraints, int> PuzzleMatrix::getRequiredFrameConstraints(){
+    return this->_requieredFrameConstraints;
+};
+
+void  PuzzleMatrix::setRequiredCounters(std::map<Constraints , int> requiredCounters){
+    this->_requiredCounters = requiredCounters;
+}
+void  PuzzleMatrix::setRequiredFrameConstraints(std::map<outerFrameConstraints , int> requiredFrameCounters){
+    this->_requieredFrameConstraints = requiredFrameCounters;
 }

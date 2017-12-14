@@ -32,7 +32,8 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
-
+    std::map<Constraints , int> _requiredCounters; // TODO: move to priv and write getter
+    std::map<outerFrameConstraints, int> _requieredFrameConstraints; //number of outer-frame straight edges needed for this puzzleMatrix. //todo move to private
 
 
 public:
@@ -53,9 +54,10 @@ public:
     string toString();
     void print();
 
-    std::map<Constraints , int> requiredCounters; // TODO: move to priv and write getter
-    std::map<outerFrameConstraints, int> _requieredFrameConstraints; //number of outer-frame straight edges needed for this puzzleMatrix. //todo move to private
-
+    std::map<Constraints , int> getRequiredCounters();
+    void setRequiredCounters(std::map<Constraints , int> requiredCounters);
+    std::map<outerFrameConstraints, int> getRequiredFrameConstraints();
+    void setRequiredFrameConstraints(std::map<outerFrameConstraints , int> requiredFrameCounters);
     void updateRequiredFrameCounters(int row, int col);
     int getOuterFrameRequirementAt(outerFrameConstraints c);
     bool isCornerRequired(Corners c);
