@@ -9,8 +9,8 @@ void RotatePuzzle::getPossibleSizes(vector<pair<int,int>> & result){
     int puzzleSize = _size;
     int sqr = (int) sqrt(puzzleSize) + 1;
     int totalStraightEdges = _straightEdges[0] + _straightEdges[1] + _straightEdges[2]+_straightEdges[3];
-    for (int i = 1; i < sqr; i++) {
-        if (puzzleSize % i == 0 && 2*(i + puzzleSize/i) < totalStraightEdges) { //Just make sure There's enough straight edges to cover it.
+    for (int i = 1; i <= sqr; i++) {
+        if (puzzleSize % i == 0 && 2*(i + puzzleSize/i) <= totalStraightEdges) { //Just make sure There's enough straight edges to cover it.
             result.push_back(pair<int, int>(i, puzzleSize / i));
         }
     }

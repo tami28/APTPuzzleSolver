@@ -78,44 +78,12 @@ void Solver::solve(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
-    COUNT++;
 //    std::cout << next.get()->i << ","<<next.get()->j << " " <<next.get()->nrow<<","<<next.get()->ncol<<std::endl;
     if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
         && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
-
-
-    if (NULL!= pm.matrix[0][0].piece && pm.matrix[0][0].piece->getId() == 7) {
-        int a = 3;
-        if (NULL!= pm.matrix[0][1].piece && pm.matrix[0][1].piece->getId() == 4) {
-            int a = 3;
-            if (NULL!= pm.matrix[0][2].piece && pm.matrix[0][2].piece->getId() == 9) {
-                int a = 3;
-                if (NULL!= pm.matrix[1][0].piece && pm.matrix[1][0].piece->getId() == 6) {
-                    int a = 3;
-                    if (NULL!= pm.matrix[1][1].piece && pm.matrix[1][1].piece->getId() == 3) {
-                        int a = 3;
-                        if (NULL!= pm.matrix[1][2].piece && pm.matrix[1][2].piece->getId() == 1) {
-                            int a = 3;
-                            if (NULL!= pm.matrix[2][0].piece && pm.matrix[2][0].piece->getId() == 2) {
-                                int a = 3;
-                                if (NULL!= pm.matrix[2][1].piece && pm.matrix[2][1].piece->getId() == 5) {
-                                    int a = 3;
-                                    if (NULL!= pm.matrix[2][2].piece && pm.matrix[2][2].piece->getId() == 8) {
-                                        int a = 3;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }}
-
-
-
 
     int constraints[4] = {NONE, NONE, NONE, NONE};
     pm.constraintsOfCell(next.get()->i,next.get()->j,constraints);
@@ -169,21 +137,20 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 
 //TODO:  need to fix.
 bool Solver::hasSingleRowColSolution(){
-    return false; //todo: rm when fixed..
+//    return false; //todo: rm when fixed..
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
-
     vector<int> usedIDs;
 
 
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used" todo: need this?
-    next = std::make_unique<Step>(_puzzle.get()->getSize(), 1);
+    next = std::make_unique<Step>(1,_puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"todo: need this?
-    next = std::make_unique<Step>(1, _puzzle.get()->getSize() );
+    next = std::make_unique<Step>(_puzzle.get()->getSize() , 1);
     if (_solveForSize(col_pm, usedIDs)){
         return true;
     }
