@@ -228,7 +228,7 @@ void Puzzle::getPossibleSizes(vector<pair<int,int>> & result){
 	int puzzleSize = _size;
 	int sqr = (int) sqrt(puzzleSize) + 1;
 	for (int i = 1; i < sqr; i++) {
-		if (puzzleSize % i == 0 && i<=max(getMaxWidth(), getMaxHeight())&& (puzzleSize/i)<=max(getMaxWidth(), getMaxHeight())) {
+		if (puzzleSize % i == 0){
 			result.push_back(pair<int, int>(i, puzzleSize / i));
 			if (i != puzzleSize / i) {
 				result.push_back(pair<int, int>(puzzleSize / i,
