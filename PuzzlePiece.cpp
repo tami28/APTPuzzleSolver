@@ -172,7 +172,7 @@ string PuzzlePiece::getConstraintStr(Rotate rotation){
 int PuzzlePiece::getConstraintsKey(Rotate rotation){
     int key = 0;
     for (int i = LEFT; i<= BOTTOM; i++){
-        //key += (edges[(i+(int)rotation/90)%4] +1 )*pow(10,3-i);
+        //key += (edges[(i+(int)rotation/90)%4] +1 )*pow(10,3-i); //todo rm
         key += (this->getConstraint((Edge) i, rotation) +1 )*pow(10,3-i);
     }
     return key;
