@@ -18,7 +18,7 @@
 #include <numeric>
 
 //TODO: decide about these constants here (0.5? 0.3?)
-#define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 0 //todo chane to 30
+#define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30 //todo chane to 30
 #define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
 
 /*
