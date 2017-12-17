@@ -10,6 +10,7 @@
 #include "const.h"
 #include "PuzzlePiece.h"
 #include <sstream>
+#include <unordered_map>
 
 typedef pair<int, Rotate> IDandRotation;
 
