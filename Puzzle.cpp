@@ -180,7 +180,6 @@ void Puzzle::checkCorners(){
     if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
         return; //See doc!
     }
-	//todo: break down to 2-3 funcs
 	if (hasSufficientCornersCover()) {
 		return;
 	}
