@@ -22,7 +22,7 @@ using namespace std;
 class PuzzlePiece  {
 protected:
     Constraints edges[4];
-    int id = DEFAULT_PIECE_ID;
+    int id;
     int encoding;
 public:
     PuzzlePiece(); // Empty c'tor

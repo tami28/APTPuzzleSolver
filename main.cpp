@@ -58,13 +58,14 @@ int main(int argc, char** argv){
         }
     }
 
+
+    // Try to solve:
+    Solver solver = Solver(inFilePath);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
         return 1;
     }
-    // Try to solve:
-    Solver solver = Solver(inFilePath);
     solver.solve();
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();

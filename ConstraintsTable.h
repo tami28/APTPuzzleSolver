@@ -10,6 +10,7 @@
 #include "const.h"
 #include "PuzzlePiece.h"
 #include <sstream>
+#include <unordered_map>
 
 typedef pair<int, Rotate> IDandRotation;
 
@@ -21,5 +22,5 @@ public:
     ConstraintsTable();
     void insertPiece(PuzzlePiece& p);
     set<IDandRotation> getIDsFittingConstraints(int consts[4]);
-    unordered_map< int, set<IDandRotation> > _table;
+    std::unordered_map< int, std::set<IDandRotation> > _table;
 };

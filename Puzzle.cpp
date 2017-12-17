@@ -14,7 +14,7 @@
 #include "Solver.h"
 #include <numeric>
 
-int numPieces; //initialization of global variable.
+unsigned int numPieces; //initialization of global variable.
 
 //constructors:
 
@@ -177,12 +177,10 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  */
 void Puzzle::checkCorners(){
     Solver solver = Solver();
-    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
-        return; //See doc!
-    }
 	if (hasSufficientCornersCover()) {
 		return;
 	}
+
 	//continue here to find which corner is missing, and report the error (in correct error):
 	string errStr = "";
     int pieceUsedForCurrentCorner;

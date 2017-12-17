@@ -21,7 +21,7 @@ void RotatePuzzle::getPossibleSizes(vector<pair<int,int>> & result){
 void RotatePuzzle::checkCorners(){
     string errStr = "";
 
-    int uniqueCorners = 0, pieceUsedForCurrentCorner;
+    int uniqueCorners = 0;
     //for (int corner = TL ; corner <= BR ; corner++){
     for (auto &pair : _corners){
         if (pair.second.empty()){
