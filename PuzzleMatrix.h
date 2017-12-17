@@ -32,8 +32,8 @@ class PuzzleMatrix{
     } Cell;
     typedef std::vector<Cell> CellArray;
     typedef std::vector<CellArray> CellArray2D;
-    std::map<Constraints , int> _requiredCounters; // TODO: move to priv and write getter
-    std::map<outerFrameConstraints, int> _requieredFrameConstraints; //number of outer-frame straight edges needed for this puzzleMatrix. //todo move to private
+    std::map<Constraints , int> _requiredCounters;
+    std::map<outerFrameConstraints, int> _requieredFrameConstraints; //number of outer-frame straight edges needed for this puzzleMatrix.
 
 
 public:

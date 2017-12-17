@@ -87,7 +87,6 @@ public:
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
     virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs);
-    int COUNT; //TODO; rem
 };
 
 //solution table

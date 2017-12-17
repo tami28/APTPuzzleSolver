@@ -56,7 +56,6 @@ void Solver::solve(){
         col = size.second;
         pm = PuzzleMatrix(row, col);
         _puzzle.get()->selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
-        //unordered_set<int> usedIDs; //TODO: note now calling 2nd version of _solveForSize! (overloaded)
         vector<int> usedIDs;
         next = std::make_unique<Step>(row, col); //TODO: fix frame step?
         solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
@@ -69,7 +68,6 @@ void Solver::solve(){
 
     }
     else {
-        cout << "NO SOL" << endl; //todo rm
         (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
 
     }
@@ -137,7 +135,6 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 
 //TODO:  need to fix.
 bool Solver::hasSingleRowColSolution(){
-//    return false; //todo: rm when fixed..
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;
 
