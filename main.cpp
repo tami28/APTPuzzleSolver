@@ -5,12 +5,11 @@
  *      Author: Tami
  */
 
-#include "Puzzle.h"
-#include "RotatePuzzle.h"
 #include "Solver.h"
 #include <chrono>
 #include "const.h"
-string outFilePath;
+
+std::string outFilePath;
 bool withRotations = false;
 
 int main(int argc, char** argv){
