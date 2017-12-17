@@ -65,7 +65,7 @@ int PuzzleMatrix::getNcols() const{
  * assumes piece can be legally assigned there.
  */
 void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, Rotate rotation, int row, int col){
-    matrix[row][col].piece = piece; //TODO: maybe no need to actually keep Piece in matrix? just id?
+    matrix[row][col].piece = piece;
     matrix[row][col].rotation = rotation;
 
     updateRequiredCounters(piece, rotation, row, col);
