@@ -3,6 +3,7 @@
 //
 
 
+#include <c++/bits/unique_ptr.h>
 #include "PuzzlePiece.h"
 
 
@@ -51,13 +52,14 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromF
             errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine));
             //throw Error(WRONG_PIECE_FORMAT, inputFileLine);
         }
-        char* paramstr =new char[inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).length() + 1];
-        std::strcpy(paramstr,inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).c_str() );
+//        std::unique_ptr<char[]> paramstr = std::make_unique<char[]>(inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).length() + 1);
+//        std::strcpy(paramstr.get(),inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos).c_str() );
+        string paramstr = inputFileLine.substr(prvDelimPos, currDelimPos-prvDelimPos);
         // Use of ALTERNATIVE_ZERO_STRING / ALTERNATIVE_ZERO_INT is to overcome atoi's encounteredError value being 0.
-        if (strcmp(paramstr,"0") == 0){
-            paramstr = (char *) ALTERNATIVE_ZERO_STRING;
+        if (paramstr.compare("0")== 0){
+            paramstr = ALTERNATIVE_ZERO_STRING;
         }
-        param = atoi(paramstr);
+        param = atoi(paramstr.c_str());
 
         if (param == 0 && argsCount == 1){
             //the ID given in the input line is not an int --> Error 1.5 in exercise updates:

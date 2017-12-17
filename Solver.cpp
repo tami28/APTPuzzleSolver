@@ -163,6 +163,7 @@ bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
 
 
 void Solver::setStep(int nrow, int ncol){
+    //Decide which is the best stepper, meaning by what order to go:
     int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
     int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
     if (colDiff >= rowDiff){
