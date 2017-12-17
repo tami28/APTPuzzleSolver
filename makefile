@@ -3,7 +3,7 @@ COMP = g++-5.3.0
 OBJS = Exceptions.o PuzzlePiece.o Puzzle.o PuzzleMatrix.o Solver.o main.o #objects should be placed here!
 #The executabel filename DON'T CHANGE
 EXEC = ex1
-CPP_COMP_FLAG = -std=c++14 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
+CPP_COMP_FLAG = -std=c++11 -std=c++14 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
 
 $(EXEC): $(OBJS)
 	$(COMP) $(OBJS) -o $@
