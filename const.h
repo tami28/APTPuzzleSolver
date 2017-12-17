@@ -13,7 +13,7 @@
 
 #define INVALID_PIECE_ID -9
 
-extern int numPieces;
+extern unsigned int numPieces;
 enum Constraints { FEMALE = -1, STRAIGHT = 0, MALE = 1, NONE = 2};
 enum outerFrameConstraints {LEFT_STRAIGHT= 1, TOP_STRAIGHT = 2, RIGHT_STAIGHT = 3, BOTTOM_STRAIGHT = 4,  FINAL = 5};
 enum Edge {LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST = 4};
