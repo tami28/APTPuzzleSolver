@@ -20,6 +20,7 @@
 
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
 #define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
+#define STRAIGHT_EDGES_RATIO_FOR_FRAME_STEPS 0.25
 
 /*
  * Used to determine in what order to go over the puzzle.

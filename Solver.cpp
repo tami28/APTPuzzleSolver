@@ -156,13 +156,9 @@ bool Solver::solverFinished(vector<int> usedIDs){
 
 void Solver::setStep(int nrow, int ncol){
     //Decide which is the best stepper, meaning by what order to go:
-//    int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
-//    int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
-//    if (colDiff >= rowDiff){
-//        next = std::make_unique<Step>(nrow,ncol);
-//    } else{
-//        next = std::make_unique<StepCol>(nrow,ncol);
-//    }
+    int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
+    int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
+
     if (nrow <= 2){
         next = std::make_unique<Step>(nrow,ncol);
         return;
@@ -171,8 +167,20 @@ void Solver::setStep(int nrow, int ncol){
         next = std::make_unique<StepCol>(nrow,ncol);
         return;
     }
-    next = std::make_unique<StepFrame>(nrow, ncol);
+    if (_puzzle.get()->totalStraightEdges() <STRAIGHT_EDGES_RATIO_FOR_FRAME_STEPS*numPieces*4){
+        next = std::make_unique<StepFrame>(nrow, ncol);
+    }
 
+    if (withRotations){
+        next = std::make_unique<Step>(nrow,ncol);
+        return;
+    }
+    //This only  matters for non rotate puzzles, go by the one with less options - first col or first row
+    if (colDiff >= rowDiff){
+        next = std::make_unique<Step>(nrow,ncol);
+    } else{
+        next = std::make_unique<StepCol>(nrow,ncol);
+    }
 
 }
 
