@@ -53,6 +53,7 @@ public:
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);
+	bool hasSufficientCornersCover();
 
 
 };
