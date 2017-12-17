@@ -28,4 +28,3 @@ enum StepType{ROW, COL, FRAME};
 extern bool withRotations;
 extern std::string outFilePath;
 #define DEFAULT_OUTPUT_FILE "solution.out"
-//TODO: need not to use global variables
