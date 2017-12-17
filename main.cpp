@@ -11,7 +11,7 @@
 #include <chrono>
 #include "const.h"
 typedef std::chrono::high_resolution_clock Clock;
-string outFilePath;
+std::string outFilePath;
 bool withRotations = false;
 
 int main(int argc, char** argv){
