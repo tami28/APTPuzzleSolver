@@ -2,8 +2,6 @@
 // Created by Yoav on 08-Nov-17.
 //
 
-
-#include <c++/bits/unique_ptr.h>
 #include "PuzzlePiece.h"
 
 
