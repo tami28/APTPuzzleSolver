@@ -278,7 +278,7 @@ void Puzzle::checkStraightEdges(){
 }
 
 
-int Puzzle::getSize(){
+unsigned int Puzzle::getSize(){
 	return this->_size;
 }
 
