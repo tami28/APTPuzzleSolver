@@ -48,7 +48,6 @@ public:
     bool isPrime(int n);
     virtual void checkCorners();
     void checkStraightEdges();
-	void selAllPiecesValid();
 	int totalStraightEdges(){ return _straightEdges[0] + _straightEdges[1]+_straightEdges[2]+_straightEdges[3];};
 	int numStraightEdges(Edge edge){return _straightEdges[edge];};
 private:
