@@ -61,8 +61,10 @@ public:
     void updateRequiredFrameCounters(int row, int col);
     int getOuterFrameRequirementAt(outerFrameConstraints c);
     bool isCornerRequired(Corners c);
-    void constraintsOfCell(int row,int col, int*);
+    void constraintsOfCell(int row,int col, int*, StepType);
     void getConstraintsOfCell(int row, int col, int* res);
-
+    void constraintsOfCellByCol(int row, int col, int * res);
+    void constraintsOfCellByRow (int row, int col, int *);
+    void constraintsOfCellByFrame (int row, int col, int *);
 };
 

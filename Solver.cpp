@@ -84,7 +84,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
     }
 
     int constraints[4] = {NONE, NONE, NONE, NONE};
-    pm.constraintsOfCell(next.get()->i,next.get()->j,constraints);
+    pm.constraintsOfCell(next.get()->i,next.get()->j,constraints, next.get()->getType());
     unordered_set<int> badPieces;
     set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints);
     int i;
@@ -101,7 +101,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             if(solverFinished(pm, newUsedIDs)){
                 return true;
             }
-
+            int r = next.get()->i;
+            int c = next.get()->j;
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
@@ -140,14 +141,14 @@ bool Solver::hasSingleRowColSolution(){
 
 
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used" todo: need this?
-    setStep(1,_puzzle.get()->getSize());
+    next = std::make_unique<Step>(1, _puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"todo: need this?
-    setStep(_puzzle.get()->getSize() , 1);
+    next = std::make_unique<Step>(_puzzle.get()->getSize(),1);
     if (_solveForSize(col_pm, usedIDs)){
         return true;
     }
@@ -166,11 +167,20 @@ void Solver::setStep(int nrow, int ncol){
     //Decide which is the best stepper, meaning by what order to go:
     int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
     int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
-    if (colDiff >= rowDiff){
+//    if (colDiff >= rowDiff){
+//        next = std::make_unique<Step>(nrow,ncol);
+//    } else{
+//        next = std::make_unique<StepCol>(nrow,ncol);
+//    }
+    if (nrow <= 2){
         next = std::make_unique<Step>(nrow,ncol);
-    } else{
-        next = std::make_unique<StepCol>(nrow,ncol);
+        return;
     }
+    if(ncol <= 2){
+        next = std::make_unique<StepCol>(nrow,ncol);
+        return;
+    }
+    next = std::make_unique<StepFrame>(nrow, ncol);
 
 
 }

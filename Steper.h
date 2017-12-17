@@ -1,7 +1,7 @@
 //
 // Created by Tami on 17/12/2017.
 //
-
+#include "const.h"
 #ifndef ATPPUZZLESOLVER_STEPER_H
 #define ATPPUZZLESOLVER_STEPER_H
 
@@ -24,6 +24,7 @@ public:
     virtual bool prevStep();
     Step(){};
     Step(int n, int m) : nrow(n), ncol(m){};
+    virtual StepType getType();
 };
 
 /*
@@ -34,6 +35,7 @@ class StepFrame :public Step{
 public:
     bool nextStep();
     bool prevStep();
+    StepType getType();
     StepFrame(int n, int m) : Step(n,m){};
 
 };
@@ -43,6 +45,7 @@ class StepCol : public Step{
 public:
     bool nextStep();
     bool prevStep();
+    StepType getType();
     StepCol(int n, int m) : Step(n,m){};
 };
 

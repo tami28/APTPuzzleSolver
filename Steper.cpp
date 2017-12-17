@@ -178,3 +178,14 @@ bool StepCol::prevStep(){
     }
     return true;
 }
+
+StepType Step::getType(){
+    return ROW;
+}
+StepType StepFrame::getType() {
+    return FRAME;
+}
+
+StepType StepCol::getType() {
+    return COL;
+}

@@ -22,6 +22,8 @@ enum Corners {TL = 0, TR = 1, BL = 2, BR = 3, LAST_C};
 
 enum Rotate {NO = 0, DEG90 = 90, DEG180 = 180, DEG270 = 270};
 
+enum StepType{ROW, COL, FRAME};
+
 extern bool withRotations;
 #define DEFAULT_OUTPUT_FILE "solution.out"
 extern std::string outFilePath;

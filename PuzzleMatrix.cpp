@@ -268,7 +268,20 @@ string PuzzleMatrix::toString(){
 
 
 
-void PuzzleMatrix::constraintsOfCell(int row, int col, int* res) {
+void PuzzleMatrix::constraintsOfCell(int row, int col, int* res, StepType step) {
+    switch(step){
+        case COL:
+        case ROW:
+            constraintsOfCellByRow(row, col, res);
+            return;
+        case FRAME:
+            constraintsOfCellByFrame(row,col, res);
+    }
+
+}
+
+
+void PuzzleMatrix::constraintsOfCellByRow (int row, int col, int * res) {
     //{LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, LAST};
     if (col == 0) {
         res[LEFT] = STRAIGHT;
@@ -289,7 +302,54 @@ void PuzzleMatrix::constraintsOfCell(int row, int col, int* res) {
         res[BOTTOM] = STRAIGHT;
     }
 }
-
+void PuzzleMatrix::constraintsOfCellByFrame(int row, int col, int *res) {
+    bool frame = false;
+    if (row == 0){
+        res[TOP] = STRAIGHT;
+        if (col==0){
+            res[LEFT] = STRAIGHT;
+        } else{
+            res[LEFT] = matrix[row][col -1].piece->getConstraint(RIGHT, matrix[row][col-1].rotation);
+        }
+        frame = true;
+    }
+    if (col == ncols-1){
+        res[RIGHT] = STRAIGHT;
+        if(row>0){
+            res[TOP] = matrix[row -1][col].piece->getConstraint(BOTTOM, matrix[row-1][col].rotation);
+        }
+        frame = true;
+    }
+    if(row == nrows-1){
+        res[BOTTOM] = STRAIGHT;
+        if (col < ncols-1){
+            res[RIGHT] = matrix[row][col+1].piece->getConstraint(LEFT, matrix[row][col+1].rotation);
+        }
+        frame = true;
+    }
+    if(col == 0){
+        res[LEFT] = STRAIGHT;
+        if (row < nrows-1 && row > 0){
+            res[BOTTOM] = matrix[row+1][col].piece->getConstraint(TOP, matrix[row+1][col].rotation);
+        }
+        if (row == 1){
+            res[TOP] = matrix[row-1][col].piece->getConstraint(BOTTOM, matrix[row-1][col].rotation);
+        }
+        frame = true;
+    }
+    if (frame){
+        return;
+    }
+    //FINISHED FRAME !!!!
+    res[TOP] = matrix[row -1][col].piece->getConstraint(BOTTOM, matrix[row-1][col].rotation);
+    res[LEFT] = matrix[row][col -1].piece->getConstraint(RIGHT, matrix[row][col-1].rotation);
+    if (col == ncols-2){
+        res[RIGHT] = matrix[row][col +1].piece->getConstraint(LEFT, matrix[row][col+1].rotation);
+    }
+    if (row == nrows-2){
+        res[BOTTOM] = matrix[row +1][col].piece->getConstraint(TOP, matrix[row+1][col].rotation);
+    }
+}
 
 std::map<Constraints , int> PuzzleMatrix::getRequiredCounters() {
     return this->_requiredCounters;
