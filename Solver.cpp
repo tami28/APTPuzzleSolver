@@ -47,8 +47,6 @@ void Solver::solve(){
     vector<int> indices(_puzzle.get()->getSize());
     // Fill indices vector with all relevant indices (1...numPieces)
     std::iota(indices.begin(), indices.end(), 1);
-    // Allocate buffer for solution matrix:
-    PuzzleMatrix* solution;
     // Try and solve for every puzzle size:
     PuzzleMatrix pm(0,0);
     for (auto size : sizesVec){
@@ -75,8 +73,8 @@ void Solver::solve(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
-    if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
-        && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
+    if (_puzzle.get()->getSize() > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
+        && usedIDs.size() > _puzzle.get()->getSize()*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
@@ -149,7 +147,7 @@ bool Solver::hasSingleRowColSolution(){
 }
 
 bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
-    if ((!next.get()->nextStep()) && usedIDs.size() == numPieces){
+    if ((!next.get()->nextStep()) && usedIDs.size() == _puzzle.get()->getSize()){
         return true;
     }
     return false;
