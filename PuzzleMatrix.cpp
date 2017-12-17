@@ -251,7 +251,6 @@ void PuzzleMatrix::constraintsOfCellByRow (int row, int col, int * res) {
         res[LEFT] = STRAIGHT;
     } else {
         res[LEFT] = matrix[row][col - 1].piece->getConstraint(RIGHT, matrix[row][col-1].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
     }
     if (col == (ncols - 1)) {
         res[RIGHT] = STRAIGHT;
@@ -260,7 +259,6 @@ void PuzzleMatrix::constraintsOfCellByRow (int row, int col, int * res) {
         res[TOP] = STRAIGHT;
     } else {
         res[TOP] = matrix[row - 1][col].piece->getConstraint(BOTTOM, matrix[row-1][col].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
     }
     if (row == (nrows - 1)) {
         res[BOTTOM] = STRAIGHT;
