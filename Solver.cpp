@@ -146,7 +146,7 @@ bool Solver::hasSingleRowColSolution(){
     return false;
 }
 
-bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
+bool Solver::solverFinished(vector<int> usedIDs){
     if ((!next.get()->nextStep()) && usedIDs.size() == _puzzle.get()->getSize()){
         return true;
     }
@@ -156,8 +156,8 @@ bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
 
 void Solver::setStep(int nrow, int ncol){
     //Decide which is the best stepper, meaning by what order to go:
-    int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
-    int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
+//    int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
+//    int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
 //    if (colDiff >= rowDiff){
 //        next = std::make_unique<Step>(nrow,ncol);
 //    } else{

@@ -54,7 +54,7 @@ public:
     //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
-    virtual bool solverFinished(PuzzleMatrix& pm,vector<int> usedIDs);
+    virtual bool solverFinished(vector<int> usedIDs);
 };
 
 //solution table
