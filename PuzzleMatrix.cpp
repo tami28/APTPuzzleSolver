@@ -133,8 +133,9 @@ bool PuzzleMatrix::isCornerRequired(Corners c){
             return (matrix[getNrows()-1][getNcols()-1].piece == nullptr);
         case Corners::BL:
             return (matrix[getNrows()-1][0].piece == nullptr);
+        default:
+            return false;
     }
-    return false;
 }
 
 /*
@@ -315,10 +316,11 @@ void PuzzleMatrix::constraintsOfCellByFrame(int row, int col, int *res) {
 
 std::map<Constraints , int> PuzzleMatrix::getRequiredCounters() {
     return this->_requiredCounters;
-};
+}
+
 std::map<outerFrameConstraints, int> PuzzleMatrix::getRequiredFrameConstraints(){
     return this->_requieredFrameConstraints;
-};
+}
 
 void  PuzzleMatrix::setRequiredCounters(std::map<Constraints , int> requiredCounters){
     this->_requiredCounters = requiredCounters;
