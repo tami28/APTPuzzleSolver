@@ -26,7 +26,7 @@ class Puzzle{
 //members:
 protected:
 	vector<PuzzlePiece> _pieces;
-	int _size = 0;
+	unsigned int _size = 0;
     int _totalSum = 0;
 	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
@@ -39,7 +39,7 @@ public:
 	//Dt'r: We didn't assign anything with new, nor de we have pointers therefore we don't need to implement a Dt'r.
 	void buildPuzzleFromFile(const string& fileName);
     PuzzlePiece* getPieceAt(int i);
-    int getSize();
+	unsigned int getSize();
 	int getMaxHeight();
 	int getMaxWidth();
     int getTotalSum(){return _totalSum;};
