@@ -43,8 +43,6 @@ public:
     Constraints operator()(int row, int col, Edge edge);
 
     void updateRequiredCounters(PuzzlePiece* piece, Rotate rotation, int row, int col);
-    void UpdateConstraintsOfNeighbour(PuzzlePiece* piece, Rotate rotation, Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
-                                                    int neighbourRow, int neighbourCol);
     void assignPieceToCell(PuzzlePiece* piece,Rotate rotation, int row, int col);
     bool isFit(PuzzlePiece* piece, int row, int col);
     int getNrows() const;

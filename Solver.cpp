@@ -56,7 +56,7 @@ void Solver::solve(){
         col = size.second;
         pm = PuzzleMatrix(row, col);
         vector<int> usedIDs;
-        setStep(row, col); //TODO: fix frame step?
+        setStep(row, col);
         solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
         if (solved) {
             break;
@@ -75,7 +75,6 @@ void Solver::solve(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
-//    std::cout << next.get()->i << ","<<next.get()->j << " " <<next.get()->nrow<<","<<next.get()->ncol<<std::endl;
     if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
         && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
@@ -100,8 +99,6 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             if(solverFinished(pm, newUsedIDs)){
                 return true;
             }
-            int r = next.get()->i;
-            int c = next.get()->j;
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
@@ -133,7 +130,6 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 
-//TODO:  need to fix.
 bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;

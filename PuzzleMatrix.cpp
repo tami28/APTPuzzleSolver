@@ -59,29 +59,6 @@ int PuzzleMatrix::getNcols() const{
 
 
 
-/*
- * Update the constraints of a given neighbour, according to a specific edge of the piece that was
- * placed near that neighbour.
- */
-void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece, Rotate rotation, Edge pieceEdgeToUpdateBy, Edge neighbourEdgeToUpdate,
-                                                int neighbourRow, int neighbourCol) {
-    return; //TODO: is this fun really not needed?
-    switch (piece->getConstraint(pieceEdgeToUpdateBy, rotation)) {
-        case STRAIGHT:
-            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = STRAIGHT;
-            break;
-        case MALE:
-            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = FEMALE;
-            break;
-        case FEMALE:
-            matrix[neighbourRow][neighbourCol].constraints[neighbourEdgeToUpdate] = MALE;
-            break;
-        case NONE:
-            break;
-    }
-}
-
-
 
 /*
  * assign a given piece to a cell in the PuzzleMatrix, and updates the constraints of the neighbouring cells accordingly
@@ -90,19 +67,6 @@ void PuzzleMatrix::UpdateConstraintsOfNeighbour(PuzzlePiece* piece, Rotate rotat
 void PuzzleMatrix::assignPieceToCell(PuzzlePiece* piece, Rotate rotation, int row, int col){
     matrix[row][col].piece = piece; //TODO: maybe no need to actually keep Piece in matrix? just id?
     matrix[row][col].rotation = rotation;
-    //Update constraints of neighbours:
-    if (row > 0){//cell has a neighbour above
-        UpdateConstraintsOfNeighbour(piece, rotation, TOP, BOTTOM, row-1, col); //TODO: maybe send piece here byRef?
-        }
-    if (row < nrows - 1){//cell has a neighbour below
-        UpdateConstraintsOfNeighbour(piece, rotation,  BOTTOM, TOP, row+1, col);
-    }
-    if (col > 0){//cell has a neighbour on the left
-        UpdateConstraintsOfNeighbour(piece, rotation, LEFT, RIGHT, row, col-1);
-    }
-    if (col < ncols - 1){//cell has a neighbour on the right
-        UpdateConstraintsOfNeighbour(piece, rotation, RIGHT, LEFT, row, col+1);
-    }
 
     updateRequiredCounters(piece, rotation, row, col);
 }
@@ -179,7 +143,7 @@ bool PuzzleMatrix::isCornerRequired(Corners c){
  * if every non-NULL constraint matches the edge of the piece --> fits.
  */
 bool PuzzleMatrix:: isFit(PuzzlePiece* piece, int row, int col){
-    if (matrix[row][col].piece != NULL){
+    if (matrix[row][col].piece != nullptr){
         return false;
     }
     for (int i = LEFT; i<=BOTTOM; i++){ //iterate over constraints
@@ -215,7 +179,7 @@ void PuzzleMatrix::toFile(string path) {
     for (int i=0; i<nrows; i++){
 
         for (int j=0; j<ncols; j++){
-            if (matrix[i][j].piece == NULL) {
+            if (matrix[i][j].piece == nullptr) {
                 fout << "NA" << " ";
                 continue;
             }
@@ -237,7 +201,7 @@ void PuzzleMatrix::print() {
     for (int i=0; i<nrows; i++){
 
         for (int j=0; j<ncols; j++){
-            if (matrix[i][j].piece == NULL) {
+            if (matrix[i][j].piece == nullptr) {
                 cout << "N" << " ";
                 continue;
             }
@@ -253,7 +217,7 @@ string PuzzleMatrix::toString(){
     for (int i=0; i<nrows; i++){
 
         for (int j=0; j<ncols; j++){
-            if (matrix[i][j].piece == NULL) {
+            if (matrix[i][j].piece == nullptr) {
                 s.append("N");
                 s.append(" ");
                 continue;
@@ -287,7 +251,6 @@ void PuzzleMatrix::constraintsOfCellByRow (int row, int col, int * res) {
         res[LEFT] = STRAIGHT;
     } else {
         res[LEFT] = matrix[row][col - 1].piece->getConstraint(RIGHT, matrix[row][col-1].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
     }
     if (col == (ncols - 1)) {
         res[RIGHT] = STRAIGHT;
@@ -296,7 +259,6 @@ void PuzzleMatrix::constraintsOfCellByRow (int row, int col, int * res) {
         res[TOP] = STRAIGHT;
     } else {
         res[TOP] = matrix[row - 1][col].piece->getConstraint(BOTTOM, matrix[row-1][col].rotation);
-        // TODO: above hack can be more efficient if we don't call "getConstraint(RIGHT, matrix[row][col-1].rotation)" in the non-rotatable case
     }
     if (row == (nrows - 1)) {
         res[BOTTOM] = STRAIGHT;
