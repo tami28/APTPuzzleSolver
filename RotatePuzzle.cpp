@@ -6,7 +6,6 @@
 
 
 void RotatePuzzle::getPossibleSizes(vector<pair<int,int>> & result){
-    //TODO: This might not be good, we might have to count unique pieces which have straight edges?
     int puzzleSize = _size;
     int sqr = (int) sqrt(puzzleSize) + 1;
     int totalStraightEdges = _straightEdges[0] + _straightEdges[1] + _straightEdges[2]+_straightEdges[3];

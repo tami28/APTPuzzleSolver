@@ -80,7 +80,6 @@ std::string Error::toString(){
 
         default:
             break;
-        //TODO! not all enum types are handlel
 	}
 	return "";
 }
