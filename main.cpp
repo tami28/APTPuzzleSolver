@@ -10,8 +10,7 @@
 #include "Solver.h"
 #include <chrono>
 #include "const.h"
-typedef std::chrono::high_resolution_clock Clock;
-std::string outFilePath;
+string outFilePath;
 bool withRotations = false;
 
 int main(int argc, char** argv){

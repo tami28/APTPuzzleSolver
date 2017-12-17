@@ -1,6 +1,6 @@
 COMP = g++-5.3.0
 #put all your object files here
-OBJS = main.o Exceptions.o PuzzlePiece.o Puzzle.o PuzzleMatrix.o RotatePuzzle.o SolvabilityVerifier.o Steper.o ConstraintsTable.o Solver.o #objects should be placed here!
+OBJS = Exceptions.o PuzzlePiece.o Puzzle.o PuzzleMatrix.o RotatePuzzle.o SolvabilityVerifier.o Steper.o ConstraintsTable.o Solver.o main.o #objects should be placed here!
 #The executabel filename DON'T CHANGE
 EXEC = ex2
 CPP_COMP_FLAG = -std=c++14 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
