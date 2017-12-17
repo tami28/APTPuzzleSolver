@@ -57,7 +57,7 @@ void Solver::solve(){
         pm = PuzzleMatrix(row, col);
         _puzzle.get()->selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
         vector<int> usedIDs;
-        next = std::make_unique<Step>(row, col); //TODO: fix frame step?
+        setStep(row, col); //TODO: fix frame step?
         solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
         if (solved) {
             break;
@@ -140,14 +140,14 @@ bool Solver::hasSingleRowColSolution(){
 
 
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used" todo: need this?
-    next = std::make_unique<Step>(1,_puzzle.get()->getSize());
+    setStep(1,_puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
     _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"todo: need this?
-    next = std::make_unique<Step>(_puzzle.get()->getSize() , 1);
+    setStep(_puzzle.get()->getSize() , 1);
     if (_solveForSize(col_pm, usedIDs)){
         return true;
     }
@@ -161,143 +161,16 @@ bool Solver::solverFinished(PuzzleMatrix& pm, vector<int> usedIDs){
     return false;
 }
 
-bool Step::nextStep(){
-    if ( i == nrow-1){
-        if (j == ncol-1){
-            return false;
-        }
-        j++;
-        return true;
-    }
-    if(j==ncol -1){
-        i++;
-        j = 0;
+
+void Solver::setStep(int nrow, int ncol){
+    int colDiff = _puzzle.get()->numStraightEdges(LEFT) - nrow;
+    int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
+    if (colDiff >= rowDiff){
+        next = std::make_unique<Step>(nrow,ncol);
     } else{
-        j++;
+        next = std::make_unique<StepCol>(nrow,ncol);
     }
-    return true;
+
+
 }
 
-bool Step::prevStep(){
-    if ( i == 0){
-        if (j == 0){
-            return false;
-        }
-        j--;
-        return true;
-    }
-    if(j==0){
-        i--;
-        j = ncol-1;
-    } else{
-        j--;
-    }
-    return true;
-}
-
-bool StepFrame::nextStep(){
-    //on first row till corner + 1:
-    if ( i == 0){
-        if (j < ncol-1){
-            j++;
-        } else{
-            i++; //turn the corner
-        }
-        return true;
-    }
-    //last col till corner:
-    if(j==ncol -1){
-        if(i < nrow - 1){
-            i++;
-        } else{ //turn the corner:
-            j--;
-        }
-        return true;
-    }
-    //last row:
-    if (i == nrow-1){
-        if (j>0){
-            j--;
-        }else{
-            i--; //turn the corner
-        }
-        return true;
-    }
-    //first col:
-    if (j==0){
-        if(i>1){ //not to go over 0,0 again!
-            i--;
-        } else{ //finished frame, start inside!
-            i=1;
-            j=1;
-        }
-        return true;
-    }
-    //go over inside by rows:
-    if ( i == nrow-2){
-        if (j == ncol-2){
-            return false;
-        }
-        j++;
-        return true;
-    }
-    if(j==ncol -2){
-        i++;
-        j = 1;
-    } else{
-        j++;
-    }
-    return true;
-}
-
-bool StepFrame::prevStep(){
-    //on first row till corner:
-    if ( i == 0){
-        if (j > 0){
-            j--;
-        } else{ //corner:
-            return false;
-        }
-        return true;
-    }
-    //last col till corner:
-    if(j==ncol -1){
-        if(i >0){
-            i--;
-        } else{ //return on first row..
-            j--;
-        }
-        return true;
-    }
-    //last row:
-    if (i == nrow-1){
-        if (j<ncol -1){
-            j++;
-        }else{ //turn the corner to last col
-            i--;
-        }
-        return true;
-    }
-    //first col:
-    if (j==0) {
-        if (i < nrow - 1) { //not to go over 0,0 again!
-            i++;
-        } else {
-            j++;
-        }
-        return true;
-    }
-    //    //go over inside by rows:
-    if (i == 1 && j==1) {
-        j--;
-        return true;
-    }
-    if (j == 1){
-        j = ncol -2;
-        i--;
-        return true;
-    }else{
-        j--;
-    }
-    return true;
-}

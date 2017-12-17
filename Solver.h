@@ -16,6 +16,7 @@
 #include "SolvabilityVerifier.h"
 #include <memory>
 #include <numeric>
+#include "Steper.h"
 
 //TODO: decide about these constants here (0.5? 0.3?)
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30 //todo chane to 30
@@ -24,39 +25,6 @@
 /*
  * Used to determine in what order to go over the puzzle.
  */
-class Step{
-    friend class Solver;
-    friend class RotateSolver;
-protected:
-    int i = 0;
-    int j =0 ;
-    int nrow = 0;
-    int ncol = 0;
-public:
-    /*
-     * update i&j to the next cell to go over. If we are at the end of the puzzle, meaning no next step - return false.
-     */
-    virtual bool nextStep();
-    /*
-     * update i&j to the previous cell we wentover. If we are at the start of the puzzle, meaning no prev step s- return false.
-     */
-    virtual bool prevStep();
-    Step(){};
-    Step(int n, int m) : nrow(n), ncol(m){};
-};
-
-/*
- * Used to go over frame, then by row inside.
- */
-class StepFrame :public Step{
-    friend class Solver;
-    friend class RotateSolver;
-public:
-    bool nextStep();
-    bool prevStep();
-    StepFrame(int n, int m) : Step(n,m){};
-
-};
 
 
 class Solver{
@@ -65,6 +33,7 @@ private:
     std::vector<int> indices;
     std::unique_ptr<Step> next;
     bool isFrame = false;
+    void setStep(int nrow, int ncol);
 
 public:
     Solver() = default ;
