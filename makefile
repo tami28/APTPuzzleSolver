@@ -24,7 +24,7 @@ SolvabilityVerifier.o: SolvabilityVerifier.cpp
 Steper.o: Steper.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 ConstraintsTable.o: ConstraintsTable.cpp
-    $(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
 main.o: main.cpp Puzzle.h PuzzlePiece.h const.h Exceptions.h Solver.h PuzzleMatrix.h RotatePuzzle.h SolvabilityVerifier.h Steper.h ConstraintsTable.h #put dependencies here!
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
