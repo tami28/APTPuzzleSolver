@@ -75,7 +75,6 @@ void Solver::solve(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
-//    std::cout << next.get()->i << ","<<next.get()->j << " " <<next.get()->nrow<<","<<next.get()->ncol<<std::endl;
     if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
         && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
@@ -100,8 +99,6 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             if(solverFinished(pm, newUsedIDs)){
                 return true;
             }
-            int r = next.get()->i;
-            int c = next.get()->j;
             if (_solveForSize(pm, newUsedIDs)){
                 return true;
             }
