@@ -17,8 +17,15 @@ PuzzleMatrix.o: PuzzleMatrix.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 Solver.o: Solver.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+RotatePuzzle.o: RotatePuzzle.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+SolvabilityVerifier.o: SolvabilityVerifier.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+Steper.o: Steper.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
-main.o: main.cpp Puzzle.h PuzzlePiece.h const.h Exceptions.h Solver.h PuzzleMatrix.h#put dependencies here!
+
+main.o: main.cpp Puzzle.h PuzzlePiece.h const.h Exceptions.h Solver.h PuzzleMatrix.h RotatePuzzle.h SolvabilityVerifier.h Steper.h #put dependencies here!
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 clean:
 	rm -f $(OBJS) $(EXEC)
