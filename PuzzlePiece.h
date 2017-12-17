@@ -10,7 +10,6 @@
 #include <cstdlib>
 #include "const.h"
 #include "Exceptions.h"
-#include <memory>
 
 #define ALTERNATIVE_ZERO_STRING "-2"
 #define ALTERNATIVE_ZERO_INT -2
