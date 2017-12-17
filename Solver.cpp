@@ -89,8 +89,8 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
         i = PieceIDandRotation.first;
         rotation = PieceIDandRotation.second;
         if (_isFitForCell(i, badPieces, usedIDs, rotation)){
-            std::map<Constraints , int> requiredCountersSnapshot = pm.getRequiredCounters(); //TODO: bad hack.. change
-            std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm.getRequiredFrameConstraints();//TODO: bad hack.. change
+            std::map<Constraints , int> requiredCountersSnapshot = pm.getRequiredCounters();
+            std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm.getRequiredFrameConstraints();
             pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, next.get()->i,next.get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
