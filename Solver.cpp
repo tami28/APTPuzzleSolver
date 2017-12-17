@@ -56,7 +56,7 @@ void Solver::solve(){
         col = size.second;
         pm = PuzzleMatrix(row, col);
         vector<int> usedIDs;
-        setStep(row, col); //TODO: fix frame step?
+        setStep(row, col);
         solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
         if (solved) {
             break;
@@ -133,7 +133,6 @@ bool Solver::piecefitsConstrains(PuzzlePiece& piece, char constraints[4]){
 }
 
 
-//TODO:  need to fix.
 bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;
