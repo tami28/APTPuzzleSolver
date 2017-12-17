@@ -31,7 +31,7 @@ void Solver::solve(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        if (!(_puzzle.get()->isPrime(_puzzle.get()->getSize()) || _puzzle.get()->getSize()== 1 || hasSingleRowColSolution())) {
+        if (!(_puzzle.get()->isPrime(numPieces) || numPieces== 1 || hasSingleRowColSolution())) {
             _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
@@ -73,8 +73,8 @@ void Solver::solve(){
 
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
-    if (_puzzle.get()->getSize() > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
-        && usedIDs.size() > _puzzle.get()->getSize()*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
+    if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
+        && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
@@ -94,7 +94,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs) {
             pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, next.get()->i,next.get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
-            if(solverFinished(pm, newUsedIDs)){
+            if(solverFinished(newUsedIDs)){
                 return true;
             }
             if (_solveForSize(pm, newUsedIDs)){
@@ -147,7 +147,7 @@ bool Solver::hasSingleRowColSolution(){
 }
 
 bool Solver::solverFinished(vector<int> usedIDs){
-    if ((!next.get()->nextStep()) && usedIDs.size() == _puzzle.get()->getSize()){
+    if ((!next.get()->nextStep()) && usedIDs.size() == numPieces){
         return true;
     }
     return false;

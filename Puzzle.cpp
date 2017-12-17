@@ -14,7 +14,7 @@
 #include "Solver.h"
 #include <numeric>
 
-int numPieces; //initialization of global variable.
+unsigned int numPieces; //initialization of global variable.
 
 //constructors:
 
@@ -177,9 +177,9 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  */
 void Puzzle::checkCorners(){
     Solver solver = Solver();
-    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
-        return; //See doc!
-    }
+//    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
+//        return; //See doc!
+//    }
 	//todo: break down to 2-3 funcs
 	for (auto a : _corners[Corners::TL]) {
 		for (auto b : _corners[Corners::TR]) {
