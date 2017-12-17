@@ -21,5 +21,5 @@ public:
     ConstraintsTable();
     void insertPiece(PuzzlePiece& p);
     set<IDandRotation> getIDsFittingConstraints(int consts[4]);
-    unordered_map< int, set<IDandRotation> > _table;
+    std::unordered_map< int, set<IDandRotation> > _table;
 };
