@@ -288,3 +288,4 @@ bool Puzzle::isPrime(int n){
     }
     return true;
 }
+

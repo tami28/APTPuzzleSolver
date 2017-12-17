@@ -9,7 +9,7 @@
  * empy constructor for a Piece object
  */
 
-PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
+PuzzlePiece::PuzzlePiece(): edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
 
 /*
  * Constructor for a Piece object from id + edges array.
