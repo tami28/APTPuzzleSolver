@@ -79,7 +79,7 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromF
         numNumericParams++; // Got here -> the parameter we are parsing now is an integer.
         if (param == ALTERNATIVE_ZERO_INT) {param = 0;}
         args[argsCount-1] = param;
-        if (argsCount == 1 && (param < 1 || param > numPieces)) {
+        if (argsCount == 1 && (param < 1 || (unsigned int) param > numPieces)) {
             //Input ID is numeric but not in the valid range:
             encounteredError = true;
             errVec.push_back(Error(_WRONG_PIECE_ID, param));
