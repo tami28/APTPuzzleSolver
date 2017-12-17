@@ -11,6 +11,7 @@
 #include <iterator>
 //#include "solver.h"
 #include "PuzzleMatrix.h"
+#include "Solver.h"
 #include <numeric>
 
 int numPieces; //initialization of global variable.
@@ -141,7 +142,7 @@ bool Puzzle::checkForMissingPieces(vector<int> &idsFromFile, vector<int> &ids){
 int Puzzle::addPiece(PuzzlePiece& piece) {
 	int sum =0;
 	_pieces[piece.getId() -1] = piece;
-	for (int edge = LEFT; edge != LAST; ++edge){ //TODO
+	for (int edge = LEFT; edge != LAST; ++edge){
 		sum += piece.getConstraint((Edge) edge);
         if (piece.getConstraint((Edge) edge) == STRAIGHT){
             _straightEdges[edge]++;
@@ -175,10 +176,10 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  * corners in the single-row / single-col case).
  */
 void Puzzle::checkCorners(){
-//    Solver solver = Solver(*this);
-//    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
-//        return; //See doc!
-//    }
+    Solver solver = Solver();
+    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
+        return; //See doc!
+    }
 	//todo: break down to 2-3 funcs
 	for (auto a : _corners[Corners::TL]) {
 		for (auto b : _corners[Corners::TR]) {
