@@ -177,22 +177,11 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  */
 void Puzzle::checkCorners(){
     Solver solver = Solver();
-//    if (isPrime(_size) || _size == 1 || solver.hasSingleRowColSolution()) {
-//        return; //See doc!
-//    }
-	//todo: break down to 2-3 funcs
-	for (auto a : _corners[Corners::TL]) {
-		for (auto b : _corners[Corners::TR]) {
-			for (auto c : _corners[Corners::BL]) {
-				for (auto d : _corners[Corners::BR]) {
-					if (set<int>{a,b,c,d}.size() == 4) {
-						return;
-					}
-				}
-			}
-		}
+	if (hasSufficientCornersCover()) {
+		return;
 	}
 
+	//continue here to find which corner is missing, and report the error (in correct error):
 	string errStr = "";
     int pieceUsedForCurrentCorner;
     for (int corner = TL ; corner <= BR ; corner++){
@@ -224,6 +213,23 @@ void Puzzle::checkCorners(){
     }
 }
 
+/*
+ * returns true if all 4 corners of puzzle can be covered with 4 different pieces
+ */
+bool Puzzle::hasSufficientCornersCover(){
+	for (auto a : _corners[Corners::TL]) {
+		for (auto b : _corners[Corners::TR]) {
+			for (auto c : _corners[Corners::BL]) {
+				for (auto d : _corners[Corners::BR]) {
+					if (set<int>{a,b,c,d}.size() == 4) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
 
 void Puzzle::getPossibleSizes(vector<pair<int,int>> & result){
 	int puzzleSize = _size;
