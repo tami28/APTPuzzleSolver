@@ -288,10 +288,3 @@ bool Puzzle::isPrime(int n){
     }
     return true;
 }
-
-void Puzzle::selAllPiecesValid(){
-	for (PuzzlePiece& p : _pieces){
-		//p.setIsValid(true);
-		p.isValid = true;
-	}
-}

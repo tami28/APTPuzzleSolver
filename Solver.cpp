@@ -55,7 +55,6 @@ void Solver::solve(){
         row = size.first;
         col = size.second;
         pm = PuzzleMatrix(row, col);
-        _puzzle.get()->selAllPiecesValid(); //Before starting solve for size, set all pieces as "not used"
         vector<int> usedIDs;
         setStep(row, col); //TODO: fix frame step?
         solved = _solveForSize(pm, usedIDs); // Find a solution for size (row,col)
@@ -140,14 +139,12 @@ bool Solver::hasSingleRowColSolution(){
     vector<int> usedIDs;
 
 
-    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used" todo: need this?
     next = std::make_unique<Step>(1, _puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
-    _puzzle.get()->selAllPiecesValid(); //Before strating solve for size, set all pieces as "not used"todo: need this?
     next = std::make_unique<Step>(_puzzle.get()->getSize(),1);
     if (_solveForSize(col_pm, usedIDs)){
         return true;

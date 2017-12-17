@@ -9,14 +9,14 @@
  * empy constructor for a Piece object
  */
 
-PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), isValid(true), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
+PuzzlePiece::PuzzlePiece(): id(DEFAULT_PIECE_ID), edges{DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE,DEFAULT_EDGE}{}
 
 /*
  * Constructor for a Piece object from id + edges array.
  * This c'tor assumes valid input in inputEdges.
  */
 PuzzlePiece::PuzzlePiece(int id, int inputEdges[4])
-        : id(id), isValid(true)  {
+        : id(id){
     this->encoding = 0;
     for (int i=0; i<4; i++){
         edges[i] = (Constraints) inputEdges[i];
@@ -175,6 +175,3 @@ int PuzzlePiece::getConstraintsKey(Rotate rotation){
     }
     return key;
 }
-
-bool PuzzlePiece::getIsValid() { return isValid; }
-void PuzzlePiece::setIsValid(bool value) { isValid = value; }
