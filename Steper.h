@@ -15,7 +15,7 @@ protected:
     int ncol = 0;
 public:
     /*
-     * update i&j to the stepperesVec cell to go over. If we are at the end of the puzzle, meaning no stepperesVec step - return false.
+     * update i&j to the steppersMap cell to go over. If we are at the end of the puzzle, meaning no steppersMap step - return false.
      */
     virtual bool nextStep();
     /*
@@ -23,7 +23,7 @@ public:
      */
     virtual bool prevStep();
     Step(){};
-    Step(int n, int m) : nrow(n), ncol(m){};
+    Step(int k, int m) : nrow(k), ncol(m){};
     virtual StepType getType();
 };
 

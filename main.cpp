@@ -23,7 +23,6 @@ int main(int argc, char** argv){
     std::string inFilePath;
     outFilePath = DEFAULT_OUTPUT_FILE;
     int numThreads = DEFAULT_NUM_THREADS;
-    numThreads = atoi(argv[3]); //TODO: properly take num threads from cmndLine
     if (argc <2){
         std::cout<<"Error, no input file. Run COMMAND inputFilePath or COMMAND inputFilePath outputFilePath for specific output file location";
         return 1;
@@ -59,7 +58,7 @@ int main(int argc, char** argv){
 
 
     // Try to solve:
-    Solver solver = Solver(inFilePath, numThreads);
+    Solver solver(inFilePath, numThreads);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
