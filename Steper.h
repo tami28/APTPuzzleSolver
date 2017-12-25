@@ -15,7 +15,7 @@ protected:
     int ncol = 0;
 public:
     /*
-     * update i&j to the next cell to go over. If we are at the end of the puzzle, meaning no next step - return false.
+     * update i&j to the stepperesVec cell to go over. If we are at the end of the puzzle, meaning no stepperesVec step - return false.
      */
     virtual bool nextStep();
     /*

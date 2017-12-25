@@ -17,6 +17,7 @@
 #include <memory>
 #include <numeric>
 #include "Steper.h"
+#include <thread>
 
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
 #define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
@@ -31,10 +32,15 @@ class Solver{
 private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
-    std::unique_ptr<Step> next;
+    std::vector<std::unique_ptr<Step>> stepperesVec;
     bool isFrame = false;
-    void setStep(int nrow, int ncol);
-
+    void setStep(int nrow, int ncol, int threadIndex);
+    PuzzleMatrix solution;
+    bool solved;
+    int numThreads;
+    std::map<pair<int,int>, std::unique_ptr<Step>> steppers;
+    void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
+    virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
 public:
     Solver() = default ;
     Solver(string fileName){
@@ -51,11 +57,11 @@ public:
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices);
+    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, int threadIndex);
     //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
-    virtual bool solverFinished(vector<int> usedIDs);
+
 };
 
 //solution table

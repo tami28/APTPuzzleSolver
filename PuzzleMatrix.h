@@ -38,6 +38,7 @@ class PuzzleMatrix{
 
 public:
     CellArray2D matrix;
+    PuzzleMatrix(){};
     PuzzleMatrix(int row, int col);
     PuzzleMatrix(const PuzzleMatrix &other);
     Constraints operator()(int row, int col, Edge edge);
