@@ -48,6 +48,7 @@ void Solver::solve(){
     //todo: group sizes to groups, each group for 1 thread:
     int threadIndex = 0;
     std::vector<std::thread> threads;
+    auto sizesPerThread = divideSizesToThreads(sizesVec, numThreads);
     for (auto size : sizesVec){
         std::thread t(&Solver::threadSolveForSize, this, vector<pair<int,int>>(size), threadIndex++);
         threads.push_back(t);
@@ -68,6 +69,16 @@ void Solver::solve(){
 
     }
 
+}
+
+
+vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>> allPossibleSizes, int numThreads){
+    //TODO: implement this function
+    vector<vector<pair<int,int>>> res;
+    for (auto size : allPossibleSizes){
+        res.push_back(vector<pair<int,int>(size));
+    }
+    return res;
 }
 
 void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){

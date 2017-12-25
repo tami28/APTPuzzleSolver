@@ -41,6 +41,7 @@ private:
     std::map<pair<int,int>, std::unique_ptr<Step>> steppers;
     void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
+    vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes, int numThreads);
 public:
     Solver() = default ;
     Solver(string fileName){
