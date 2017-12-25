@@ -35,16 +35,19 @@ private:
     std::vector<std::unique_ptr<Step>> stepperesVec;
     bool isFrame = false;
     void setStep(int nrow, int ncol, int threadIndex);
-    PuzzleMatrix solution;
-    bool solved;
-    int numThreads;
+    PuzzleMatrix _solution;
+    bool _solved;
+    int _numThreads;
     std::map<pair<int,int>, std::unique_ptr<Step>> steppers;
     void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
     vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes, int numThreads);
+
+
 public:
     Solver() = default ;
     Solver(string fileName){
+        _solved = false;
         if (withRotations){
             _puzzle = std::make_unique<RotatePuzzle>(fileName);
         }else {

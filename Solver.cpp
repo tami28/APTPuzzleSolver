@@ -45,25 +45,39 @@ void Solver::solve(){
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
 
-    //todo: group sizes to groups, each group for 1 thread:
+
+    cout << "before threading out. th_id = "<< std::this_thread::get_id() << endl;
+
     int threadIndex = 0;
     std::vector<std::thread> threads;
-    auto sizesPerThread = divideSizesToThreads(sizesVec, numThreads);
+    auto sizesPerThread = divideSizesToThreads(sizesVec, _numThreads);
     for (auto size : sizesPerThread){
-        threads.push_back(std::thread(&Solver::threadSolveForSize, this, size, threadIndex++));
+        if (threadIndex == _numThreads-1) { //thread of index _numThreads-1 is our main thread (will be launched after launching all other threads)
+            threadSolveForSize(size, threadIndex++);
+        }else {
+            cout << "now pushing to thrdsVec : index "<<threadIndex<<endl; // todo rm
+            threads.push_back(std::thread(&Solver::threadSolveForSize, this, size, threadIndex++));
+        }
     }
 
-    vector<int> indices(_puzzle.get()->getSize());
-    // Fill indices vector with all relevant indices (1...numPieces)
-    std::iota(indices.begin(), indices.end(), 1);
-    // Try and solve for every puzzle size:
-    PuzzleMatrix pm(0,0);
+    //TODO: complete this (indented) part, where amin thread also tries a solution:
 
-    if (solved){
-        pm.toFile(outFilePath);
+            vector<int> indices(_puzzle.get()->getSize());
+            // Fill indices vector with all relevant indices (1...numPieces)
+            std::iota(indices.begin(), indices.end(), 1);
+            // Try and solve for every puzzle size:
+            PuzzleMatrix pm(0,0);
 
+
+    for (std::thread &th : threads){ th.join(); }
+
+    cout << "finished waiting threads. this-_solved = " << this->_solved << endl; //todo rm
+    if (this->_solved){ //One of the threads successfully _solved
+        this->_solution.toFile(outFilePath);
     }
     else {
+        cout << "th_id " <<std::this_thread::get_id()<<" About to declare no sol!  [ this-_solved  =  " << this->_solved <<"]\n"; //todo rm
+
         (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
 
     }
@@ -82,22 +96,27 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
 }
 
 void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
+    bool success;
     for (auto size : sizes){
+        cout << "Thread #" <<std::this_thread::get_id()<<" will try size:("<< size.first <<","<<size.second<<")" <<endl;//todo rm
         int row = size.first;
         int col = size.second;
         PuzzleMatrix pm = PuzzleMatrix(row, col);
         vector<int> usedIDs;
         setStep(row, col, threadIndex);
-        solved = _solveForSize(pm, usedIDs, threadIndex); // Find a solution for size (row,col)
-        if (solved) {
-            this->solved = true;  //todo make this Atomic
-            this->solution = pm; //todo make this Atomic
+        success =_solveForSize(pm, usedIDs, threadIndex);
+        cout << "Thread #" <<std::this_thread::get_id()<<" done trying size:("<< size.first <<","<<size.second<<")" <<"success="<<success<<endl; //todo rm
+        if ( success ) { // Find a solution for size (row,col)
+            cout << "Thread #" <<std::this_thread::get_id()<<" _solved. will now set this->_solved=True\n"; //todo rm
+            this->_solved = true;  //todo make this Atomic
+            this->_solution = PuzzleMatrix(pm); //todo make this Atomic
         }
     }
+    cout << "Thread #" <<std::this_thread::get_id()<<" Done.\n"; //todo rm
 }
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadIndex) {
-    if (this->solved) { return false; }
+    if (this->_solved) { return false; }
 
     if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
         && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
@@ -158,14 +177,13 @@ bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;
 
-
-    stepperesVec[0] = std::make_unique<Step>(1, _puzzle.get()->getSize());
+    stepperesVec.push_back(std::make_unique<Step>(1, _puzzle.get()->getSize()));
     if (_solveForSize(row_pm, usedIDs, 0)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
-    stepperesVec[0] = std::make_unique<Step>(_puzzle.get()->getSize(),1);
+    stepperesVec.push_back(std::make_unique<Step>(_puzzle.get()->getSize(),1));
     if (_solveForSize(col_pm, usedIDs, 0)){
         return true;
     }
