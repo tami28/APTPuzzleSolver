@@ -47,10 +47,11 @@ void Solver::solve(){
 
 
     cout << "before threading out. th_id = "<< std::this_thread::get_id() << endl;
+    cout << "_numThreads="<<_numThreads<<endl;
 
     int threadIndex = 0;
     std::vector<std::thread> threads;
-    auto sizesPerThread = divideSizesToThreads(sizesVec, _numThreads);
+    auto sizesPerThread = divideSizesToThreads(sizesVec);
     for (auto size : sizesPerThread){
         if (threadIndex == _numThreads-1) { //thread of index _numThreads-1 is our main thread (will be launched after launching all other threads)
             threadSolveForSize(size, threadIndex++);
@@ -85,12 +86,29 @@ void Solver::solve(){
 }
 
 
-vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>> allPossibleSizes, int numThreads){
+vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>> allPossibleSizes){
     //TODO: implement this function
     vector<vector<pair<int,int>>> res;
+    //return res;
+    allPossibleSizes = {{8,6},{1,42},{7,8},{9,9}};
+    //sort possible sizes by "squareness":
+    std::sort(allPossibleSizes.begin(), allPossibleSizes.end(),
+         [](const pair<int,int> &p1, const pair<int,int> &p2) -> bool
+         {
+             return std::abs(p1.first-p1.second) < std::abs(p2.first-p2.second);
+         });
+    //more square sizes go to smaller groups
+    int numGroups = _numThreads <= allPossibleSizes.size() ? _numThreads : allPossibleSizes.size();
+    int groupSize = allPossibleSizes.size() / numGroups;
+    int i=0,iters=allPossibleSizes.size();
+    for (i=0; i<numGroups; i++){res.push_back(vector<pair<int,int>>{});}
+    i=0;
+    bool directionFlag = false;
     for (auto& size : allPossibleSizes){
-        vector<pair<int,int>>a{size};
-        res.push_back(a);
+        res[i].push_back(size);
+        if (directionFlag) {i--;}
+            else {i++;}
+        if (i==(res.size()-1) || i==0) { directionFlag = 1-directionFlag; }
     }
     return res;
 }

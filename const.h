@@ -28,3 +28,4 @@ enum StepType{ROW, COL, FRAME};
 extern bool withRotations;
 extern std::string outFilePath;
 #define DEFAULT_OUTPUT_FILE "solution.out"
+#define DEFAULT_NUM_THREADS 4

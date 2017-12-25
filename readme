@@ -11,7 +11,7 @@ A little explanation about the classes:
 --- The solving algorithm:---
 We try to solve per  legal size (determined by number of straight edges on each side):
 Go by rows and try to fit puzzle pieces that fit the constraint in cell i,j. The constraints are set by previous pieces already places (left & up) or
-if we are on the edge. Then it is solved recursively.
+if we are on the edge. Then it is _solved recursively.
 We hold a set of piece shapes already tried, so if we encounter another piece index with the same shape it will not be checked.
 
 
