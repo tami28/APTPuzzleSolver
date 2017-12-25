@@ -80,12 +80,13 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
     //more square sizes go to smaller groups
     int numGroups = _numThreads <= allPossibleSizes.size() ? _numThreads : allPossibleSizes.size();
     int groupSize = allPossibleSizes.size() / numGroups;
-    int i=0,iters=allPossibleSizes.size();
+    int i=0;
     for (i=0; i<numGroups; i++){res.push_back(vector<pair<int,int>>{});}
     i=0;
     int directionFlag = 1;
     for (auto& size : allPossibleSizes){
         res[i].push_back(size);
+        if (res.size() == 1) { continue; }
         i+= directionFlag;
         switch (directionFlag) {
             case 1:
@@ -112,6 +113,7 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
         vector<int> usedIDs;
         setStep(row, col, threadIndex);
         success =_solveForSize(pm, usedIDs, threadIndex);
+        cout<<"in th #"<<threadIndex<<" success on ("<<size.first<<","<<size.second<<") = "<<success<<endl; //todo rm
         if ( success ) { // Find a solution for size (row,col)
             std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
             this->_solved = true;
