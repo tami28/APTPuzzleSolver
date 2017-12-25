@@ -172,7 +172,7 @@ bool StepCol::prevStep(){
     }
     if(i==0){
         j--;
-        i = ncol-1;
+        i = nrow-1;
     } else{
         i--;
     }

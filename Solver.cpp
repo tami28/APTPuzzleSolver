@@ -113,7 +113,6 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
         vector<int> usedIDs;
         setStep(row, col, threadIndex);
         success =_solveForSize(pm, usedIDs, threadIndex);
-        cout<<"in th #"<<threadIndex<<" success on ("<<size.first<<","<<size.second<<") = "<<success<<endl; //todo rm
         if ( success ) { // Find a solution for size (row,col)
             std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
             this->_solved = true;
