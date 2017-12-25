@@ -33,7 +33,7 @@ class Solver{
 private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
-    std::map<int,std::unique_ptr<Step>> steppersMap;
+    std::map<int,std::unique_ptr<StepRow>> steppersMap;
     bool isFrame = false;
     void setStep(int nrow, int ncol, int threadIndex);
     PuzzleMatrix _solution;

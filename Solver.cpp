@@ -205,13 +205,13 @@ bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;
 
-    steppersMap[0] = std::make_unique<Step>(1, _puzzle.get()->getSize());
+    steppersMap[0] = std::make_unique<StepRow>(1, _puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs, 0)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
-    steppersMap[0] = std::make_unique<Step>(_puzzle.get()->getSize(),1);
+    steppersMap[0] = std::make_unique<StepRow>(_puzzle.get()->getSize(),1);
     if (_solveForSize(col_pm, usedIDs, 0)){
         return true;
     }
@@ -232,7 +232,7 @@ void Solver::setStep(int nrow, int ncol, int threadIndex){
     int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
 
     if (nrow <= 2){
-        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<StepRow>(nrow,ncol);
         return;
     }
     if(ncol <= 2){
@@ -244,12 +244,12 @@ void Solver::setStep(int nrow, int ncol, int threadIndex){
     }
 
     if (withRotations){
-        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<StepRow>(nrow,ncol);
         return;
     }
     //This only  matters for non rotate puzzles, go by the one with less options - first col or first row
     if (colDiff >= rowDiff){
-        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<StepRow>(nrow,ncol);
     } else{
         steppersMap[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
     }

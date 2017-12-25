@@ -4,7 +4,7 @@
 
 #include "Steper.h"
 
-bool Step::nextStep(){
+bool StepRow::nextStep(){
     if ( i == nrow-1){
         if (j == ncol-1){
             return false;
@@ -21,7 +21,7 @@ bool Step::nextStep(){
     return true;
 }
 
-bool Step::prevStep(){
+bool StepRow::prevStep(){
     if ( i == 0){
         if (j == 0){
             return false;
@@ -179,7 +179,7 @@ bool StepCol::prevStep(){
     return true;
 }
 
-StepType Step::getType(){
+StepType StepRow::getType(){
     return ROW;
 }
 StepType StepFrame::getType() {
