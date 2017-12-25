@@ -1,5 +1,6 @@
-from random import choice, shuffle
-
+from random import choice, shuffle, randint
+import os
+from time import time
 LEFT=1
 TOP=2
 RIGHT=3
@@ -10,7 +11,7 @@ MALE=1
 STRAIGHT=0
 
 CONSTRAINS = [FEMALE, MALE, STRAIGHT]
-def genPuzzle(row,col, tofile=None, sort=False):
+def genPuzzle(row,col, tofile=None, sort=False, prnt = True):
     puzzle = [[[-99,-9,-9,-9,-9] for j in range(col)] for i in range(row)]
 
 
@@ -62,7 +63,8 @@ def genPuzzle(row,col, tofile=None, sort=False):
             for col in row:
                 f.write(str(col)[1:len(str(col))-1].replace(",","")+"\n")
         #f.write("\n\nSOLUTION: "+str(solutionOrder))
-        print "\n\nSOLUTION: "+str(solutionOrder)
+        if prnt:
+            print "\n\nSOLUTION: "+str(solutionOrder)
         f.close()
 
     return puzzle, solutionOrder
@@ -166,6 +168,25 @@ def rotate_piece(piece, rotate_by):
     return rotated_piece
 
 
-genPuzzle(8,4,r'/home/yoav/CLionProjects/APTPuzzleSolver/Tests/gen84.txt')
+#genPuzzle(8,4,r'/home/yoav/CLionProjects/APTPuzzleSolver/Tests/gen84.txt')
     
 #print validateSolution(r'C:\Users\Yoav\CLionProjects\APTPuzzleSolver\Tests\rotCorn.txt', r'C:\Users\Yoav\CLionProjects\APTPuzzleSolver\Tests\SOLUTION.txt', True, rotate=True)
+
+
+
+
+
+def testCorrectness(executable, rotate, test_size = 20, prnt=True,rmin=2,rmax=7,cmin=2,cmax=5):
+    for i in range(test_size):
+        r = randint(rmin,rmax)
+        c = randint(cmin,cmax)
+        genPuzzle(r,c,r'./tst.txt', prnt=False)
+        t0=time()
+        os.system("{exe} ./tst.txt ./sol.txt".format(exe=executable))
+        t1 = time()-t0
+        success = validateSolution(r'./tst.txt','./sol.txt', prnt=False, rotate=rotate)
+        if not success:
+            print success, "[{},{}]".format(r,c), "time ",round(t1,2)
+            return
+        if prnt:
+            print success, "[{},{}]".format(r,c), "time ",round(t1,2)
