@@ -44,11 +44,6 @@ void Solver::solve(){
     }
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
-
-
-    cout << "before threading out. th_id = "<< std::this_thread::get_id() << endl;
-    cout << "_numThreads="<<_numThreads<<endl;
-
     int threadIndex = 0;
     std::vector<std::thread> threads;
     auto sizesPerThread = divideSizesToThreads(sizesVec);
@@ -56,20 +51,15 @@ void Solver::solve(){
         if (threadIndex == _numThreads-1) { //thread of index _numThreads-1 is our main thread (will be launched after launching all other threads)
             threadSolveForSize(size, threadIndex++);
         }else {
-            cout << "now pushing to thrdsVec : index "<<threadIndex<<endl; // todo rm
             threads.push_back(std::thread(&Solver::threadSolveForSize, this, size, threadIndex++));
         }
     }
-
-
     for (std::thread &th : threads){ th.join(); }
 
-    cout << "finished waiting threads. this-_solved = " << this->_solved << endl; //todo rm
     if (this->_solved){ //One of the threads successfully _solved
         this->_solution.toFile(outFilePath);
     }
     else {
-        cout << "th_id " <<std::this_thread::get_id()<<" About to declare no sol!  [ this-_solved  =  " << this->_solved <<"]\n"; //todo rm
 
         (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
 
@@ -77,7 +67,8 @@ void Solver::solve(){
 
 }
 
-//TODO: fix this logic.. not working well.
+
+
 vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>> allPossibleSizes){
     vector<vector<pair<int,int>>> res;
     //sort possible sizes by "squareness":
@@ -92,12 +83,22 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
     int i=0,iters=allPossibleSizes.size();
     for (i=0; i<numGroups; i++){res.push_back(vector<pair<int,int>>{});}
     i=0;
-    bool directionFlag = false;
+    int directionFlag = 1;
     for (auto& size : allPossibleSizes){
         res[i].push_back(size);
-        if (directionFlag) {i--;}
-            else {i++;}
-        if (i==(res.size()-1) || i==0) { directionFlag = 1-directionFlag; }
+        i+= directionFlag;
+        switch (directionFlag) {
+            case 1:
+                if (i == numGroups-1) { directionFlag = 0; }
+                break;
+            case 0:
+                directionFlag = i == 0 ? 1 : -1;
+                break;
+            case -1:
+                if (i == 0) { directionFlag = 0; }
+                break;
+        }
+
     }
     return res;
 }
@@ -105,22 +106,18 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
 void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
     bool success = false;
     for (auto size : sizes){
-        cout << "Thread #" <<std::this_thread::get_id()<<" will try size:("<< size.first <<","<<size.second<<")" <<endl;//todo rm
         int row = size.first;
         int col = size.second;
         PuzzleMatrix pm = PuzzleMatrix(row, col);
         vector<int> usedIDs;
         setStep(row, col, threadIndex);
         success =_solveForSize(pm, usedIDs, threadIndex);
-        cout << "Thread #" <<std::this_thread::get_id()<<" done trying size:("<< size.first <<","<<size.second<<")" <<"success="<<success<<endl; //todo rm
         if ( success ) { // Find a solution for size (row,col)
             std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
-            cout << "Thread #" <<std::this_thread::get_id()<<" _solved. will now set this->_solved=True\n"; //todo rm
             this->_solved = true;
             this->_solution = PuzzleMatrix(pm);
         } //mutex released here.
     }
-    cout << "Thread #" <<std::this_thread::get_id()<<" Done.\n"; //todo rm
 }
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadIndex) {
