@@ -24,7 +24,7 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
 
 void Solver::solve(){
     int row, col;
-    bool solved;
+    bool solved = false;
 
     //Check:
     if (0 == ErrorList::getNumErrors()){
@@ -61,14 +61,6 @@ void Solver::solve(){
         }
     }
 
-    //TODO: complete this (indented) part, where amin thread also tries a solution:
-
-            vector<int> indices(_puzzle.get()->getSize());
-            // Fill indices vector with all relevant indices (1...numPieces)
-            std::iota(indices.begin(), indices.end(), 1);
-            // Try and solve for every puzzle size:
-            PuzzleMatrix pm(0,0);
-
 
     for (std::thread &th : threads){ th.join(); }
 
@@ -85,12 +77,9 @@ void Solver::solve(){
 
 }
 
-
+//TODO: fix this logic.. not working well.
 vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>> allPossibleSizes){
-    //TODO: implement this function
     vector<vector<pair<int,int>>> res;
-    //return res;
-    allPossibleSizes = {{8,6},{1,42},{7,8},{9,9}};
     //sort possible sizes by "squareness":
     std::sort(allPossibleSizes.begin(), allPossibleSizes.end(),
          [](const pair<int,int> &p1, const pair<int,int> &p2) -> bool
@@ -114,7 +103,7 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
 }
 
 void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
-    bool success;
+    bool success = false;
     for (auto size : sizes){
         cout << "Thread #" <<std::this_thread::get_id()<<" will try size:("<< size.first <<","<<size.second<<")" <<endl;//todo rm
         int row = size.first;
@@ -125,10 +114,11 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
         success =_solveForSize(pm, usedIDs, threadIndex);
         cout << "Thread #" <<std::this_thread::get_id()<<" done trying size:("<< size.first <<","<<size.second<<")" <<"success="<<success<<endl; //todo rm
         if ( success ) { // Find a solution for size (row,col)
+            //std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
             cout << "Thread #" <<std::this_thread::get_id()<<" _solved. will now set this->_solved=True\n"; //todo rm
-            this->_solved = true;  //todo make this Atomic
-            this->_solution = PuzzleMatrix(pm); //todo make this Atomic
-        }
+            this->_solved = true;
+            this->_solution = PuzzleMatrix(pm);
+        } //mutex released here.
     }
     cout << "Thread #" <<std::this_thread::get_id()<<" Done.\n"; //todo rm
 }

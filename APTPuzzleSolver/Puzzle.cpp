@@ -176,7 +176,7 @@ int Puzzle::addPiece(PuzzlePiece& piece) {
  * corners in the single-row / single-col case).
  */
 void Puzzle::checkCorners(){
-    Solver solver = Solver();
+    Solver solver();
 	if (hasSufficientCornersCover()) {
 		return;
 	}

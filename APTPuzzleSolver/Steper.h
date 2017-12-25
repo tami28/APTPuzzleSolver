@@ -23,7 +23,7 @@ public:
      */
     virtual bool prevStep();
     Step(){};
-    Step(int n, int m) : nrow(n), ncol(m){};
+    Step(int k, int m) : nrow(k), ncol(m){};
     virtual StepType getType();
 };
 

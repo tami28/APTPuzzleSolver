@@ -18,6 +18,7 @@
 #include <numeric>
 #include "Steper.h"
 #include <thread>
+#include <mutex>
 
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
 #define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
@@ -38,11 +39,10 @@ private:
     PuzzleMatrix _solution;
     bool _solved;
     int _numThreads;
-    std::map<pair<int,int>, std::unique_ptr<Step>> steppers;
     void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
     vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes);
-
+    //std::mutex _declaringSolvedMutex;
 
 public:
     Solver() = default ;
@@ -63,14 +63,9 @@ public:
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
     virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, int threadIndex);
-    //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
 
 };
-
-//solution table
-//Solution finder gets puzzle & solution table and return a table of pieces representing the solution
-//Solver will have function that goes over possible legit sizes and call SolutionFinder
 
 #endif /* SOLVER_H_ */
