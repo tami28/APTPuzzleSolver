@@ -31,7 +31,11 @@ void Solver::solve(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        if (!(_puzzle.get()->isPrime(numPieces) || numPieces== 1 || hasSingleRowColSolution())) {
+        bool c1,c2,c3;
+        c1 = !(_puzzle.get()->isPrime(numPieces));
+        c2= numPieces== 1;
+        c3 = hasSingleRowColSolution();
+        if ( c1 || c2 ||c3 ) {
             _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
@@ -114,7 +118,7 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
         success =_solveForSize(pm, usedIDs, threadIndex);
         cout << "Thread #" <<std::this_thread::get_id()<<" done trying size:("<< size.first <<","<<size.second<<")" <<"success="<<success<<endl; //todo rm
         if ( success ) { // Find a solution for size (row,col)
-            //std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
+            std::lock_guard<std::mutex> lock(_declaringSolvedMutex);
             cout << "Thread #" <<std::this_thread::get_id()<<" _solved. will now set this->_solved=True\n"; //todo rm
             this->_solved = true;
             this->_solution = PuzzleMatrix(pm);
@@ -133,7 +137,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadInde
     }
 
     int constraints[4] = {NONE, NONE, NONE, NONE};
-    pm.constraintsOfCell(stepperesVec[threadIndex].get()->i,stepperesVec[threadIndex].get()->j,constraints, stepperesVec[threadIndex].get()->getType());
+    pm.constraintsOfCell(steppersMap[threadIndex].get()->i,steppersMap[threadIndex].get()->j,constraints, steppersMap[threadIndex].get()->getType());
     unordered_set<int> badPieces;
     set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints);
     int i;
@@ -144,7 +148,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadInde
         if (_isFitForCell(i, badPieces, usedIDs, rotation)){
             std::map<Constraints , int> requiredCountersSnapshot = pm.getRequiredCounters();
             std::map<outerFrameConstraints, int> requieredFrameConstraintsSnapshot = pm.getRequiredFrameConstraints();
-            pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, stepperesVec[threadIndex].get()->i,stepperesVec[threadIndex].get()->j);
+            pm.assignPieceToCell(_puzzle.get()->getPieceAt(i),rotation, steppersMap[threadIndex].get()->i,steppersMap[threadIndex].get()->j);
             vector<int> newUsedIDs(usedIDs);
             newUsedIDs.push_back(i);
             if(solverFinished(newUsedIDs, threadIndex)){
@@ -155,7 +159,7 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadInde
             }
             pm.setRequiredCounters(requiredCountersSnapshot);
             pm.setRequiredFrameConstraints(requieredFrameConstraintsSnapshot);
-            stepperesVec[threadIndex].get()->prevStep();
+            steppersMap[threadIndex].get()->prevStep();
             badPieces.insert((*_puzzle.get()->getPieceAt(i)).getConstraintsKey(rotation));
         }
     }
@@ -185,13 +189,13 @@ bool Solver::hasSingleRowColSolution(){
     PuzzleMatrix row_pm = PuzzleMatrix(1, _puzzle.get()->getSize());
     vector<int> usedIDs;
 
-    stepperesVec.push_back(std::make_unique<Step>(1, _puzzle.get()->getSize()));
+    steppersMap[0] = std::make_unique<Step>(1, _puzzle.get()->getSize());
     if (_solveForSize(row_pm, usedIDs, 0)){
         return true;
     }
     usedIDs.clear();
     PuzzleMatrix col_pm = PuzzleMatrix(_puzzle.get()->getSize(), 1);
-    stepperesVec.push_back(std::make_unique<Step>(_puzzle.get()->getSize(),1));
+    steppersMap[0] = std::make_unique<Step>(_puzzle.get()->getSize(),1);
     if (_solveForSize(col_pm, usedIDs, 0)){
         return true;
     }
@@ -199,7 +203,7 @@ bool Solver::hasSingleRowColSolution(){
 }
 
 bool Solver::solverFinished(vector<int> usedIDs, int threadIndex){
-    if ((!stepperesVec[threadIndex].get()->nextStep()) && usedIDs.size() == numPieces){
+    if ((!steppersMap[threadIndex].get()->nextStep()) && usedIDs.size() == numPieces){
         return true;
     }
     return false;
@@ -212,26 +216,26 @@ void Solver::setStep(int nrow, int ncol, int threadIndex){
     int rowDiff = _puzzle.get()->numStraightEdges(TOP) - ncol;
 
     if (nrow <= 2){
-        stepperesVec[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
         return;
     }
     if(ncol <= 2){
-        stepperesVec[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
         return;
     }
     if (_puzzle.get()->totalStraightEdges() <STRAIGHT_EDGES_RATIO_FOR_FRAME_STEPS*numPieces*4){
-        stepperesVec[threadIndex] = std::make_unique<StepFrame>(nrow, ncol);
+        steppersMap[threadIndex] = std::make_unique<StepFrame>(nrow, ncol);
     }
 
     if (withRotations){
-        stepperesVec[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
         return;
     }
     //This only  matters for non rotate puzzles, go by the one with less options - first col or first row
     if (colDiff >= rowDiff){
-        stepperesVec[threadIndex] = std::make_unique<Step>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<Step>(nrow,ncol);
     } else{
-        stepperesVec[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
+        steppersMap[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
     }
 
 }

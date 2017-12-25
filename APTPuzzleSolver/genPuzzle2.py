@@ -166,6 +166,6 @@ def rotate_piece(piece, rotate_by):
     return rotated_piece
 
 
-genPuzzle(3,3,r'/home/yoav/CLionProjects/APTPuzzleSolver/Tests/gen3.txt')
+genPuzzle(8,4,r'/home/yoav/CLionProjects/APTPuzzleSolver/Tests/gen84.txt')
     
 #print validateSolution(r'C:\Users\Yoav\CLionProjects\APTPuzzleSolver\Tests\rotCorn.txt', r'C:\Users\Yoav\CLionProjects\APTPuzzleSolver\Tests\SOLUTION.txt', True, rotate=True)

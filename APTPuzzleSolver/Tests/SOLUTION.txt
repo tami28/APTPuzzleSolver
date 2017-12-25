@@ -1,2 +1,4 @@
-Missing puzzle element(s) with the following IDs: 4
-Puzzle of size 4 cannot have the following IDs: 5
+1 11 21 25 31 26 22 9
+18 13 6 19 14 30 24 3
+32 2 4 7 10 23 12 17
+5 8 16 27 28 20 29 15

@@ -33,7 +33,7 @@ class Solver{
 private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
-    std::vector<std::unique_ptr<Step>> stepperesVec;
+    std::map<int,std::unique_ptr<Step>> steppersMap;
     bool isFrame = false;
     void setStep(int nrow, int ncol, int threadIndex);
     PuzzleMatrix _solution;
@@ -42,7 +42,7 @@ private:
     void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
     vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes);
-    //std::mutex _declaringSolvedMutex;
+    std::mutex _declaringSolvedMutex;
 
 public:
     Solver() = default ;

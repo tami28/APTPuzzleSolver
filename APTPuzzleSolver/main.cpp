@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 
 
     // Try to solve:
-    Solver solver = Solver(inFilePath, numThreads);
+    Solver solver(inFilePath, numThreads);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();
