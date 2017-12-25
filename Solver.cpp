@@ -123,9 +123,6 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
 }
 
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadIndex) {
-
-    cout << "now trying :\n"<<pm.toString()<<endl; //todo rm
-
     if (this->_solved) { return false; }
 
     if (numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
@@ -134,25 +131,9 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadInde
             return false;
     }
 
-    if (pm.getNrows() == 3 && pm.getNcols() == 2){
-        if ( (NULL != pm.matrix[0][0].piece) && pm.matrix[0][0].piece->getId() == 2){
-            if ((NULL != pm.matrix[1][0].piece) && pm.matrix[1][0].piece->getId() == 6){
-                if ( (NULL != pm.matrix[2][0].piece) && pm.matrix[2][0].piece->getId() == 3){
-                    if ( (NULL != pm.matrix[0][1].piece) && pm.matrix[0][1].piece->getId() == 1){
-                        if ((NULL != pm.matrix[1][1].piece) && pm.matrix[1][1].piece->getId() == 4){
-                            if ((NULL != pm.matrix[2][1].piece) && pm.matrix[2][1].piece->getId() == 5){
-                        }
-                    }
-                }
-
-            }
-    }}}
-
-
     int constraints[4] = {NONE, NONE, NONE, NONE};
     int row = steppersMap[threadIndex].get()->i;
     int col = steppersMap[threadIndex].get()->j;
-    cout << "placing: "<<row<<","<<col<<"\n****************"<<endl;
     pm.constraintsOfCell(row, col, constraints, steppersMap[threadIndex].get()->getType());
     unordered_set<int> badPieces;
     set<IDandRotation> relevantPieceIDs = _puzzle.get()->constraintsTable.getIDsFittingConstraints(constraints);
