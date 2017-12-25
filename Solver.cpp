@@ -31,11 +31,7 @@ void Solver::solve(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        bool c1,c2,c3;
-        c1 = !(_puzzle.get()->isPrime(numPieces));
-        c2= numPieces== 1;
-        c3 = hasSingleRowColSolution();
-        if ( c1 || c2 ||c3 ) {
+        if ( !(_puzzle.get()->isPrime(numPieces)) || numPieces== 1 ||hasSingleRowColSolution() ) {
             _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
