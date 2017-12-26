@@ -15,4 +15,17 @@ if we are on the edge. Then it is solved recursively.
 We hold a set of piece shapes already tried, so if we encounter another piece index with the same shape it will not be checked.
 
 
+#######Exercise 2:############
+
+Added feature of Stepper: polymorphysm to change the order in which we go over the puzzle (by row, by col, frame then by row)
+
+Added constraintsTable: allows to get all piece ids that fit given constraints in O(1) instead going over al pieces and trying.
+
+Added SolvabilityVerifier: For puzzles big enough, we check if the remaining puzzle pieces can fulfill the needed constraints left in the puzzle.
+                            If not, we stop exploring this solution. Proved very good for big puzzles :)
+
+Added RotatePuzzle: polymorphysm the the original puzzle, that overriedsd some of the checks differently.
+
+
+
 
