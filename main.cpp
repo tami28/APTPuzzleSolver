@@ -22,7 +22,7 @@ int main(int argc, char** argv){
     bool hasInputFile = false;
     std::string inFilePath;
     outFilePath = DEFAULT_OUTPUT_FILE;
-
+    int numThreads = DEFAULT_NUM_THREADS;
     if (argc <2){
         std::cout<<"Error, no input file. Run COMMAND inputFilePath or COMMAND inputFilePath outputFilePath for specific output file location";
         return 1;
@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 
 
     // Try to solve:
-    Solver solver = Solver(inFilePath);
+    Solver solver(inFilePath, numThreads);
     // Check for Errors before continuing to solve:
     if (ErrorList::getNumErrors() > 0) {
         ErrorList::getErrorList()->toFile();

@@ -6,7 +6,7 @@
 #define ATPPUZZLESOLVER_STEPER_H
 
 
-class Step{
+class StepRow{
     friend class Solver;
 protected:
     int i = 0;
@@ -15,38 +15,38 @@ protected:
     int ncol = 0;
 public:
     /*
-     * update i&j to the next cell to go over. If we are at the end of the puzzle, meaning no next step - return false.
+     * update i&j to the steppersMap cell to go over. If we are at the end of the puzzle, meaning no steppersMap step - return false.
      */
     virtual bool nextStep();
     /*
      * update i&j to the previous cell we wentover. If we are at the start of the puzzle, meaning no prev step s- return false.
      */
     virtual bool prevStep();
-    Step(){};
-    Step(int n, int m) : nrow(n), ncol(m){};
+    StepRow(){};
+    StepRow(int k, int m) : nrow(k), ncol(m){};
     virtual StepType getType();
 };
 
 /*
  * Used to go over frame, then by row inside.
  */
-class StepFrame :public Step{
+class StepFrame :public StepRow{
     friend class Solver;
 public:
     bool nextStep();
     bool prevStep();
     StepType getType();
-    StepFrame(int n, int m) : Step(n,m){};
+    StepFrame(int n, int m) : StepRow(n,m){};
 
 };
 
-class StepCol : public Step{
+class StepCol : public StepRow{
     friend  class Solver;
 public:
     bool nextStep();
     bool prevStep();
     StepType getType();
-    StepCol(int n, int m) : Step(n,m){};
+    StepCol(int n, int m) : StepRow(n,m){};
 };
 
 #endif //ATPPUZZLESOLVER_STEPER_H

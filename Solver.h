@@ -17,6 +17,8 @@
 #include <memory>
 #include <numeric>
 #include "Steper.h"
+#include <thread>
+#include <mutex>
 
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
 #define PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS 0.5
@@ -31,13 +33,22 @@ class Solver{
 private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
-    std::unique_ptr<Step> next;
+    std::map<int,std::unique_ptr<StepRow>> steppersMap;
     bool isFrame = false;
-    void setStep(int nrow, int ncol);
+    void setStep(int nrow, int ncol, int threadIndex);
+    PuzzleMatrix _solution;
+    bool _solved;
+    int _numThreads;
+    void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
+    virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
+    vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes);
+    std::mutex _declaringSolvedMutex;
 
 public:
     Solver() = default ;
-    Solver(string fileName){
+    Solver(string fileName, int numThreads){
+        _solved = false;
+        _numThreads = numThreads;
         if (withRotations){
             _puzzle = std::make_unique<RotatePuzzle>(fileName);
         }else {
@@ -51,15 +62,10 @@ public:
     void solve();
 
     bool piecefitsConstrains(PuzzlePiece& piece, char constraints[4]);
-    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices);
-    //virtual bool _solveForSize(PuzzleMatrix& pm, unordered_set<int> usedIDs, PuzzleMatrix *result, int row, int col);
+    virtual bool _solveForSize(PuzzleMatrix& pm, vector<int> indices, int threadIndex);
     virtual bool hasSingleRowColSolution();
     virtual bool _isFitForCell(int i, std::unordered_set<int>& badPieces,  vector<int> usedIDs, Rotate rotation);
-    virtual bool solverFinished(vector<int> usedIDs);
-};
 
-//solution table
-//Solution finder gets puzzle & solution table and return a table of pieces representing the solution
-//Solver will have function that goes over possible legit sizes and call SolutionFinder
+};
 
 #endif /* SOLVER_H_ */
