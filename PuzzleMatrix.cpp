@@ -177,6 +177,9 @@ bool PuzzleMatrix:: isFit(PuzzlePiece* piece, int row, int col){
 
 void PuzzleMatrix::toFile(string path) {
     ofstream fout(path);
+    if (fout.fail()) {
+        cout << "Could not write solution to file\n";
+    }
     for (int i=0; i<nrows; i++){
 
         for (int j=0; j<ncols; j++){
