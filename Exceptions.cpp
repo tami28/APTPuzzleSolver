@@ -131,6 +131,9 @@ int ErrorList::getNumErrors(){
  */
 void ErrorList::toFile(){
 	ofstream fout(outFilePath);
+	if (fout.fail()) {
+		cout << "Puzzle has error(s). Could not write errors to file\n";
+	}
     sort(_errVec.begin(), _errVec.end(), [] (const Error &e1,const Error &e2) {
         return (int) e1.getErrorType() < (int) e2.getErrorType();});
 	for (Error err : _errVec  ){
