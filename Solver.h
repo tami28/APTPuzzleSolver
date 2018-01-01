@@ -47,12 +47,11 @@ private:
     int performValidityChecks();
 
 public:
-    static bool withRotations;
     Solver() = default ;
     Solver(string fileName, int numThreads){
         _solved = false;
         _numThreads = numThreads;
-        if (withRotations){
+        if (Puzzle::withRotations){
             _puzzle = std::make_unique<RotatePuzzle>(fileName);
         }else {
             _puzzle = std::make_unique<Puzzle>(fileName);

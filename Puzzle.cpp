@@ -39,7 +39,6 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	PuzzlePiece curr;
 	getline(fin, line);
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
-    std::cout<<line<<std::endl;
 	parseFirstLine(line);
 	_pieces.resize(_size);
 	numPieces = _size;
@@ -103,7 +102,6 @@ void Puzzle::parseFirstLine(std::string line){
 	std::size_t const foundEq = line.find("=", foundS+1);
 	//Make sure format is ok:
 	if (foundS ==std::string::npos || foundEq == std::string::npos){
-        std::cout <<line<<std::endl;
 		(*ErrorList::getErrorList()).add(Error(WRONG_FIRST_LINE_FORMAT, line));
 	}
 	//Read the number:

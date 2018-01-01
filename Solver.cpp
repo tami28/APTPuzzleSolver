@@ -126,7 +126,7 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadIndex) {
     if (this->_solved) { return false; }
 
-    if (!withRotations && numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
+    if (!Puzzle::withRotations && numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
         && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
@@ -224,7 +224,7 @@ void Solver::setStep(int nrow, int ncol, int threadIndex){
         steppersMap[threadIndex] = std::make_unique<StepFrame>(nrow, ncol);
     }
 
-    if (withRotations){
+    if (Puzzle::withRotations){
         steppersMap[threadIndex] = std::make_unique<StepRow>(nrow,ncol);
         return;
     }

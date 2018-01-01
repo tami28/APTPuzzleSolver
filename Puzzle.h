@@ -30,7 +30,7 @@ protected:
     int _totalSum = 0;
 	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
-    bool withRotations = false;
+
 //functions:
 public:
 	//constructors:
@@ -51,6 +51,7 @@ public:
     void checkStraightEdges();
 	int totalStraightEdges(){ return _straightEdges[0] + _straightEdges[1]+_straightEdges[2]+_straightEdges[3];};
 	int numStraightEdges(Edge edge){return _straightEdges[edge];};
+	static bool withRotations;
 private:
 	void parseFirstLine(string line);
 	int addPiece(PuzzlePiece& piece);

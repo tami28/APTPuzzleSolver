@@ -18,7 +18,7 @@
 #define DEFAULT_NUM_THREADS 4
 
 std::string outFilePath;
-bool Solver::withRotations = false;
+bool Puzzle::withRotations = false;
 
 bool isCharPntInt(char* argv){
     for(char* c = argv; *c !='\0'; c++ ){
@@ -42,11 +42,11 @@ int main(int argc, char** argv){
     }
     for(int i =1; i<argc; i++){
         if ((strcmp(argv[i], ROTATE_FLAG) == 0)){
-            if (Solver::withRotations){
+            if (Puzzle::withRotations){
                 std::cout<<FLAG_USED_ONCE_ERR_MSG<<std::endl;
                 return 1;
             }
-            Solver::withRotations = true;
+            Puzzle::withRotations = true;
             continue;
         }
         if ((strcmp(argv[i], THREADS_FLAG) == 0)){
