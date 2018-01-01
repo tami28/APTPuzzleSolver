@@ -12,7 +12,7 @@
  * returns true iff all above are true.
  */
 bool SolvabilityVerifier::verifySolvabilityConstraints(){
-    if (withRotations){ return true; }
+//    if (withRotations){ return true; }
 
     _TL_corner = false;
     _BL_corner = false;

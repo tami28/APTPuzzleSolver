@@ -18,7 +18,7 @@ class ConstraintsTable {
 public:
     int getKey(int right, int top, int left, int bottom);
     ConstraintsTable();
-    void insertPiece(PuzzlePiece& p);
+    void insertPiece(PuzzlePiece &p, bool withRotations);
     set<IDandRotation> getIDsFittingConstraints(int consts[4]);
     std::unordered_map< int, std::set<IDandRotation> > _table;
 };

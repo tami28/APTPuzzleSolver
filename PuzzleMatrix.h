@@ -11,6 +11,7 @@
 
 #include "const.h"
 #include "PuzzlePiece.h"
+#include "Steper.h"
 #include <vector>
 #include <iostream>
 #include <map>

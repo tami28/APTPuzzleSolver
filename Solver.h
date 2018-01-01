@@ -30,6 +30,7 @@
 
 
 class Solver{
+
 private:
     std::unique_ptr<Puzzle> _puzzle;
     std::vector<int> indices;
@@ -46,6 +47,7 @@ private:
     int performValidityChecks();
 
 public:
+    static bool withRotations;
     Solver() = default ;
     Solver(string fileName, int numThreads){
         _solved = false;

@@ -30,6 +30,7 @@ protected:
     int _totalSum = 0;
 	map<Corners ,set<int>> _corners;
 	int _straightEdges[4] = {0};
+    bool withRotations = false;
 //functions:
 public:
 	//constructors:

@@ -16,7 +16,7 @@ ConstraintsTable::ConstraintsTable(){
 }
 
 
-void ConstraintsTable::insertPiece(PuzzlePiece& p){
+void ConstraintsTable::insertPiece(PuzzlePiece &p, bool withRotations) {
     Constraints pieceFittingConstraints[4];
     int timesRotated = 0;
     do {

@@ -15,9 +15,10 @@
 #define TOO_MANY_ARGS_ERR_MSG "Too many args, unused parameter: "
 #define ROTATE_FLAG "-rotate"
 #define THREADS_FLAG "-threads"
+#define DEFAULT_NUM_THREADS 4
 
 std::string outFilePath;
-bool withRotations = false;
+bool Solver::withRotations = false;
 
 bool isCharPntInt(char* argv){
     for(char* c = argv; *c !='\0'; c++ ){
@@ -32,6 +33,7 @@ bool isCharPntInt(char* argv){
 int main(int argc, char** argv){
     bool hasInputFile = false, hasOutputFile = false, hasThreads = false;
     std::string inFilePath;
+
     outFilePath = DEFAULT_OUTPUT_FILE;
     int numThreads = DEFAULT_NUM_THREADS;
     if (argc <2){
@@ -40,11 +42,11 @@ int main(int argc, char** argv){
     }
     for(int i =1; i<argc; i++){
         if ((strcmp(argv[i], ROTATE_FLAG) == 0)){
-            if (withRotations){
+            if (Solver::withRotations){
                 std::cout<<FLAG_USED_ONCE_ERR_MSG<<std::endl;
                 return 1;
             }
-            withRotations = true;
+            Solver::withRotations = true;
             continue;
         }
         if ((strcmp(argv[i], THREADS_FLAG) == 0)){

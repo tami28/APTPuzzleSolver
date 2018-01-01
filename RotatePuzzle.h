@@ -9,7 +9,7 @@
 
 class RotatePuzzle :public Puzzle{
 public:
-    RotatePuzzle(string fileName): Puzzle(fileName){};
+    RotatePuzzle(string fileName): Puzzle(fileName){withRotations = true;};
     void getPossibleSizes(vector<pair<int,int>> & result);
     void checkCorners();
 

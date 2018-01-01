@@ -6,6 +6,8 @@
 #define ATPPUZZLESOLVER_STEPER_H
 
 
+enum StepType{ROW, COL, FRAME};
+
 class StepRow{
     friend class Solver;
 protected:
