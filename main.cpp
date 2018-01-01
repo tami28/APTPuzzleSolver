@@ -17,8 +17,9 @@
 #define THREADS_FLAG "-threads"
 #define DEFAULT_NUM_THREADS 4
 
-std::string outFilePath;
+std::string Environment::outFilePath;
 bool Puzzle::withRotations = false;
+unsigned int Environment::numPieces = 0;
 
 bool isCharPntInt(char* argv){
     for(char* c = argv; *c !='\0'; c++ ){
@@ -34,7 +35,7 @@ int main(int argc, char** argv){
     bool hasInputFile = false, hasOutputFile = false, hasThreads = false;
     std::string inFilePath;
 
-    outFilePath = DEFAULT_OUTPUT_FILE;
+    Environment::setOutFilePath(DEFAULT_OUTPUT_FILE);
     int numThreads = DEFAULT_NUM_THREADS;
     if (argc <2){
         std::cout<<NO_INPUT_FILE_ERR_MSG;
@@ -69,7 +70,7 @@ int main(int argc, char** argv){
             continue;
         }
         if(!hasOutputFile){
-            outFilePath = argv[i];
+            Environment::setOutFilePath(argv[i]);
             hasOutputFile = true;
             continue;
         }

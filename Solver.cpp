@@ -26,7 +26,7 @@ int Solver::performValidityChecks(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        if ( !(_puzzle.get()->isPrime(numPieces)) || numPieces== 1 ||hasSingleRowColSolution() ) {
+        if ( !(_puzzle.get()->isPrime(Environment::getNumPieces())) || Environment::getNumPieces()== 1 ||hasSingleRowColSolution() ) {
             _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
@@ -62,7 +62,7 @@ void Solver::solve(){
     for (std::thread &th : threads){ th.join(); }
 
     if (this->_solved){ //One of the threads successfully _solved
-        this->_solution.toFile(outFilePath);
+        this->_solution.toFile(Environment::getOutFilePath());
     }
     else {
 
@@ -126,8 +126,8 @@ void Solver::threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex){
 bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadIndex) {
     if (this->_solved) { return false; }
 
-    if (!Puzzle::withRotations && numPieces > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
-        && usedIDs.size() > numPieces*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
+    if (!Puzzle::withRotations && Environment::getNumPieces() > MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS
+        && usedIDs.size() > Environment::getNumPieces()*(PIECES_RATIO_TO_CHECK_SUFFICIENT_CONSTRAINTS)
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
@@ -200,7 +200,7 @@ bool Solver::hasSingleRowColSolution(){
 }
 
 bool Solver::solverFinished(vector<int> usedIDs, int threadIndex){
-    if ((!steppersMap[threadIndex].get()->nextStep()) && usedIDs.size() == numPieces){
+    if ((!steppersMap[threadIndex].get()->nextStep()) && usedIDs.size() == Environment::getNumPieces()){
         return true;
     }
     return false;
@@ -220,7 +220,7 @@ void Solver::setStep(int nrow, int ncol, int threadIndex){
         steppersMap[threadIndex] = std::make_unique<StepCol>(nrow,ncol);
         return;
     }
-    if (_puzzle.get()->totalStraightEdges() <STRAIGHT_EDGES_RATIO_FOR_FRAME_STEPS*numPieces*4){
+    if (_puzzle.get()->totalStraightEdges() <STRAIGHT_EDGES_RATIO_FOR_FRAME_STEPS*Environment::getNumPieces()*4){
         steppersMap[threadIndex] = std::make_unique<StepFrame>(nrow, ncol);
     }
 

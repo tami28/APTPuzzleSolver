@@ -9,7 +9,6 @@
 #include "Puzzle.h"
 #include <sstream>
 #include <iterator>
-//#include "solver.h"
 #include "PuzzleMatrix.h"
 #include "Solver.h"
 #include <numeric>
@@ -41,7 +40,7 @@ void Puzzle::buildPuzzleFromFile(const std::string& fileName){
 	//assumption: if couldn't find properly tthe size the size will be set to zero, meaning all puzzle pieces will be illegal!
 	parseFirstLine(line);
 	_pieces.resize(_size);
-	numPieces = _size;
+	Environment::setNumPieces(_size);
 	//Read all lines, assuming that the piece constructor adds to errs if there's  a problem
 	std::vector<int> wrongIDs;
 	std::vector<int> idsFromFile; //holds all integer IDs seen in file (for detecting missing IDs).

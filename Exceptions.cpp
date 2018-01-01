@@ -57,7 +57,7 @@ std::string Error::toString(){
 			strm << "Puzzle ID " << this->_extraInt1 << " has wrong data: " << this->_extraString1;
 			return strm.str();
 		case WRONG_PIECE_IDS:
-			strm << "Puzzle of size " << numPieces << " cannot have the following IDs: " << this->_extraString1;
+			strm << "Puzzle of size " << Environment::getNumPieces()<< " cannot have the following IDs: " << this->_extraString1;
 			return strm.str();
 		case MISSING_PIECES:
 			strm << "Missing puzzle element(s) with the following IDs: "<< this->_extraString1;
@@ -130,7 +130,7 @@ int ErrorList::getNumErrors(){
  * Print all existing errors to file, in order of precedence.
  */
 void ErrorList::toFile(){
-	ofstream fout(outFilePath);
+	ofstream fout(Environment::getOutFilePath());
 	if (fout.fail()) {
 		cout << "Puzzle has error(s). Could not write errors to file\n";
 	}

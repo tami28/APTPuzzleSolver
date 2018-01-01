@@ -34,7 +34,7 @@ void SolvabilityVerifier::countConstraintsInPuzzleMatrix(){
     _sumOuterFrameEdges.insert({outerFrameConstraints::TOP_STRAIGHT, 0});
     _sumOuterFrameEdges.insert({outerFrameConstraints::RIGHT_STAIGHT, 0});
     _sumOuterFrameEdges.insert({outerFrameConstraints::BOTTOM_STRAIGHT, 0});
-    for (unsigned i=1; (i <= numPieces) ; i++){
+    for (unsigned i=1; (i <= Environment::getNumPieces()) ; i++){
         if ((std::find(_usedIDs.begin(), _usedIDs.end(), i) != _usedIDs.end())) {continue;}
         piece = _puzzle.get()->getPieceAt(i);
         if (piece->getConstraint(LEFT) == STRAIGHT) {
