@@ -16,9 +16,7 @@ typedef pair<int, Rotate> IDandRotation;
 
 class ConstraintsTable {
 public:
-
     int getKey(int right, int top, int left, int bottom);
-public:
     ConstraintsTable();
     void insertPiece(PuzzlePiece& p);
     set<IDandRotation> getIDsFittingConstraints(int consts[4]);
