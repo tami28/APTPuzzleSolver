@@ -43,6 +43,7 @@ private:
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
     vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes);
     std::mutex _declaringSolvedMutex;
+    int performValidityChecks();
 
 public:
     Solver() = default ;

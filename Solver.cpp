@@ -21,12 +21,7 @@ std::vector<pair<int, int>> Solver::getPossiblePuzzleSizes(){
 }
 
 
-
-void Solver::solve(){
-    int row, col;
-    bool solved = false;
-
-    //Check:
+int Solver::performValidityChecks(){
     if (0 == ErrorList::getNumErrors()){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
@@ -40,8 +35,18 @@ void Solver::solve(){
         }
     }
     if (ErrorList::getNumErrors() > 0) {
-        return;
+        return -1;
     }
+    return 0;
+}
+
+
+void Solver::solve(){
+    int row, col;
+    bool solved = false;
+    //Check:
+    if (performValidityChecks() != 0){ return; }
+
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
     int threadIndex = 0;
@@ -62,9 +67,7 @@ void Solver::solve(){
     else {
 
         (*ErrorList::getErrorList()).add(Error(COULD_NOT_FIND_SOLUTION));
-
     }
-
 }
 
 
@@ -129,7 +132,6 @@ bool Solver::_solveForSize(PuzzleMatrix& pm, vector<int> usedIDs, int threadInde
         &&  !(SolvabilityVerifier(_puzzle , pm, usedIDs)).verifySolvabilityConstraints()) {
             return false;
     }
-
     int constraints[4] = {NONE, NONE, NONE, NONE};
     int row = steppersMap[threadIndex].get()->i;
     int col = steppersMap[threadIndex].get()->j;
