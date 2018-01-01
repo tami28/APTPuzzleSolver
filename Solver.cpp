@@ -82,7 +82,6 @@ vector<vector<pair<int,int>>> Solver::divideSizesToThreads(vector<pair<int,int>>
          });
     //more square sizes go to smaller groups
     int numGroups = _numThreads <= allPossibleSizes.size() ? _numThreads : allPossibleSizes.size();
-    int groupSize = allPossibleSizes.size() / numGroups;
     int i=0;
     for (i=0; i<numGroups; i++){res.push_back(vector<pair<int,int>>{});}
     i=0;
