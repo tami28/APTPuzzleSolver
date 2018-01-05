@@ -26,7 +26,7 @@ int Solver::performValidityChecks(){
         //check for wrong-num-of-straight-edges-error:
         _puzzle.get()->checkStraightEdges();
         //check for missing corner error:
-        if ( !(_puzzle.get()->isPrime(Environment::getNumPieces())) || Environment::getNumPieces()== 1 ||hasSingleRowColSolution() ) {
+        if ( !(_puzzle.get()->isPrime(Environment::getNumPieces()) || Environment::getNumPieces()== 1 ||hasSingleRowColSolution() )) {
             _puzzle.get()->checkCorners();
         }
         //check for sum-not-zero error:
