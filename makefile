@@ -4,9 +4,10 @@ OBJS = Exceptions.o PuzzlePiece.o Puzzle.o PuzzleMatrix.o RotatePuzzle.o Solvabi
 #The executabel filename DON'T CHANGE
 EXEC = ex3
 CPP_COMP_FLAG = -std=c++14 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
+FLAGS = -pthread
 
 $(EXEC): $(OBJS)
-	$(COMP) $(OBJS) -o $@
+	$(COMP) $(FLAGS) $(OBJS) -o $@
 Exceptions.o: Exceptions.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 Puzzle.o: Puzzle.cpp
@@ -27,6 +28,6 @@ Solver.o: Solver.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
 main.o: main.cpp const.h Exceptions.h Puzzle.h PuzzlePiece.h Solver.h PuzzleMatrix.h RotatePuzzle.h SolvabilityVerifier.h Steper.h ConstraintsTable.h #put dependencies here!
-	$(COMP) $(CPP_COMP_FLAG) -pthread-c $*.cpp
+	$(COMP) $(CPP_COMP_FLAG)-c $*.cpp
 clean:
 	rm -f $(OBJS) $(EXEC)
