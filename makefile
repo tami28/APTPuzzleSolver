@@ -2,7 +2,7 @@ COMP = g++-5.3.0
 #put all your object files here
 OBJS = Exceptions.o PuzzlePiece.o Puzzle.o PuzzleMatrix.o RotatePuzzle.o SolvabilityVerifier.o Steper.o ConstraintsTable.o Solver.o main.o #objects should be placed here!
 #The executabel filename DON'T CHANGE
-EXEC = ex2
+EXEC = ex3
 CPP_COMP_FLAG = -std=c++14 -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
 
 $(EXEC): $(OBJS)
@@ -27,7 +27,6 @@ Solver.o: Solver.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 
 main.o: main.cpp const.h Exceptions.h Puzzle.h PuzzlePiece.h Solver.h PuzzleMatrix.h RotatePuzzle.h SolvabilityVerifier.h Steper.h ConstraintsTable.h #put dependencies here!
-	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
-clean:
+	$(COMP) $(CPP_COMP_FLAG) -pthread-c $*.cppclean:
 	rm -f $(OBJS) $(EXEC)
 
