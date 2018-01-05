@@ -17,7 +17,7 @@
 #include <memory>
 #include <numeric>
 #include "Steper.h"
-#include <thread>
+#include <pthread.h>
 #include <mutex>
 
 #define MIN_NUM_PIECES_TO_CHECK_SUFFICIENT_CONSTRAINTS 30
