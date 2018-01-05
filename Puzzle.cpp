@@ -13,7 +13,6 @@
 #include "Solver.h"
 #include <numeric>
 
-unsigned int numPieces; //initialization of global variable.
 
 //constructors:
 
@@ -123,7 +122,7 @@ PuzzlePiece* Puzzle::getPieceAt(int i){
 
 
 bool Puzzle::checkForMissingPieces(vector<int> &idsFromFile, vector<int> &ids){
-	vector<int> expected_ids(numPieces);
+	vector<int> expected_ids(Environment::getNumPieces());
 	std::iota(expected_ids.begin(), expected_ids.end(), 1);
 	for (int id : idsFromFile){
 		expected_ids.erase( std::remove(expected_ids.begin(), expected_ids.end(), id ), expected_ids.end() );
