@@ -26,8 +26,7 @@ ConstraintsTable.o: ConstraintsTable.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 Solver.o: Solver.cpp
 	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
-
 main.o: main.cpp const.h Exceptions.h Puzzle.h PuzzlePiece.h Solver.h PuzzleMatrix.h RotatePuzzle.h SolvabilityVerifier.h Steper.h ConstraintsTable.h #put dependencies here!
-	$(COMP) $(CPP_COMP_FLAG)-c $*.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
 clean:
 	rm -f $(OBJS) $(EXEC)
