@@ -24,7 +24,7 @@ private:
     static unsigned int numPieces;
     static std::string outFilePath;
 public:
-    static int getNumPieces(){return numPieces;};
+    static unsigned int getNumPieces(){return numPieces;};
     static void setNumPieces(unsigned int num){numPieces = num;};
     static std::string getOutFilePath(){return outFilePath;};
     static void setOutFilePath(std::string path){ outFilePath = path;};

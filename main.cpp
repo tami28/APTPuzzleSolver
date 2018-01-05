@@ -36,7 +36,7 @@ int main(int argc, char** argv){
     std::string inFilePath;
 
     Environment::setOutFilePath(DEFAULT_OUTPUT_FILE);
-    int numThreads = DEFAULT_NUM_THREADS;
+    unsigned int numThreads = DEFAULT_NUM_THREADS;
     if (argc <2){
         std::cout<<NO_INPUT_FILE_ERR_MSG;
         return 1;

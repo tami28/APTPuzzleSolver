@@ -39,7 +39,7 @@ private:
     void setStep(int nrow, int ncol, int threadIndex);
     PuzzleMatrix _solution;
     bool _solved;
-    int _numThreads;
+    unsigned int _numThreads;
     void threadSolveForSize(vector<pair<int,int>> sizes, int threadIndex);
     virtual bool solverFinished(vector<int> usedIDs, int threadIndex);
     vector<vector<pair<int,int>>> divideSizesToThreads(vector<pair<int,int>> allPossibleSizes);
@@ -48,7 +48,7 @@ private:
 
 public:
     Solver() = default ;
-    Solver(string fileName, int numThreads){
+    Solver(string fileName, unsigned int numThreads){
         _solved = false;
         _numThreads = numThreads;
         if (Puzzle::withRotations){

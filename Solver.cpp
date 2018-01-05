@@ -42,14 +42,12 @@ int Solver::performValidityChecks(){
 
 
 void Solver::solve(){
-    int row, col;
-    bool solved = false;
     //Check:
     if (performValidityChecks() != 0){ return; }
 
     // Get all possible puzzle sizes:
     std::vector<pair<int, int>> sizesVec = getPossiblePuzzleSizes();
-    int threadIndex = 0;
+    unsigned int threadIndex = 0;
     std::vector<std::thread> threads;
     auto sizesPerThread = divideSizesToThreads(sizesVec);
     for (auto size : sizesPerThread){
