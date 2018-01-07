@@ -71,9 +71,11 @@ PuzzlePiece::PuzzlePiece(const std::string& inputFileLine, vector<int> &idsFromF
             piece_id = param;
         }
         if (param == 0 && argsCount > 1){
+            if (!encounteredError){
+                encounteredError = true;
+                errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
+            }
             //One of the E-d-g-e-s given in the input line is not an int --> invalid piece representation.
-            encounteredError = true;
-            errVec.push_back(Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id));
             //throw Error(WRONG_PIECE_FORMAT, inputFileLine, piece_id);
         }
         numNumericParams++; // Got here -> the parameter we are parsing now is an integer.
