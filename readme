@@ -26,6 +26,9 @@ Added SolvabilityVerifier: For puzzles big enough, we check if the remaining puz
 
 Added RotatePuzzle: polymorphysm the the original puzzle, that overriedsd some of the checks differently.
 
+########Exercise 3: ##############
+Added Threads. This is done by size, meaning each threads gets a bunch of possible legal sizes to try and solve.
+The sizes are divided by "squareness" since we saw that "squarer" puzzles tend to be more difficult to solve.
 
 
 
